@@ -64,5 +64,14 @@ describe("модель", function() {
             console.log(arr.matrix,arr.running);
             assert.deepEqual(arr.matrix, [[true, true, false], [true, true, false], [false, false, false]],'анимация до остановки');
         });
+        it("resize", function () {
+            arr.resize(50,40);
+            assert.equal(arr.matrix.length, 50,'50 строк');
+            assert.equal(arr.matrix[0].length, 40 , '40 столбцов');
+            assert.equal(arr.matrix[50][40], false);
+            assert.equal(arr.running,false,'должен останавливаться');
+            arr.resize(10,10);
+            assert.equal(arr.matrix.length, 10,'уменьшение')
+        })
     });
 });

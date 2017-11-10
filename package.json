@@ -4,7 +4,8 @@
   "description": "Github Pages:   <https://geksanit.github.io/Ui-Kit/build/page_news.html>",
   "main": "webpack.config.js",
   "scripts": {
-    "dev": "webpack --config webpack.config.js",
+    "build": "webpack --env production",
+    "dev": "nodemon --watch webpack.config.js --exec \"webpack-dev-server --env development\"",
     "test": "karma start karma.conf.js --browsers PhantomJS"
   },
   "keywords": [],
@@ -28,12 +29,14 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.5",
     "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
     "phantomjs-prebuilt": "^2.1.16",
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
     "style-loader": "^0.19.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
-    "webpack": "^3.8.1"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
   }
 }

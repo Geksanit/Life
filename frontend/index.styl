@@ -1,2 +1,37 @@
+$blue = #4eb7a8 #28a290
+$orange = #e75735 #bf3e1f
+$gray = #f2f2f2 #e5e5e5 #8e8d8d
+$lato-b = 'test'
+
+
 body
-  color blue
+  color $blue[0]
+  background-color lightgrey
+  margin 0
+  main
+    width 720px
+    padding 10px
+    margin auto
+    background-color white
+    .game
+      display flex
+      margin-bottom 20px
+      #board
+        width 400px
+        height 400px
+        border 2px solid gray
+        .live
+          background-color $blue[1]
+      .controls
+        padding 5px
+        width 300px
+        .standart-button
+          margin 5px
+        div.slider
+          margin 10px
+
+@import "./components/standart-button/main.styl"
+standart-button($lato-b,$blue,$orange)
+
+@import "./components/slider/main.styl"
+slider(lato-r,$blue)
