@@ -1,6 +1,7 @@
 # Life
 
-Github Pages:   <https://geksanit.github.io/Ui-Kit/build/index.html>
+Github Pages:   <https://geksanit.github.io/Life/build/>
+Coverage <https://geksanit.github.io/Life/tmp/coverage/report-html/>
 
 Все зависимости webpack'a описаны в package.json и устанавливаются командой `npm i`
 
