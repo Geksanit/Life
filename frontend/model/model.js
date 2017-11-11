@@ -14,8 +14,37 @@ export var Board = function(m,n) {
 };
 //методы
 Board.prototype={
-    resize : function (n,m) {
-        console.log('res')
+    resize : function (m,n) {
+        this.running = false;
+        var matrix = this.matrix;
+        var o = matrix.length;
+        var p = matrix[0].length;
+        console.log('resize',o,p,' to ',m,n);
+        if(p > n){//убираем столбцы
+            for(var i=0; i<o; i++){
+                matrix[i].splice(n-1,p-n);//изменить length?
+            }
+        }
+        if(p < n){//добавляем столбцы
+            for(var i=0; i<o; i++){
+                for(var j=p; j<n; j++){
+                    matrix[i].push(false);
+                }
+            }
+        }
+        if(o > m){//убираем строки
+            matrix.splice(m-1,o-m);//изменить length?
+        }
+        if(o < m){//добавляем строки
+            var line = [];
+            for(var j=0; j<n; j++){
+                line.push(false);
+            }
+            for(var i=o; i<m; i++){
+                matrix.push(line.slice());
+            }
+
+        }
     },
     pause : function () {
         this.running = false;
@@ -36,11 +65,11 @@ Board.prototype={
             }
             newMatrix.push(newLine);
         }
-        console.log('test',this.matrix);
-        console.log('test',newMatrix);
+        //console.log('test',this.matrix);
+        //console.log('test',newMatrix);
 
         if(newMatrix === this.matrix){
-            console.log('no new');
+            //console.log('no new');
             this.running = false;
         }/*
         if(1){

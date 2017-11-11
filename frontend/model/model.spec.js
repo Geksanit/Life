@@ -54,24 +54,29 @@ describe("модель", function() {
             assert.deepEqual(arr.matrix, [[true, true, false], [true, false, false], [false, false, false]],'одна итерация');
         });
         it("anim", function () {
-            //arr.setCell(0,2);
-            console.log(arr.matrix,arr.running);
+            arr.setCell(0,2);
+            //console.log(arr.matrix,arr.running);
             arr.start();
-            console.log(arr.running);
-            arr.anim();
+            //console.log(arr.running);
+            //arr.anim();
             //arr.worker();
             //arr.worker();
-            console.log(arr.matrix,arr.running);
+            //console.log(arr.matrix,arr.running);
             assert.deepEqual(arr.matrix, [[true, true, false], [true, true, false], [false, false, false]],'анимация до остановки');
         });
         it("resize", function () {
+            console.log('do',arr.matrix);
             arr.resize(50,40);
+
+
             assert.equal(arr.matrix.length, 50,'50 строк');
             assert.equal(arr.matrix[0].length, 40 , '40 столбцов');
-            assert.equal(arr.matrix[50][40], false);
+            assert.equal(arr.matrix[49][39], false,'значение');
             assert.equal(arr.running,false,'должен останавливаться');
+
             arr.resize(10,10);
             assert.equal(arr.matrix.length, 10,'уменьшение')
+            console.log('posle',arr.matrix.length);
         })
     });
 });
