@@ -6,12 +6,16 @@ export var painter = function (matrix) {
     var m = matrix.length;
     var n = matrix[0].length;
     //console.log(m,n);
+    var width = 400/n;
+    var height = 400/m;
 
     var tbody = document.createElement('tbody');
     for(var i=0; i<m; i++){
         var tr = document.createElement('tr');
         for(var j=0; j<n; j++){
             var  td = document.createElement('td');
+            td.style.width=width+'px';
+            td.style.height=width+'px';
             if(matrix[i][j]) td.className = 'live';
             tr.appendChild(td);
         };
