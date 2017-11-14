@@ -1,10 +1,11 @@
+
 import {Board} from '../model/model'
 
 describe("контроллер", function () {
     describe("события", function () {
         var board = new Board(5,5);
         it('click',function () {
-        
+            assert.equal(1,1);
         });
         it('start',function () {
 

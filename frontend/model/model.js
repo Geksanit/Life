@@ -1,9 +1,12 @@
-'use strict'
+'use strict';
 
 //конструктор
 export var Board = function(m,n) {
     this.matrix = [];//матрица m на n заполненная false
-    this.running = false;//запущен ли цыкл
+    this.running = false;//для циклической обработки
+    this.m = m;//строки
+    this.n = n;//столбцы
+
     for(var i=0; i<m; i++){
         var line = [];
         for(var j=0; j<n; j++){
@@ -43,18 +46,24 @@ Board.prototype={
             for(var i=o; i<m; i++){
                 matrix.push(line.slice());
             }
-
         }
+        this.m = m;
+        this.n = n;
     },
     pause : function () {
         this.running = false;
     },
+    clear : function () {
+        //this = new Board(this.m,this.n);
+        this.running = false;
+        for(var i=0; i<this.m; i++){
+            for(var j=0; j<this.n; j++){
+                this.matrix[i][j] = false;
+            }
+        }
+    },
     start : function () {
         this.running = true;
-    },
-    anim : function() {
-        if (this.running) window.requestAnimationFrame(this.anim);
-        this.worker();
     },
     worker : function () {//обход всех ячеек с записью нового состояния
         var newMatrix = [];
@@ -71,11 +80,7 @@ Board.prototype={
         if(newMatrix === this.matrix){
             //console.log('no new');
             this.running = false;
-        }/*
-        if(1){
-            console.log('no new');
-            this.running = false;
-        }*/
+        }
         this.matrix = newMatrix;
     },
     cell : function (i,j) {

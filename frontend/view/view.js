@@ -25,9 +25,7 @@ export var painter = function (matrix) {
     return tbody
 };
 
-export var newTable = function (board) {
-    var table = document.getElementById('board');
-    console.dir(table);
+export var newTable = function (board,table) {
     var tbody = painter(board.matrix);
     if(table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
@@ -47,5 +45,5 @@ export var repainter = function (matrix,tbody) {
             else td.className = '';
         };
     };
-    return tbody
+    return tbody//для тестов
 };

@@ -1,7 +1,7 @@
 import {Board} from '../model/model'
 import {painter,repainter} from './view'
 
-describe("Вьюшка", function () {
+describe("Представление", function () {
     it("painter",function () {
         var board = new Board(5,5);
         board.setCell(1,1);

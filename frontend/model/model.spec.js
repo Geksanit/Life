@@ -1,6 +1,7 @@
 'use strict'
 
 import {Board} from './model'
+//import './model'
 
 describe("модель", function() {
 
@@ -13,6 +14,8 @@ describe("модель", function() {
         });
         it("атрибуты", function () {
             assert.deepEqual(arr.running, false,'не верное значение атрибута');
+            assert.equal(arr.m,2);
+            assert.equal(arr.n,2)
         })
     });
     describe("методы модели", function() {
@@ -30,6 +33,13 @@ describe("модель", function() {
             assert.equal(arr.matrix[0][0], true,'переключение ячейки');
             arr.setCell(0,0);
             assert.equal(arr.matrix[0][0], false,'переключение ячейки');
+        });
+        it("clear", function () {
+            arr.setCell(0,0);
+            arr.setCell(1,1);
+            arr.clear();
+            assert.equal(arr.matrix[0][0],false, 'ячейки обнулились');
+            assert.equal(arr.matrix[1][1],false, 'ячейки обнулились');
         });
         arr = new Board(3,3);
         it("cell", function () {
@@ -53,30 +63,20 @@ describe("модель", function() {
             //console.log(arr.matrix);
             assert.deepEqual(arr.matrix, [[true, true, false], [true, false, false], [false, false, false]],'одна итерация');
         });
-        it("anim", function () {
-            arr.setCell(0,2);
-            //console.log(arr.matrix,arr.running);
-            arr.start();
-            //console.log(arr.running);
-            //arr.anim();
-            //arr.worker();
-            //arr.worker();
-            //console.log(arr.matrix,arr.running);
-            assert.deepEqual(arr.matrix, [[true, true, false], [true, true, false], [false, false, false]],'анимация до остановки');
-        });
         it("resize", function () {
-            console.log('do',arr.matrix);
             arr.resize(50,40);
-
-
             assert.equal(arr.matrix.length, 50,'50 строк');
+            assert.equal(arr.m, 50,'50 строк');
             assert.equal(arr.matrix[0].length, 40 , '40 столбцов');
+            assert.equal(arr.n, 40 , '40 столбцов');
             assert.equal(arr.matrix[49][39], false,'значение');
             assert.equal(arr.running,false,'должен останавливаться');
 
-            arr.resize(10,10);
-            assert.equal(arr.matrix.length, 10,'уменьшение')
-            console.log('posle',arr.matrix.length);
+            arr.resize(10,9);
+            assert.equal(arr.matrix.length, 10,'уменьшение');
+            assert.equal(arr.m, 10 , '10 строк');
+            assert.equal(arr.matrix[0].length, 9 , '9 столбцов');
+            assert.equal(arr.n, 9 , '9 столбцов');
         })
     });
 });
