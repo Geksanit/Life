@@ -34,8 +34,18 @@ body
         width 300px
         .standart-button
           margin 5px
-        div.slider
-          margin 10px
+        .container
+          display flex
+          justify-content space-between
+          align-items flex-end
+          div.slider
+            margin 10px
+            flex 1 1 100px
+          .label
+            width 50px
+            height 40px
+            line-height @height
+
 
 @import "./components/standart-button/main.styl"
 standart-button($lato-b,$blue,$orange)

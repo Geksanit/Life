@@ -21,7 +21,6 @@ export var painter = function (matrix) {
         };
         tbody.appendChild(tr);
     };
-
     return tbody
 };
 

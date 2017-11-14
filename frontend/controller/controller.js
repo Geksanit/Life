@@ -20,11 +20,25 @@ var controlsOnclick = function (event) {
     if (target.innerText == 'CLEAR') {board.clear(); repainter(board.matrix, table.children[0])};
 };
 var controlsUnfocus = function (event){
-    console.log(event);
+    //console.log(event);
     var target = event.target;
     if (target.tagName != 'INPUT') return;
     var value = target.valueAsNumber;
-    console.dir(target);
+    //console.dir(value);
+    if(target.parentElement.previousElementSibling.innerText == 'speed') {
+        //console.log('speed');
+        fps = value;
+    };
+    if(target.parentElement.previousElementSibling.innerText == 'width') {
+        //console.log('width');
+        board.resize(board.m,value);
+        newTable(board,table);
+    };
+    if(target.parentElement.previousElementSibling.innerText == 'height') {
+        //console.log('height');
+        board.resize(value,board.n);
+        newTable(board,table);
+    };
 };
 
 
@@ -43,11 +57,11 @@ console.dir(table);
 var fps = 1;
 function anim(){
     setTimeout(function() {
-        requestAnimationFrame(anim);
+        requestAnimationFrame(anim);//не блокирует поток!
         if(board.running) {
             board.worker();
             repainter(board.matrix, table.children[0])
         }
     }, 1000 / fps);
 };
-anim();//работает асинхронно!!!
+anim();
