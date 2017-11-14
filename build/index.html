@@ -6,6 +6,49 @@
     <title>Life</title>
   <link href="index.css" rel="stylesheet"></head>
   <body>
-    <p>qwerty</p>
+    <main>
+      <h1>Life</h1>
+      <div class="game">
+        <table id="board"></table>
+        <div class="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">clear</button>
+          <div class="container">
+            <div class="label">speed</div>
+            <div class="slider">
+              <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1">
+            </div>
+          </div>
+          <div class="container">
+            <div class="label">width</div>
+            <div class="slider">
+              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+            </div>
+          </div>
+          <div class="container">
+            <div class="label">height</div>
+            <div class="slider">
+              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+            </div>
+          </div>
+        </div>
+      </div>
+      <dl>Игра «Жизнь»
+        <dt>— клеточный автомат, придуманный английским математиком Джоном Конвеем в 1970 году.</dt>
+      </dl>
+      <section>Каждая клетка на этой поверхности может находиться в двух состояниях: быть «живой» (заполненной) или быть «мёртвой» (пустой). Клетка имеет восемь соседей, окружающих её.
+        <p>Распределение живых клеток в начале игры называется первым поколением. Каждое следующее поколение рассчитывается на основе предыдущего по таким правилам:</p>
+        <ul>
+          <li>в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;</li>
+          <li>если у живой клетки есть две или три живые соседки, то эта клетка продолжает жить; в противном случае, если соседей меньше двух или больше трёх, клетка умирает («от одиночества» или «от перенаселённости»)</li>
+        </ul>
+        <p>Игра прекращается, если</p>
+        <ul>
+          <li>на поле не останется ни одной «живой» клетки</li>
+          <li>конфигурация на очередном шаге в точности (без сдвигов и поворотов) повторит себя же на одном из более ранних шагов (складывается периодическая конфигурация)</li>
+          <li>при очередном шаге ни одна из клеток не меняет своего состояния (складывается стабильная конфигурация; предыдущее правило, вырожденное до одного шага назад)</li>
+        </ul>
+        <p>Эти простые правила приводят к огромному разнообразию форм, которые могут возникнуть в игре.</p>
+        <p>Игрок не принимает прямого участия в игре, а лишь расставляет или генерирует начальную конфигурацию «живых» клеток, которые затем взаимодействуют согласно правилам уже без его участия (он является наблюдателем).</p>
+      </section>
+    </main>
   <script type="text/javascript" src="index.js"></script></body>
 </html>
