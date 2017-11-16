@@ -11,13 +11,31 @@ export var tableOnclick = function(event) {
     board.setCell(i,j);
     target.classList.toggle("live");
 };
+var tableMouse = function (event) {
+    console.log(event);
+};
 var controlsOnclick = function (event) {
     //console.log(event);
     var target = event.target;
     if (target.tagName != 'BUTTON') return;
-    if (target.innerText == 'START') board.start();
-    if (target.innerText == 'PAUSE') board.pause();
-    if (target.innerText == 'CLEAR') {board.clear(); repainter(board.matrix, table.children[0])};
+    if (target.innerText == 'START') {board.start(); buttonsDisabled(board);};
+    if (target.innerText == 'PAUSE') {board.pause(); buttonsDisabled(board);};
+    if (target.innerText == 'CLEAR') {board.clear(); buttonsDisabled(board); repainter(board.matrix, table.children[0])};
+};
+var buttonsDisabled = function (board) {
+    var buttons = document.getElementsByTagName('BUTTON');
+    //console.log(buttons);
+    for(var i=0; i<buttons.length; i++){
+        var button = buttons[i];
+        if (button.innerText == 'START'){
+            if (board.running) button.disabled = true;
+            else button.disabled = false;
+        };
+        if (button.innerText == 'PAUSE'){
+            if (board.running) button.disabled = false;
+            else button.disabled = true;
+        };
+    };
 };
 var controlsUnfocus = function (event){
     //console.log(event);
@@ -40,20 +58,22 @@ var controlsUnfocus = function (event){
         newTable(board,table);
     };
 };
+{
+    var board = new Board(10, 10);
+    var table = document.getElementById('board');
+    //console.dir(table);
+    var controls = table.nextElementSibling;
 
+    newTable(board, table);//начальная отрисовка
+    table.onclick = tableOnclick;
+    controls.onclick = controlsOnclick;
+    controls.onchange = controlsUnfocus;
+    controls.onmousedown = tableMouse;
+    buttonsDisabled(board);
 
-var board = new Board(10,10);
-var table = document.getElementById('board');
-var controls = table.nextElementSibling;
-
-newTable(board,table);//начальная отрисовка
-table.onclick = tableOnclick;
-controls.onclick = controlsOnclick;
-controls.onchange = controlsUnfocus;
-
-console.log(board);
-console.dir(table);
-
+    //console.log(board);
+    //console.dir(table);
+}
 var fps = 1;
 function anim(){
     setTimeout(function() {

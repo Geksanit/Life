@@ -1,5 +1,6 @@
 //$blue = #4eb7a8 #28a290
 //$orange = #e75735 #bf3e1f
+$gray = darkgray gray #8e8d8d
 @keyframes ripple {
   0% {
     transform: scale(0, 0);
@@ -61,6 +62,15 @@ standart-button($font,$blue,$orange)
         background-color $_color[0]
       &-small
         box-shadow 0 2px 0 $_color[1]
+    &:disabled
+      $_color = $gray
+      border-color $_color[0]
+      box-shadow 0 3px 0 $_color[1]
+      color $_color[0]
+      &:hover
+        background-color $_color[0]
+        color white
+
 
   #ripple
     position absolute

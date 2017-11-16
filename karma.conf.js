@@ -24,20 +24,22 @@ module.exports=function(config) {
         // spec файлы, условимся называть по маске **_*.spec.js_**
         files: [
             'frontend/**/*.spec.js',
-            'frontend/*.spec.js',
-        ],
-        frameworks: [ 'chai', 'jasmine' ],
+            './test/spec/**/*.html',
+    ],
+        frameworks: ['chai', 'jasmine', 'fixture'],
         // репортеры необходимы для  наглядного отображения результатов
         reporters: ['mocha', 'coverage'],
         preprocessors: {
-            'frontend/**/*.spec.js': ['webpack', 'sourcemap','coverage'],
-            'frontend/*.spec.js':['webpack', 'sourcemap']
+            '*.html'   : ['html2js'],
+            'frontend/**/*.spec.js': ['webpack', 'sourcemap','coverage']
         },
         plugins: [
             'karma-jasmine', 'karma-mocha',
             'karma-chai', 'karma-coverage',
             'karma-webpack', 'karma-phantomjs-launcher',
-            'karma-mocha-reporter', 'karma-sourcemap-loader'
+            'karma-mocha-reporter', 'karma-sourcemap-loader',
+            'karma-fixture',
+            'karma-html2js-preprocessor',
         ],
         // передаем конфигурацию webpack
         webpack: webpackConfig,

@@ -1,0 +1,24 @@
+
+      <div class="game">
+        <table id="board"></table>
+        <div class="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">clear</button>
+          <div class="container">
+            <div class="label">speed</div>
+            <div class="slider">
+              <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1">
+            </div>
+          </div>
+          <div class="container">
+            <div class="label">width</div>
+            <div class="slider">
+              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+            </div>
+          </div>
+          <div class="container">
+            <div class="label">height</div>
+            <div class="slider">
+              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+            </div>
+          </div>
+        </div>
+      </div>
