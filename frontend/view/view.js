@@ -1,8 +1,8 @@
 //отрисовка матрицы
 
-export var painter = function (matrix) {
+export var painter = function (board) {
     //заполнение таблицы
-    //console.log('painter');
+    var matrix = board.matrix;
     var m = matrix.length;
     var n = matrix[0].length;
     //console.log(m,n);
@@ -25,14 +25,16 @@ export var painter = function (matrix) {
 };
 
 export var newTable = function (board,table) {
-    var tbody = painter(board.matrix);
+    //для  создания и ресайза таблицы
+    var tbody = painter(board);
     if(table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
 };
 
-export var repainter = function (matrix,tbody) {
+export var repainter = function (board,table) {
     //перерисовка таблицы
-    //console.log('repainter');
+    var matrix = board.matrix;
+    var tbody = table.children[0];
     var m = matrix.length;
     var n = matrix[0].length;
     //console.log(m,n);
@@ -44,5 +46,4 @@ export var repainter = function (matrix,tbody) {
             else td.className = '';
         };
     };
-    return tbody//для тестов
 };

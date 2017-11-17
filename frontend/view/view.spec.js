@@ -2,36 +2,60 @@ import {Board} from '../model/model'
 import {painter,repainter,newTable} from './view'
 
 describe("Представление", function () {
-    //console.log(this);
-    //console.log(document);
-    it("painter",function () {
+    describe("painter",function () {
         var board = new Board(5,5);
         board.setCell(1,1);
-        var tbody = painter(board.matrix);
-        assert.equal(tbody.children.length,5,'5 строк');
-        assert.equal(tbody.children[0].children.length,5,'5 столбцов');
-        assert.equal(tbody.children[1].children[1].className,'live','класс живой клетки');
+        var tbody = painter(board);
+        it('создает и заполняет tbody в соостветсви с моделью',function () {
+            assert.equal(tbody.children.length,5,'5 строк');
+            assert.equal(tbody.children[0].children.length,5,'5 столбцов');
+        });
+        it('сразу задает класс живым ячейкам',function () {
+            assert.equal(tbody.children[1].children[1].className,'live','класс живой клетки');
+        });
     });
-    it("repainter",function () {
+    describe("new table", function () {
         var board = new Board(5,5);
-        var tbody = painter(board.matrix);
-        assert.equal(tbody.children[1].children[1].className,'','класс отсутсвовал');
         board.setCell(1,1);
-        tbody = repainter(board.matrix, tbody);
-        assert.equal(tbody.children.length,5,'5 строк, размер не должен меняться');
-        assert.equal(tbody.children[0].children.length,5,'5 столбцов, размер не должен меняться');
-        assert.equal(tbody.children[1].children[1].className,'live','класс изменился');
+        var table = document.createElement('table');
+        it('содает tbody, и вставляет в таблицу', function () {
+            assert.equal(table.children.length,0,'нет tbody');
+            newTable(board,table);
+            var tbody = table.children[0];
+            assert.equal(table.children.length,1,'появился tbody');
+            assert.equal(tbody.children.length,5,'5 строк');
+            assert.equal(tbody.children[0].children.length,5,'5 столбцов');
+            assert.equal(tbody.children[1].children[1].className,'live','класс живой клетки');
+        });
+        it('заменяет tbody, если есть', function () {
+            board.setCell(1,1);
+            newTable(board,table);
+            var tbody = table.children[0];
+            assert.equal(table.children.length,1);
+            assert.equal(tbody.children[1].children[1].className,'','класс живой клетки');
+        });
+        it('при ресайзе модели таблица тоже меняется', function () {
+            board.resize(8,9);
+            newTable(board,table);
+            var tbody = table.children[0];
+            assert.equal(tbody.children.length,8,'8 строк');
+            assert.equal(tbody.children[0].children.length,9,'9 столбцов');
+        });
     });
-    it("new table", function () {
-        var table = document.createElement('tbody');
+    describe("repainter",function () {
         var board = new Board(5,5);
         board.setCell(1,1);
-        assert.equal(table.children.length,0,'нет tbody');
+        var table = document.createElement('table');
         newTable(board,table);
-        assert.equal(table.children.length,1,'появился tbody');
+        repainter(board, table);
         var tbody = table.children[0];
-        assert.equal(tbody.children.length,5,'5 строк');
-        assert.equal(tbody.children[0].children.length,5,'5 столбцов');
-        assert.equal(tbody.children[1].children[1].className,'live','класс живой клетки');
+        it('размер не меняет', function () {
+            assert.equal(tbody.children.length,5,'5 строк, размер не должен меняться');
+            assert.equal(tbody.children[0].children.length,5,'5 столбцов, размер не должен меняться');
+        });
+        it('меняет класс  существующих ячеек в соответствии с моделью', function () {
+            assert.equal(tbody.children[1].children[1].className,'live','класс изменился');
+        });
     });
+
 });

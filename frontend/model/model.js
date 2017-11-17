@@ -22,7 +22,7 @@ Board.prototype={
         var matrix = this.matrix;
         var o = matrix.length;
         var p = matrix[0].length;
-        console.log('resize',o,p,' to ',m,n);
+        //console.log('resize',o,p,' to ',m,n);
         if(p > n){//убираем столбцы
             for(var i=0; i<o; i++){
                 matrix[i].splice(n-1,p-n);//изменить length?

@@ -10,9 +10,6 @@ var tableOnclick = function(event) {
     board.setCell(i,j);
     target.classList.toggle("live");
 };
-var tableMouse = function (event) {
-    console.log(event);
-};
 var controlsOnclick = function (event) {
     //console.log('oncklick target = ',event.target.innerText);
     var target = event.target;
@@ -21,24 +18,20 @@ var controlsOnclick = function (event) {
         case 'start':
             //console.log('test start');
             board.start();
-            buttonsDisabled();
+            buttonsDisable();
             break;
         case 'pause':
             //console.log('test pause');
             board.pause();
-            buttonsDisabled();
+            buttonsDisable();
             break;
         case 'clear':
-            //console.log('test clear');
             board.clear();
-            buttonsDisabled();
-            repainter(board.matrix, table.children[0]);
-            break;
-        default:
-            //console.log('мимо');
-    }
+            buttonsDisable();
+            repainter(board, table);
+    };
 };
-export var buttonsDisabled = function () {
+export var buttonsDisable = function () {
     var buttons = document.getElementsByTagName('BUTTON');
     //console.log(buttons);
     for(var i=0; i<buttons.length; i++){
@@ -53,54 +46,57 @@ export var buttonsDisabled = function () {
         };
     };
 };
-var controlsUnfocus = function (event){
-    //console.log(event);
+export var controlsChange = function (event){
     var target = event.target;
+    //console.log(event);
+    //console.log(event.target.parentElement.previousElementSibling.innerText);
     if (target.tagName != 'INPUT') return;
     var value = target.valueAsNumber;
     //console.dir(value);
-    if(target.parentElement.previousElementSibling.innerText == 'speed') {
-        //console.log('speed');
-        fps = value;
-    };
-    if(target.parentElement.previousElementSibling.innerText == 'width') {
-        //console.log('width');
-        board.resize(board.m,value);
-        newTable(board,table);
-    };
-    if(target.parentElement.previousElementSibling.innerText == 'height') {
-        //console.log('height');
-        board.resize(value,board.n);
-        newTable(board,table);
+    switch(target.parentElement.previousElementSibling.innerText) {
+        case 'speed':
+            fps = value;
+            break;
+        case 'width':
+            board.resize(board.m,value);
+            newTable(board,table);
+            break;
+        case 'height':
+            board.resize(value,board.n);
+            newTable(board,table);
     };
 };
+/*
+ var tableMouseDoswn = function (event) {
+ console.log(event);
+ };
+ */
 export var init = function () {
     {
         board = new Board(10, 10);
         table = document.getElementById('board');
-        controls = table.nextElementSibling;
+        controls = document.getElementById('controls');
         fps = 1;
     }
-
     newTable(board, table);//начальная отрисовка
     table.onclick = tableOnclick;
     controls.onclick = controlsOnclick;
-    controls.onchange = controlsUnfocus;
+    controls.onchange = controlsChange;
     //table.onmousedown = tableMouse;
-    //return [board,table,controls,fps]
 };
+
 function anim(){
     setTimeout(function() {
         requestAnimationFrame(anim);//не блокирует поток!
         if(board.running) {
             board.worker();
-            repainter(board.matrix, table.children[0])
+            repainter(board, table)
         }
     }, 1000 / fps);
 };
 
 export var run = function () {
     init();
-    buttonsDisabled();
+    buttonsDisable();
     anim();
 };
