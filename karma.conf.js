@@ -24,13 +24,13 @@ module.exports=function(config) {
         // spec файлы, условимся называть по маске **_*.spec.js_**
         files: [
             'frontend/**/*.spec.js',
-            './test/spec/**/*.html',
+            'spec/fixtures/*.html',
     ],
         frameworks: ['chai', 'jasmine', 'fixture'],
         // репортеры необходимы для  наглядного отображения результатов
         reporters: ['mocha', 'coverage'],
         preprocessors: {
-            '*.html'   : ['html2js'],
+            'spec/fixtures/*.html': ['html2js'],
             'frontend/**/*.spec.js': ['webpack', 'sourcemap','coverage']
         },
         plugins: [
