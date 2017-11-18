@@ -1,10 +1,10 @@
 body {
-  color: #4eb7a8;
+  color: #28a290;
   background-color: #d3d3d3;
   margin: 0;
 }
 body main {
-  width: 720px;
+  width: 710px;
   padding: 10px;
   margin: auto;
   background-color: #fff;
@@ -30,11 +30,8 @@ body main .game #board .live {
   background-color: #28a290;
 }
 body main .game #controls {
-  padding: 5px;
+  padding-left: 10px;
   width: 300px;
-}
-body main .game #controls .standart-button {
-  margin: 5px;
 }
 body main .game #controls .container {
   display: flex;

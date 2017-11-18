@@ -284,7 +284,7 @@ var anim = function(callback){//останавливается и вызывет
 var run = function () {
     init();
     buttonsDisable();
-    anim();
+    //anim();
     console.log('run() started');
 };
 

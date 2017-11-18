@@ -115,6 +115,6 @@ export var anim = function(callback){//останавливается и выз�
 export var run = function () {
     init();
     buttonsDisable();
-    anim();
+    //anim();
     console.log('run() started');
 };
