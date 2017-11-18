@@ -82,7 +82,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
+Object(__WEBPACK_IMPORTED_MODULE_3__controller_controller__["a" /* run */])();
 
 
 /***/ }),
@@ -156,76 +156,137 @@ document.buttonClick = function (event) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export tableOnclick */
+/* unused harmony export board */
+/* unused harmony export table */
+/* unused harmony export controls */
+/* unused harmony export fps */
+/* unused harmony export buttonsDisable */
+/* unused harmony export controlsChange */
+/* unused harmony export init */
+/* unused harmony export anim */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return run; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_model__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__view_view__ = __webpack_require__(6);
 
 
-
+var board,table,controls,fps;
 var tableOnclick = function(event) {
-    //console.log(event);
+    //console.log(event.target);
     var target = event.target;
     if (target.tagName != 'TD') return;
     var j = target.cellIndex;
     var i = target.parentElement.sectionRowIndex;
-    //console.log(i,j);
     board.setCell(i,j);
     target.classList.toggle("live");
 };
 var controlsOnclick = function (event) {
-    //console.log(event);
+    //console.log('oncklick target = ',event.target.innerText);
     var target = event.target;
     if (target.tagName != 'BUTTON') return;
-    if (target.innerText == 'START') board.start();
-    if (target.innerText == 'PAUSE') board.pause();
-    if (target.innerText == 'CLEAR') {board.clear(); Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["b" /* repainter */])(board.matrix, table.children[0])};
+    switch (target.innerHTML) {
+        case 'start':
+            //console.log('test start');
+            board.start();
+            buttonsDisable();
+            anim();
+            break;
+        case 'pause':
+            //console.log('test pause');
+            board.pause();
+            buttonsDisable();
+            break;
+        case 'clear':
+            board.clear();
+            buttonsDisable();
+            Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["b" /* repainter */])(board, table);
+    };
 };
-var controlsUnfocus = function (event){
-    //console.log(event);
+var buttonsDisable = function () {
+    var buttons = document.getElementsByTagName('BUTTON');
+    //console.log(buttons);
+    for(var i=0; i<buttons.length; i++){
+        var button = buttons[i];
+        if (button.innerHTML == 'start'){
+            if (board.running) button.disabled = true;
+            else button.disabled = false;
+        };
+        if (button.innerHTML == 'pause'){
+            if (board.running) button.disabled = false;
+            else button.disabled = true;
+        };
+    };
+};
+var controlsChange = function (event){
     var target = event.target;
+    //console.log(event);
+    //console.log(event.target.parentElement.previousElementSibling.innerText);
     if (target.tagName != 'INPUT') return;
     var value = target.valueAsNumber;
     //console.dir(value);
-    if(target.parentElement.previousElementSibling.innerText == 'speed') {
-        //console.log('speed');
-        fps = value;
+    switch(target.parentElement.previousElementSibling.innerText) {
+        case 'speed':
+            fps = value;
+            break;
+        case 'width':
+            board.resize(board.m,value);
+            Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board,table);
+            break;
+        case 'height':
+            board.resize(value,board.n);
+            Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board,table);
     };
-    if(target.parentElement.previousElementSibling.innerText == 'width') {
-        //console.log('width');
-        board.resize(board.m,value);
-        Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board,table);
-    };
-    if(target.parentElement.previousElementSibling.innerText == 'height') {
-        //console.log('height');
-        board.resize(value,board.n);
-        Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board,table);
+};
+/*
+ var tableMouseDoswn = function (event) {
+ console.log(event);
+ };
+ */
+var init = function () {
+    {
+        board = new __WEBPACK_IMPORTED_MODULE_0__model_model__["a" /* Board */](10, 10);
+        table = document.getElementById('board');
+        controls = document.getElementById('controls');
+        fps = 1;
+    }
+    Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board, table);//начальная отрисовка
+    table.onclick = tableOnclick;
+    controls.onclick = controlsOnclick;
+    controls.onchange = controlsChange;
+    //table.onmousedown = tableMouse;
+};
+
+var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
+    console.log('anim started');
+    var oldMatrix;
+    loop();
+    function loop() {
+        //console.log('loop');
+        setTimeout(function() {
+            if(board.running) {
+                requestAnimationFrame(loop);//не блокирует поток!
+                //console.log('test');
+                board.worker();
+                Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["b" /* repainter */])(board, table);
+                if (oldMatrix == board.matrix) {//если матрица не меняется, ссылка остаетя актуальной
+                    board.pause();
+                    buttonsDisable();
+                }
+                else oldMatrix = board.matrix;
+            }
+            else {
+                console.log('anim stopped');
+                if(callback) callback();
+            }
+        }, 1000 / fps);
     };
 };
 
-
-var board = new __WEBPACK_IMPORTED_MODULE_0__model_model__["a" /* Board */](10,10);
-var table = document.getElementById('board');
-var controls = table.nextElementSibling;
-
-Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["a" /* newTable */])(board,table);//начальная отрисовка
-table.onclick = tableOnclick;
-controls.onclick = controlsOnclick;
-controls.onchange = controlsUnfocus;
-
-console.log(board);
-console.dir(table);
-
-var fps = 1;
-function anim(){
-    setTimeout(function() {
-        requestAnimationFrame(anim);//не блокирует поток!
-        if(board.running) {
-            board.worker();
-            Object(__WEBPACK_IMPORTED_MODULE_1__view_view__["b" /* repainter */])(board.matrix, table.children[0])
-        }
-    }, 1000 / fps);
+var run = function () {
+    init();
+    buttonsDisable();
+    anim();
+    console.log('run() started');
 };
-anim();
 
 
 /***/ }),
@@ -258,7 +319,7 @@ Board.prototype={
         var matrix = this.matrix;
         var o = matrix.length;
         var p = matrix[0].length;
-        console.log('resize',o,p,' to ',m,n);
+        //console.log('resize',o,p,' to ',m,n);
         if(p > n){//убираем столбцы
             for(var i=0; i<o; i++){
                 matrix[i].splice(n-1,p-n);//изменить length?
@@ -303,21 +364,17 @@ Board.prototype={
     },
     worker : function () {//обход всех ячеек с записью нового состояния
         var newMatrix = [];
+        var flag = false;//изменмлась ли матрица?
         for(var i=0; i<this.matrix.length; i++){
             var newLine = [];
             for(var j=0; j<this.matrix[0].length; j++){
-                newLine.push(this.cell(i,j));
+                var cell = this.cell(i,j);
+                newLine.push(cell);
+                if(cell != this.matrix[i][j]) flag = true;
             }
             newMatrix.push(newLine);
         }
-        //console.log('test',this.matrix);
-        //console.log('test',newMatrix);
-
-        if(newMatrix === this.matrix){
-            //console.log('no new');
-            this.running = false;
-        }
-        this.matrix = newMatrix;
+        if(flag) this.matrix = newMatrix;
     },
     cell : function (i,j) {
         //новое состояние клетки
@@ -360,9 +417,9 @@ Board.prototype={
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return repainter; });
 //отрисовка матрицы
 
-var painter = function (matrix) {
+var painter = function (board) {
     //заполнение таблицы
-    //console.log('painter');
+    var matrix = board.matrix;
     var m = matrix.length;
     var n = matrix[0].length;
     //console.log(m,n);
@@ -385,14 +442,16 @@ var painter = function (matrix) {
 };
 
 var newTable = function (board,table) {
-    var tbody = painter(board.matrix);
+    //для  создания и ресайза таблицы
+    var tbody = painter(board);
     if(table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
 };
 
-var repainter = function (matrix,tbody) {
+var repainter = function (board,table) {
     //перерисовка таблицы
-    //console.log('repainter');
+    var matrix = board.matrix;
+    var tbody = table.children[0];
     var m = matrix.length;
     var n = matrix[0].length;
     //console.log(m,n);
@@ -404,7 +463,6 @@ var repainter = function (matrix,tbody) {
             else td.className = '';
         };
     };
-    return tbody//для тестов
 };
 
 /***/ })

@@ -29,23 +29,23 @@ body main .game #board td {
 body main .game #board .live {
   background-color: #28a290;
 }
-body main .game .controls {
+body main .game #controls {
   padding: 5px;
   width: 300px;
 }
-body main .game .controls .standart-button {
+body main .game #controls .standart-button {
   margin: 5px;
 }
-body main .game .controls .container {
+body main .game #controls .container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-body main .game .controls .container div.slider {
+body main .game #controls .container div.slider {
   margin: 10px;
   flex: 1 1 100px;
 }
-body main .game .controls .container .label {
+body main .game #controls .container .label {
   width: 50px;
   height: 40px;
   line-height: 40px;
@@ -148,6 +148,15 @@ body main .game .controls .container .label {
 }
 .standart-button_orange-small {
   box-shadow: 0 2px 0 #bf3e1f;
+}
+.standart-button:disabled {
+  border-color: #a9a9a9;
+  box-shadow: 0 3px 0 #808080;
+  color: #a9a9a9;
+}
+.standart-button:disabled:hover {
+  background-color: #a9a9a9;
+  color: #fff;
 }
 #ripple {
   position: absolute;
