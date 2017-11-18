@@ -67,21 +67,17 @@ Board.prototype={
     },
     worker : function () {//обход всех ячеек с записью нового состояния
         var newMatrix = [];
+        var flag = false;//изменмлась ли матрица?
         for(var i=0; i<this.matrix.length; i++){
             var newLine = [];
             for(var j=0; j<this.matrix[0].length; j++){
-                newLine.push(this.cell(i,j));
+                var cell = this.cell(i,j);
+                newLine.push(cell);
+                if(cell != this.matrix[i][j]) flag = true;
             }
             newMatrix.push(newLine);
         }
-        //console.log('test',this.matrix);
-        //console.log('test',newMatrix);
-
-        if(newMatrix === this.matrix){
-            //console.log('no new');
-            this.running = false;
-        }
-        this.matrix = newMatrix;
+        if(flag) this.matrix = newMatrix;
     },
     cell : function (i,j) {
         //новое состояние клетки

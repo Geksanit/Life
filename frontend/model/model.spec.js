@@ -62,6 +62,10 @@ describe("модель", function() {
             arr.worker();
             //console.log(arr.matrix);
             assert.deepEqual(arr.matrix, [[true, true, false], [true, false, false], [false, false, false]],'одна итерация');
+            var board = new Board(3,3);
+            var oldBoard = board;
+            board.worker();
+            assert.equal(board,oldBoard,'если матрица не меняется, ссылка остаетя актуальной')
         });
         it("resize", function () {
             arr.resize(50,40);

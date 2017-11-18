@@ -1,4 +1,4 @@
-import {init,board,table,controls,fps,buttonsDisable,controlsChange} from './controller'
+import {init,board,table,controls,fps,buttonsDisable,controlsChange,anim} from './controller'
 import '../components/standart-button/standart-button'
 console.log('start controller test');
 
@@ -38,12 +38,13 @@ describe("контроллер", function () {
             cell.click();
             assert.equal(board.matrix[0][0],false,'клик по ячейке меняет состояние на false');
         });
-        it('start button',function () {
+        it('start button',function (done) {
             assert.equal(board.running,false,'before false');
             var button = controls.children[0];
             button.click();
             assert.equal(button.disabled && board.running,true,'after true');
-            board.running = false;
+            board.pause();
+            setTimeout(done,1000);
         });
         it('pause button',function () {
             board.running = true;
@@ -81,13 +82,26 @@ describe("контроллер", function () {
         });
     });
     describe("анимация", function () {
-        it('anim',function () {
-
+        it('anim 1',function (done) {
+            board.resize(2,3);
+            board.clear();
+            {
+                board.setCell(0,0);
+                board.setCell(0,1);
+                board.setCell(0,2);
+                board.setCell(1,0);
+            }
+            board.start();
+            //console.log(board.matrix);
+            anim(done);//anim останавливается и вызывет аргумент, когда матрица перестает меняться
         });
-        it('run',function () {
-
+        it('anim',function () {
+            //console.log(board.matrix);
+            assert.deepEqual(board.matrix,[[true,true,false],[true,true,false]]);
+        });
+        it('test done', function(done) {
+            setTimeout(done,1000);
         });
 
     });
-
 });

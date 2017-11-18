@@ -19,6 +19,7 @@ var controlsOnclick = function (event) {
             //console.log('test start');
             board.start();
             buttonsDisable();
+            anim();
             break;
         case 'pause':
             //console.log('test pause');
@@ -85,18 +86,35 @@ export var init = function () {
     //table.onmousedown = tableMouse;
 };
 
-function anim(){
-    setTimeout(function() {
-        requestAnimationFrame(anim);//не блокирует поток!
-        if(board.running) {
-            board.worker();
-            repainter(board, table)
-        }
-    }, 1000 / fps);
+export var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
+    console.log('anim started');
+    var oldMatrix;
+    loop();
+    function loop() {
+        //console.log('loop');
+        setTimeout(function() {
+            if(board.running) {
+                requestAnimationFrame(loop);//не блокирует поток!
+                //console.log('test');
+                board.worker();
+                repainter(board, table);
+                if (oldMatrix == board.matrix) {//если матрица не меняется, ссылка остаетя актуальной
+                    board.pause();
+                    buttonsDisable();
+                }
+                else oldMatrix = board.matrix;
+            }
+            else {
+                console.log('anim stopped');
+                if(callback) callback();
+            }
+        }, 1000 / fps);
+    };
 };
 
 export var run = function () {
     init();
     buttonsDisable();
     anim();
+    console.log('run() started');
 };
