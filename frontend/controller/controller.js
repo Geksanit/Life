@@ -84,7 +84,7 @@ var init = function () {
 };
 
 var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
-    console.log('anim started');
+    //console.log('anim started');
     var oldMatrix;
     loop();
     function loop() {
@@ -102,7 +102,7 @@ var anim = function(callback){//останавливается и вызывет
                 else oldMatrix = board.matrix;
             }
             else {
-                console.log('anim stopped');
+                //console.log('anim stopped');
                 if(callback) callback();
             }
         }, 1000 / fps);
@@ -112,6 +112,6 @@ var anim = function(callback){//останавливается и вызывет
 var run = function () {
     init();
     buttonsDisable();
-    console.log('run() started');
+    //console.log('run() started');
 };
-export {init,board,table,controls,fps,buttonsDisable,slidersChange,anim}
+export {run,init,board,table,controls,fps,buttonsDisable,slidersChange,anim}

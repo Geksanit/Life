@@ -22,7 +22,7 @@ var painter = function (board,tableWidth) {
         };
         tbody.appendChild(tr);
     };
-    return tbody
+    return tbody;
 };
 
 var newTable = function (board,table) {
@@ -48,4 +48,4 @@ var repainter = function (board,table) {
         };
     };
 };
-export {painter,newTable,repainter}
+export {painter,newTable,repainter};

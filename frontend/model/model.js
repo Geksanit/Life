@@ -102,7 +102,7 @@ Board.prototype={
 
         if(count<2 || count>3) newCell = false;
         else if(count == 3) newCell = true;
-        return newCell
+        return newCell;
     },
     setCell : function (i,j) {
         this.matrix[i][j] = !this.matrix[i][j];

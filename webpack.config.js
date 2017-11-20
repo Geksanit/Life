@@ -17,7 +17,10 @@ const baseConfig = {
     plugins:[
         new ExtractTextPlugin('[name].css', {allChunks: true}),
         new HtmlWebpackPlugin({filename: 'index.html',chunks: ['index'],template: './index.pug'})
-    ],/*
+    ],
+    cache: true,
+    devtool: 'inline-source-map',
+    /*
     resolve:{
         modules:['node-modules'],
         extensions:['.js', ".json", '.styl', '.pug']
@@ -29,6 +32,13 @@ const baseConfig = {
     },
     module: {
         rules: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "eslint-loader",
+            options: {
+                // eslint options (if necessary)
+            }
+        }, {
             test: /\.pug$/,
             use: {
                 loader: 'pug',
