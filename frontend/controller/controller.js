@@ -1,7 +1,9 @@
+'use strict';
+
 import {Board} from '../model/model'
 import {newTable,repainter} from '../view/view'
-export var board,table,controls,fps;
-var tableOnclick = function(event) {
+var board,table,controls,fps;
+var tableSetCell = function(event) {
     //console.log(event.target);
     var target = event.target;
     if (target.tagName != 'TD') return;
@@ -10,7 +12,7 @@ var tableOnclick = function(event) {
     board.setCell(i,j);
     target.classList.toggle("live");
 };
-var controlsOnclick = function (event) {
+var buttunsOnclick = function (event) {
     //console.log('oncklick target = ',event.target.innerText);
     var target = event.target;
     if (target.tagName != 'BUTTON') return;
@@ -23,7 +25,7 @@ var controlsOnclick = function (event) {
             break;
         case 'pause':
             //console.log('test pause');
-            board.pause();
+            board.stop();
             buttonsDisable();
             break;
         case 'clear':
@@ -32,7 +34,7 @@ var controlsOnclick = function (event) {
             repainter(board, table);
     };
 };
-export var buttonsDisable = function () {
+var buttonsDisable = function () {
     var buttons = document.getElementsByTagName('BUTTON');
     //console.log(buttons);
     for(var i=0; i<buttons.length; i++){
@@ -47,7 +49,7 @@ export var buttonsDisable = function () {
         };
     };
 };
-export var controlsChange = function (event){
+var slidersChange = function (event){
     var target = event.target;
     //console.log(event);
     //console.log(event.target.parentElement.previousElementSibling.innerText);
@@ -67,12 +69,8 @@ export var controlsChange = function (event){
             newTable(board,table);
     };
 };
-/*
- var tableMouseDoswn = function (event) {
- console.log(event);
- };
- */
-export var init = function () {
+
+var init = function () {
     {
         board = new Board(10, 10);
         table = document.getElementById('board');
@@ -80,13 +78,12 @@ export var init = function () {
         fps = 1;
     }
     newTable(board, table);//начальная отрисовка
-    table.onclick = tableOnclick;
-    controls.onclick = controlsOnclick;
-    controls.onchange = controlsChange;
-    //table.onmousedown = tableMouse;
+    table.onclick = tableSetCell;
+    controls.onclick = buttunsOnclick;
+    controls.onchange = slidersChange;
 };
 
-export var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
+var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
     console.log('anim started');
     var oldMatrix;
     loop();
@@ -99,7 +96,7 @@ export var anim = function(callback){//останавливается и выз�
                 board.worker();
                 repainter(board, table);
                 if (oldMatrix == board.matrix) {//если матрица не меняется, ссылка остаетя актуальной
-                    board.pause();
+                    board.stop();
                     buttonsDisable();
                 }
                 else oldMatrix = board.matrix;
@@ -112,9 +109,9 @@ export var anim = function(callback){//останавливается и выз�
     };
 };
 
-export var run = function () {
+var run = function () {
     init();
     buttonsDisable();
-    //anim();
     console.log('run() started');
 };
+export {init,board,table,controls,fps,buttonsDisable,slidersChange,anim}

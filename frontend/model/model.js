@@ -1,8 +1,9 @@
 'use strict';
 
 //конструктор
-export var Board = function(m,n) {
-    this.matrix = [];//матрица m на n заполненная false
+var Board = function(m,n) {
+    //матрица m на n заполненная false
+    this.matrix = [];
     this.running = false;//для циклической обработки
     this.m = m;//строки
     this.n = n;//столбцы
@@ -50,11 +51,10 @@ Board.prototype={
         this.m = m;
         this.n = n;
     },
-    pause : function () {
+    stop : function () {
         this.running = false;
     },
     clear : function () {
-        //this = new Board(this.m,this.n);
         this.running = false;
         for(var i=0; i<this.m; i++){
             for(var j=0; j<this.n; j++){
@@ -65,7 +65,8 @@ Board.prototype={
     start : function () {
         this.running = true;
     },
-    worker : function () {//обход всех ячеек с записью нового состояния
+    worker : function () {
+        //обход всех ячеек с записью нового состояния
         var newMatrix = [];
         var flag = false;//изменмлась ли матрица?
         for(var i=0; i<this.matrix.length; i++){
@@ -80,10 +81,10 @@ Board.prototype={
         if(flag) this.matrix = newMatrix;
     },
     cell : function (i,j) {
-        //новое состояние клетки
+        //вычисляет новое состояние клетки
         //соседи за пределами поля считаются мертвыми
         var count = 0;//живые соседи
-        var newCell = this.matrix[i][j];//клетка
+        var newCell = this.matrix[i][j];
 
         if(this.matrix[i-1]) {
             if (this.matrix[i - 1][j - 1]) count++;
@@ -99,13 +100,12 @@ Board.prototype={
             if (this.matrix[i + 1][j + 1]) count++;
         }
 
-        //console.log(i,j,newCell,'count=',count);
         if(count<2 || count>3) newCell = false;
         else if(count == 3) newCell = true;
-        //console.log(i,j,newCell,'count=',count,'after');
         return newCell
     },
     setCell : function (i,j) {
         this.matrix[i][j] = !this.matrix[i][j];
     }
 };
+export {Board};

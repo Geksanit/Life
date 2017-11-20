@@ -1,11 +1,10 @@
-import {init,board,table,controls,fps,buttonsDisable,controlsChange,anim} from './controller'
+'use strict';
+
+import {init,board,table,controls,fps,buttonsDisable,slidersChange,anim} from './controller'
 import '../components/standart-button/standart-button'
 console.log('start controller test');
 
 describe("контроллер", function () {
-    //fixture.setBase('frontend/fixtures');
-    //fixture.load('index.html');
-    //console.log(document);
 
     it('вставка html кода', function () {
         var div = document.createElement('div');
@@ -32,7 +31,6 @@ describe("контроллер", function () {
     describe("события", function () {
         it('click in table',function () {
             var cell = table.children[0].children[0].children[0];
-            //console.log(cell);
             cell.click();
             assert.equal(board.matrix[0][0],true,'клик по ячейке меняет состояние на true');
             cell.click();
@@ -43,7 +41,7 @@ describe("контроллер", function () {
             var button = controls.children[0];
             button.click();
             assert.equal(button.disabled && board.running,true,'after true');
-            board.pause();
+            board.stop();
             setTimeout(done,1000);
         });
         it('pause button',function () {
@@ -65,19 +63,19 @@ describe("контроллер", function () {
         it('set speed',function () {
             var slider = document.querySelectorAll('input.slider')[0];
             slider.value = 5;
-            controlsChange({target: slider});
+            slidersChange({target: slider});
             assert.equal(fps,5)
         });
         it('set Width',function () {
             var slider = document.querySelectorAll('input.slider')[1];
             slider.value = 16;
-            controlsChange({target: slider});
+            slidersChange({target: slider});
             assert.equal(board.n,16)
         });
         it('set Height',function () {
             var slider = document.querySelectorAll('input.slider')[2];
             slider.value = 15;
-            controlsChange({target: slider});
+            slidersChange({target: slider});
             assert.equal(board.m,15)
         });
     });
@@ -92,11 +90,9 @@ describe("контроллер", function () {
                 board.setCell(1,0);
             }
             board.start();
-            //console.log(board.matrix);
             anim(done);//anim останавливается и вызывет аргумент, когда матрица перестает меняться
         });
         it('anim',function () {
-            //console.log(board.matrix);
             assert.deepEqual(board.matrix,[[true,true,false],[true,true,false]]);
         });
         it('test done', function(done) {

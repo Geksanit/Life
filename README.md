@@ -20,3 +20,4 @@ Coverage: <https://geksanit.github.io/Life/tmp/coverage/report-html/>
 
   результат в папке build
 
+тестирование: `npm run test`

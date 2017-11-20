@@ -55,7 +55,7 @@ const baseConfig = {
         ]
     }
 };
-const productionConfig = () => baseConfig
+const productionConfig = () => baseConfig;
 const developmentConfig = () =>{
     const config = {
         devServer: {
@@ -68,15 +68,15 @@ const developmentConfig = () =>{
                 poll: 1000
             }
         }
-    }
+    };
     return Object.assign(
         {}, baseConfig, config
     )
-}
+};
 
 module.exports = (env) => {
     if (env === 'production'){
         return productionConfig()
     }
     return developmentConfig()
-}
+};

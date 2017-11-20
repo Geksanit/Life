@@ -1,11 +1,9 @@
-'use strict'
+'use strict';
 
 import {Board} from './model'
-//import './model'
 
 describe("модель", function() {
-
-    describe("создание модели", function () {
+    describe("конструктор", function () {
         var arr = new Board(2,2);
         it("матрица", function() {
             var a = new Board(0,0);
@@ -24,8 +22,8 @@ describe("модель", function() {
             arr.start();
             assert.equal(arr.running, true);
         });
-        it("pause", function() {
-            arr.pause();
+        it("stop", function() {
+            arr.stop();
             assert.equal(arr.running, false);
         });
         it("set cell", function () {
@@ -43,44 +41,41 @@ describe("модель", function() {
         });
         arr = new Board(3,3);
         it("cell", function () {
-            //console.log(arr.matrix);
             arr.setCell(0,0);
             arr.setCell(0,1);
-            //console.log(arr.matrix);
             assert.equal(arr.cell(1,1), false,'2 живых соседа');
 
             arr.setCell(1,0);
-            //console.log(arr.matrix);
             assert.equal(arr.cell(1,1), true,'3 живых соседа');
 
             arr.setCell(0,2);
-            //console.log(arr.matrix);
             assert.equal(arr.cell(1,1), false,'4 живых соседа');
         });
         it("worker", function () {
-            //console.log(arr.matrix);
             arr.worker();
-            //console.log(arr.matrix);
             assert.deepEqual(arr.matrix, [[true, true, false], [true, false, false], [false, false, false]],'одна итерация');
             var board = new Board(3,3);
             var oldBoard = board;
             board.worker();
             assert.equal(board,oldBoard,'если матрица не меняется, ссылка остаетя актуальной')
         });
-        it("resize", function () {
-            arr.resize(50,40);
-            assert.equal(arr.matrix.length, 50,'50 строк');
-            assert.equal(arr.m, 50,'50 строк');
-            assert.equal(arr.matrix[0].length, 40 , '40 столбцов');
-            assert.equal(arr.n, 40 , '40 столбцов');
-            assert.equal(arr.matrix[49][39], false,'значение');
-            assert.equal(arr.running,false,'должен останавливаться');
-
-            arr.resize(10,9);
-            assert.equal(arr.matrix.length, 10,'уменьшение');
-            assert.equal(arr.m, 10 , '10 строк');
-            assert.equal(arr.matrix[0].length, 9 , '9 столбцов');
-            assert.equal(arr.n, 9 , '9 столбцов');
-        })
+        describe("resize", function () {
+            it('увеличение', function () {
+                arr.resize(50,40);
+                assert.equal(arr.matrix.length, 50,'50 строк');
+                assert.equal(arr.m, 50,'50 строк');
+                assert.equal(arr.matrix[0].length, 40 , '40 столбцов');
+                assert.equal(arr.n, 40 , '40 столбцов');
+                assert.equal(arr.matrix[49][39], false,'значение');
+                assert.equal(arr.running,false,'должен останавливаться');
+            });
+            it("уменьшение",function () {
+                arr.resize(10,9);
+                assert.equal(arr.matrix.length, 10,'уменьшение');
+                assert.equal(arr.m, 10 , '10 строк');
+                assert.equal(arr.matrix[0].length, 9 , '9 столбцов');
+                assert.equal(arr.n, 9 , '9 столбцов');
+            });
+        });
     });
 });

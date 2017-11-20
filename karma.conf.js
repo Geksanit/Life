@@ -4,7 +4,7 @@
 var webpackConfig = require('./testing.webpack');
 module.exports=function(config) {
     config.set({
-        browsers: [ 'Chrome' ], //run in Chrome
+        browsers: [ 'Chrome' ],
         hostname: 'localhost',
         port: 9050,
         browserNoActivityTimeout: 60000,
@@ -24,13 +24,11 @@ module.exports=function(config) {
         // spec файлы, условимся называть по маске **_*.spec.js_**
         files: [
             'frontend/**/*.spec.js',
-            'spec/fixtures/*.html',
     ],
-        frameworks: ['chai', 'jasmine', 'fixture'],
+        frameworks: ['chai', 'jasmine'],
         // репортеры необходимы для  наглядного отображения результатов
         reporters: ['mocha', 'coverage'],
         preprocessors: {
-            'spec/fixtures/*.html': ['html2js'],
             'frontend/**/*.spec.js': ['webpack', 'sourcemap','coverage']
         },
         plugins: [
@@ -38,8 +36,6 @@ module.exports=function(config) {
             'karma-chai', 'karma-coverage',
             'karma-webpack', 'karma-phantomjs-launcher',
             'karma-mocha-reporter', 'karma-sourcemap-loader',
-            'karma-fixture',
-            'karma-html2js-preprocessor',
         ],
         // передаем конфигурацию webpack
         webpack: webpackConfig,
