@@ -10,7 +10,7 @@ var tableSetCell = function(event) {
     var j = target.cellIndex;
     var i = target.parentElement.sectionRowIndex;
     board.setCell(i,j);
-    target.classList.toggle("live");
+    //target.classList.toggle("live");
 };
 var buttunsOnclick = function (event) {
     //console.log('oncklick target = ',event.target.innerText);
@@ -37,7 +37,7 @@ var buttunsOnclick = function (event) {
 var buttonsDisable = function () {
     var buttons = document.getElementsByTagName('BUTTON');
     //console.log(buttons);
-    for(var i=0; i<buttons.length; i++){
+    for(var i=0; i<buttons.length; i+=1){
         var button = buttons[i];
         if (button.innerHTML == 'start'){
             if (board.running) button.disabled = true;

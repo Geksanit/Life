@@ -11,9 +11,9 @@ var painter = function (board,tableWidth) {
     var height = width;
 
     var tbody = document.createElement('tbody');
-    for(var i=0; i<m; i++){
+    for(var i=0; i<m; i+=1){
         var tr = document.createElement('tr');
-        for(var j=0; j<n; j++){
+        for(var j=0; j<n; j+=1){
             var  td = document.createElement('td');
             td.style.width=width+'px';
             td.style.height=height+'px';
@@ -40,8 +40,8 @@ var repainter = function (board,table) {
     var n = matrix[0].length;
     //console.log(m,n);
 
-    for(var i=0; i<m; i++){
-        for(var j=0; j<n; j++){//строка
+    for(var i=0; i<m; i+=1){
+        for(var j=0; j<n; j+=1){//строка
             var td = tbody.children[i].children[j];
             if(matrix[i][j]) td.className = 'live';
             else td.className = '';

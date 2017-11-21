@@ -12,6 +12,9 @@
   },
   "extends": "eslint:recommended",
   "rules": {
-    "semi": 1 //;
+    "semi": 0, //;
+    "no-extra-semi": 0,
+    "no-unused-vars": 0,
+    "no-redeclare": 0
   }
 }

@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">96.92% </span>
+        <span class="strong">96.91% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>315/325</span>
+        <span class='fraction'>314/324</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">92.93% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>58/62</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">98.28% </span>
+        <span class="strong">98.27% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>285/290</span>
+        <span class='fraction'>284/289</span>
       </div>
     </div>
   </div>
@@ -759,7 +759,7 @@
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -973,9 +973,9 @@
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-yes">9×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1268,7 +1268,7 @@ var tableSetCell = function(event) {
     var j = target.cellIndex;
     var i = target.parentElement.sectionRowIndex;
     board.setCell(i,j);
-    target.classList.toggle("live");
+    //target.classList.toggle("live");
 };
 var buttunsOnclick = function (event) {
     //console.log('oncklick target = ',event.target.innerText);
@@ -1295,7 +1295,7 @@ var buttunsOnclick = function (event) {
 var buttonsDisable = function () {
     var buttons = document.getElementsByTagName('BUTTON');
     //console.log(buttons);
-    for(var i=0; i&lt;buttons.length; i++){
+    for(var i=0; i&lt;buttons.length; i+=1){
         var button = buttons[i];
         if (button.innerHTML == 'start'){
             if (board.running) button.disabled = true;
@@ -1391,9 +1391,9 @@ var Board = function(m,n) {
     this.m = m;//строки
     this.n = n;//столбцы
 &nbsp;
-    for(var i=0; i&lt;m; i++){
+    for(var i=0; i&lt;m; i+=1){
         var line = [];
-        for(var j=0; j&lt;n; j++){
+        for(var j=0; j&lt;n; j+=1){
             line.push(false);
         }
         this.matrix.push(line);
@@ -1408,13 +1408,13 @@ Board.prototype={
         var p = matrix[0].length;
         //console.log('resize',o,p,' to ',m,n);
         if(p &gt; n){//убираем столбцы
-            for(var i=0; i&lt;o; i++){
+            for(var i=0; i&lt;o; i+=1){
                 matrix[i].splice(n-1,p-n);//изменить length?
             }
         }
         if(p &lt; n){//добавляем столбцы
-            for(var i=0; i&lt;o; i++){
-                for(var j=p; j&lt;n; j++){
+            for(var i=0; i&lt;o; i+=1){
+                for(var j=p; j&lt;n; j+=1){
                     matrix[i].push(false);
                 }
             }
@@ -1424,10 +1424,10 @@ Board.prototype={
         }
         if(o &lt; m){//добавляем строки
             var line = [];
-            for(var j=0; j&lt;n; j++){
+            for(var j=0; j&lt;n; j+=1){
                 line.push(false);
             }
-            for(var i=o; i&lt;m; i++){
+            for(var i=o; i&lt;m; i+=1){
                 matrix.push(line.slice());
             }
         }
@@ -1439,8 +1439,8 @@ Board.prototype={
     },
     clear : function () {
         this.running = false;
-        for(var i=0; i&lt;this.m; i++){
-            for(var j=0; j&lt;this.n; j++){
+        for(var i=0; i&lt;this.m; i+=1){
+            for(var j=0; j&lt;this.n; j+=1){
                 this.matrix[i][j] = false;
             }
         }
@@ -1452,9 +1452,9 @@ Board.prototype={
         //обход всех ячеек с записью нового состояния
         var newMatrix = [];
         var flag = false;//изменмлась ли матрица?
-        for(var i=0; i&lt;this.matrix.length; i++){
+        for(var i=0; i&lt;this.matrix.length; i+=1){
             var newLine = [];
-            for(var j=0; j&lt;this.matrix[0].length; j++){
+            for(var j=0; j&lt;this.matrix[0].length; j+=1){
                 var cell = this.cell(i,j);
                 newLine.push(cell);
                 if(cell != this.matrix[i][j]) flag = true;
@@ -1470,22 +1470,22 @@ Board.prototype={
         var newCell = this.matrix[i][j];
 &nbsp;
         if(this.matrix[i-1]) {
-            if (this.matrix[i - 1][j - 1]) count++;
-            if (this.matrix[i - 1][j]) count++;
-            if (this.matrix[i - 1][j + 1]) count++;
+            if (this.matrix[i - 1][j - 1]) count+=1;
+            if (this.matrix[i - 1][j]) count+=1;
+            if (this.matrix[i - 1][j + 1]) count+=1;
         }
-        if(this.matrix[i][j-1]) count++;
-        if(this.matrix[i][j+1]) count++;
+        if(this.matrix[i][j-1]) count+=1;
+        if(this.matrix[i][j+1]) count+=1;
 &nbsp;
         if(this.matrix[i+1]) {
-            if (this.matrix[i + 1][j - 1]) count++;
-            if (this.matrix[i + 1][j]) count++;
-            if (this.matrix[i + 1][j + 1]) count++;
+            if (this.matrix[i + 1][j - 1]) count+=1;
+            if (this.matrix[i + 1][j]) count+=1;
+            if (this.matrix[i + 1][j + 1]) count+=1;
         }
-&nbsp;
         if(count&lt;2 || count&gt;3) newCell = false;
         else if(count == 3) newCell = true;
-        return newCell
+&nbsp;
+        return newCell;
     },
     setCell : function (i,j) {
         this.matrix[i][j] = !this.matrix[i][j];
@@ -1514,9 +1514,9 @@ var painter = function (board,tableWidth) {
     var height = width;
 &nbsp;
     var tbody = document.createElement('tbody');
-    for(var i=0; i&lt;m; i++){
+    for(var i=0; i&lt;m; i+=1){
         var tr = document.createElement('tr');
-        for(var j=0; j&lt;n; j++){
+        for(var j=0; j&lt;n; j+=1){
             var  td = document.createElement('td');
             td.style.width=width+'px';
             td.style.height=height+'px';
@@ -1525,7 +1525,7 @@ var painter = function (board,tableWidth) {
         };
         tbody.appendChild(tr);
     };
-    return tbody
+    return tbody;
 };
 &nbsp;
 var newTable = function (board,table) {
@@ -1543,8 +1543,8 @@ var repainter = function (board,table) {
     var n = matrix[0].length;
     //console.log(m,n);
 &nbsp;
-    for(var i=0; i&lt;m; i++){
-        for(var j=0; j&lt;n; j++){//строка
+    for(var i=0; i&lt;m; i+=1){
+        for(var j=0; j&lt;n; j+=1){//строка
             var td = tbody.children[i].children[j];
             if(matrix[i][j]) td.className = 'live';
             else td.className = '';
@@ -1576,7 +1576,7 @@ document.buttonClick = function (event) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Nov 20 2017 17:56:47 GMT+0700 (Алтайское стандартное время)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Nov 21 2017 20:39:34 GMT+0700 (Алтайское стандартное время)
 </div>
 </div>
 <script src="../prettify.js"></script>

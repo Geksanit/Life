@@ -8,9 +8,9 @@ var Board = function(m,n) {
     this.m = m;//строки
     this.n = n;//столбцы
 
-    for(var i=0; i<m; i++){
+    for(var i=0; i<m; i+=1){
         var line = [];
-        for(var j=0; j<n; j++){
+        for(var j=0; j<n; j+=1){
             line.push(false);
         }
         this.matrix.push(line);
@@ -25,13 +25,13 @@ Board.prototype={
         var p = matrix[0].length;
         //console.log('resize',o,p,' to ',m,n);
         if(p > n){//убираем столбцы
-            for(var i=0; i<o; i++){
+            for(var i=0; i<o; i+=1){
                 matrix[i].splice(n-1,p-n);//изменить length?
             }
         }
         if(p < n){//добавляем столбцы
-            for(var i=0; i<o; i++){
-                for(var j=p; j<n; j++){
+            for(var i=0; i<o; i+=1){
+                for(var j=p; j<n; j+=1){
                     matrix[i].push(false);
                 }
             }
@@ -41,10 +41,10 @@ Board.prototype={
         }
         if(o < m){//добавляем строки
             var line = [];
-            for(var j=0; j<n; j++){
+            for(var j=0; j<n; j+=1){
                 line.push(false);
             }
-            for(var i=o; i<m; i++){
+            for(var i=o; i<m; i+=1){
                 matrix.push(line.slice());
             }
         }
@@ -56,8 +56,8 @@ Board.prototype={
     },
     clear : function () {
         this.running = false;
-        for(var i=0; i<this.m; i++){
-            for(var j=0; j<this.n; j++){
+        for(var i=0; i<this.m; i+=1){
+            for(var j=0; j<this.n; j+=1){
                 this.matrix[i][j] = false;
             }
         }
@@ -69,9 +69,9 @@ Board.prototype={
         //обход всех ячеек с записью нового состояния
         var newMatrix = [];
         var flag = false;//изменмлась ли матрица?
-        for(var i=0; i<this.matrix.length; i++){
+        for(var i=0; i<this.matrix.length; i+=1){
             var newLine = [];
-            for(var j=0; j<this.matrix[0].length; j++){
+            for(var j=0; j<this.matrix[0].length; j+=1){
                 var cell = this.cell(i,j);
                 newLine.push(cell);
                 if(cell != this.matrix[i][j]) flag = true;
@@ -87,21 +87,21 @@ Board.prototype={
         var newCell = this.matrix[i][j];
 
         if(this.matrix[i-1]) {
-            if (this.matrix[i - 1][j - 1]) count++;
-            if (this.matrix[i - 1][j]) count++;
-            if (this.matrix[i - 1][j + 1]) count++;
+            if (this.matrix[i - 1][j - 1]) count+=1;
+            if (this.matrix[i - 1][j]) count+=1;
+            if (this.matrix[i - 1][j + 1]) count+=1;
         }
-        if(this.matrix[i][j-1]) count++;
-        if(this.matrix[i][j+1]) count++;
+        if(this.matrix[i][j-1]) count+=1;
+        if(this.matrix[i][j+1]) count+=1;
 
         if(this.matrix[i+1]) {
-            if (this.matrix[i + 1][j - 1]) count++;
-            if (this.matrix[i + 1][j]) count++;
-            if (this.matrix[i + 1][j + 1]) count++;
+            if (this.matrix[i + 1][j - 1]) count+=1;
+            if (this.matrix[i + 1][j]) count+=1;
+            if (this.matrix[i + 1][j + 1]) count+=1;
         }
-
         if(count<2 || count>3) newCell = false;
         else if(count == 3) newCell = true;
+
         return newCell;
     },
     setCell : function (i,j) {
