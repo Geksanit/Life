@@ -1,39 +1,43 @@
-//slider
+// slider
 
-var sliderChange = function(element){
-    var value = element.value;
-    element.previousSibling.innerText = value;
+const sC = function sliderChange(element) {
+  const { value } = element;
+  element.previousSibling.innerText = value;
 
-    var width = element.parentElement.clientWidth-20;
-    var min = element.attributes.min.value;
-    var max = element.attributes.max.value;
-    element.previousSibling.style.left = width/(max-min)*(value-min)-8.75+'px';
+  const width = element.parentElement.clientWidth - 20;
+  const min = element.attributes.min.value;
+  const max = element.attributes.max.value;
+  element.previousSibling.style.left = (((width / (max - min)) * (value - min)) - 8.75) + 'px';
 };
+
 window.sliderInput = function (event) {
-    sliderChange(event.target);
+  sC(event.target);
 };
-var sliderInit = function () {
-    var elements = document.querySelectorAll('input.slider');
-    for(var i=0; i<elements.length; i++){
-        sliderChange(elements[i]);
-    }
-}();
 
-//slider-percentage
-var sliderPercentageChange = function(element){
-    var value = element.value;
+(function () {
+  const elements = document.querySelectorAll('input.slider');
+  for (let i = 0; i < elements.length; i += 1) {
+    sC(elements[i]);
+  }
+}());
 
-    var width = element.parentElement.clientWidth-20;
-    var min = element.attributes.min.value;
-    var max = element.attributes.max.value;
-    element.previousSibling.style.width = width/(max-min)*(value-min)+1+'px';
+// slider-percentage
+const sPC = function sliderPercentageChange(element) {
+  const { value } = element;
+
+  const width = element.parentElement.clientWidth - 20;
+  const min = element.attributes.min.value;
+  const max = element.attributes.max.value;
+  element.previousSibling.style.width = (((width / (max - min)) * (value - min)) + 1) + 'px';
 };
+
 window.sliderPercentageInput = function (event) {
-    sliderPercentageChange(event.target);
+  sPC(event.target);
 };
-var sliderPercentageInit = function(){
-    var elements = document.querySelectorAll('input.slider-percentage');
-    for(var i=0; i<elements.length; i++){
-        sliderPercentageChange(elements[i]);
-    }
-}();
+
+(function () {
+  const elements = document.querySelectorAll('input.slider-percentage');
+  for (let i = 0; i < elements.length; i += 1) {
+    sPC(elements[i]);
+  }
+}());

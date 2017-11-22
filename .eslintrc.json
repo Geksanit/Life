@@ -10,11 +10,13 @@
       "jsx": true
     }
   },
-  "extends": "eslint:recommended",
+  "extends": "airbnb-base",
   "rules": {
-    "semi": 0, //;
-    "no-extra-semi": 0,
-    "no-unused-vars": 0,
-    "no-redeclare": 0
+    "semi": 1, //;
+    "no-extra-semi": 1,
+    "no-unused-vars": 1,
+    "no-redeclare": 1,
+    "no-mixed-operators": 1,
+    "linebreak-style": 1
   }
 }

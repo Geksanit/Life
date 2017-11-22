@@ -29,13 +29,26 @@ module.exports=function(config) {
         // репортеры необходимы для  наглядного отображения результатов
         reporters: ['mocha', 'coverage'],
         preprocessors: {
-            'frontend/**/*.spec.js': ['webpack', 'sourcemap','coverage']
+            'frontend/**/*.spec.js': ['webpack', 'babel', 'sourcemap','coverage']
+        },
+        babelPreprocessor: {
+            options: {
+                presets: ['env'],
+                sourceMap: 'inline'
+            },
+            filename: function (file) {
+                return file.originalPath.replace(/\.js$/, '.es5.js');
+            },
+            sourceFileName: function (file) {
+                return file.originalPath;
+            }
         },
         plugins: [
             'karma-jasmine', 'karma-mocha',
             'karma-chai', 'karma-coverage',
             'karma-webpack', 'karma-phantomjs-launcher',
             'karma-mocha-reporter', 'karma-sourcemap-loader',
+            'karma-babel-preprocessor'
         ],
         // передаем конфигурацию webpack
         webpack: webpackConfig,
