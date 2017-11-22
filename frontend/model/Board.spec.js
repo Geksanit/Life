@@ -1,6 +1,5 @@
-'use strict';
 
-import {Board} from './model'
+import Board from './Board';
 
 describe("модель", function() {
     describe("конструктор", function () {

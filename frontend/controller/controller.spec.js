@@ -1,6 +1,5 @@
-'use strict';
 
-import {init,board,table,controls,fps,buttonsDisable,slidersChange,anim} from './controller'
+import { init,board,table,controls,fps,buttonsDisable,slidersChange,anim } from './controller'
 import '../components/standart-button/standart-button'
 console.log('start controller test');
 
