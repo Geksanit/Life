@@ -2,7 +2,6 @@ export default class Board {
   constructor(m = 10, n = 10) {
     // матрица m на n заполненная false
     this.matrix = [];
-    this.running = false;// для циклической обработки
     this.m = m;// строки
     this.n = n;// столбцы
     for (let i = 0; i < m; i += 1) {
@@ -14,9 +13,7 @@ export default class Board {
       this.matrix.push(line);
     }
   }
-
   resize(m, n) {
-    this.running = false;
     const { matrix } = this;
     const o = matrix.length;
     const p = matrix[0].length;
@@ -57,14 +54,7 @@ export default class Board {
     this.n = n;
     return this;
   }
-
-  stop() {
-    this.running = false;
-    return this;
-  }
-
   clear() {
-    this.running = false;
     for (let i = 0; i < this.m; i += 1) {
       for (let j = 0; j < this.n; j += 1) {
         this.matrix[i][j] = false;
@@ -73,12 +63,6 @@ export default class Board {
 
     return this;
   }
-
-  start() {
-    this.running = true;
-    return this;
-  }
-
   worker() {
     // обход всех ячеек с записью нового состояния
     const newMatrix = [];
@@ -97,7 +81,6 @@ export default class Board {
     if (flag) this.matrix = newMatrix;
     return this;
   }
-
   cell(i, j) {
     // вычисляет новое состояние клетки
     // соседи за пределами поля считаются мертвыми
@@ -123,7 +106,6 @@ export default class Board {
     else if (count === 3) newCell = true;
     return newCell;
   }
-
   setCell(i, j) {
     this.matrix[i][j] = !this.matrix[i][j];
   }
