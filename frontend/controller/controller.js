@@ -98,11 +98,13 @@ export default class Controller {
         break;
       case 'width':
         this.running = false;
+        this.buttonsDisable();
         this.board.resize(this.board.m, value);
         this.painter.newTable();
         break;
       case 'height':
         this.running = false;
+        this.buttonsDisable();
         this.board.resize(value, this.board.n);
         this.painter.newTable();
     }

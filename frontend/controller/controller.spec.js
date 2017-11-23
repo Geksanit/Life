@@ -1,10 +1,10 @@
 
 import Controller from './Controller'
 import '../components/standart-button/standart-button'
-console.log('start controller test');
 
 describe('контроллер', function () {
   let controller;
+  console.log('start controller test');
   describe('вставка html кода', function () {
     const div = document.createElement('div');
     div.insertAdjacentHTML('beforeEnd', '<div class="game"> <table id="board"></table> <div id="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">clear</button> <div class="container"> <div class="label">speed</div> <div class="slider"> <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1"> </div> </div> <div class="container"> <div class="label">width</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> <div class="container"> <div class="label">height</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> </div> </div>');
@@ -54,6 +54,7 @@ describe('контроллер', function () {
       controller.buttonsDisable();
     });
   });
+  
   describe("события", function () {
     it('клик по ячейке таблицы', function () {
       const cell = controller.table.children[0].children[0].children[0];
@@ -107,6 +108,7 @@ describe('контроллер', function () {
       assert.equal(controller.board.m,15)
     });
   });
+  
   describe('анимация', function () {
     const board = controller.board;
     it('anim 1', function (done) {
@@ -125,9 +127,6 @@ describe('контроллер', function () {
     });
     it('anim 2', function () {
       assert.deepEqual(board.matrix, [[true,true,false], [true,true,false]]);
-    });
-    it('test done', function (done) {
-      setTimeout(done, 1000);
     });
   });
 });
