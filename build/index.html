@@ -19,26 +19,29 @@
         <table id="board"></table>
         <div id="controls">
           <div class="container">
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">start</button>
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">pause</button>
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">clear</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">start</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">pause</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">clear</button>
           </div>
           <div class="container">
             <div class="label">speed</div>
             <div class="slider">
-              <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1">
+              <div class="slider__view">1</div>
+              <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
             </div>
           </div>
           <div class="container">
             <div class="label">width</div>
             <div class="slider">
-              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+              <div class="slider__view">10</div>
+              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
             </div>
           </div>
           <div class="container">
             <div class="label">height</div>
             <div class="slider">
-              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+              <div class="slider__view">10</div>
+              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
             </div>
           </div>
         </div>
