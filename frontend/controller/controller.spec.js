@@ -1,13 +1,12 @@
 
-import Controller from './Controller'
-import '../components/standart-button/standart-button'
+import Controller from './Controller';
 
 describe('контроллер', function () {
   let controller;
   console.log('start controller test');
   describe('вставка html кода', function () {
     const div = document.createElement('div');
-    div.insertAdjacentHTML('beforeEnd', '<div class="game"> <table id="board"></table> <div id="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small" onclick="buttonClick(event)">clear</button> <div class="container"> <div class="label">speed</div> <div class="slider"> <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1"> </div> </div> <div class="container"> <div class="label">width</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> <div class="container"> <div class="label">height</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> </div> </div>');
+    div.insertAdjacentHTML('beforeEnd', '<div class="game"> <table id="board"></table> <div id="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small">clear</button> <div class="container"> <div class="label">speed</div> <div class="slider"> <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1"> </div> </div> <div class="container"> <div class="label">width</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> <div class="container"> <div class="label">height</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> </div> </div>');
     document.body.appendChild(div);
     it('проверка', function () {
       assert.notEqual(document.getElementsByClassName('game'), null, 'game not in DOM');
@@ -18,7 +17,6 @@ describe('контроллер', function () {
   
   describe('Создание контроллера', function () {
     controller = new Controller();
-    console.log(controller.table);
     it('находит таблицу', function () {
       assert.equal(controller.table !== undefined, true);
     });
@@ -33,7 +31,7 @@ describe('контроллер', function () {
     });
     it('создает свойства', function () {
       assert.equal(controller.running === false, true);
-      assert.equal(controller.fps, 1)
+      assert.equal(controller.fps, 1);
     });
   });
   
@@ -66,20 +64,20 @@ describe('контроллер', function () {
     });
     it('клик по кнопке start', function (done) {
       const button = controller.controls.children[0];
-      assert.equal(controller.running,false, 'before false');
+      assert.equal(controller.running, false, 'before false');
       button.click();
-      assert.equal(button.disabled && controller.running,true,'after true');
+      assert.equal(button.disabled && controller.running, true, 'after true');
       controller.running = false;
-      setTimeout(done,1000);
+      setTimeout(done, 1000);
     });
-    it('клик по кнопке pause',function () {
+    it('клик по кнопке pause', function () {
       const button = controller.controls.children[1];
       controller.running = true;
-      assert.equal((!button.disabled && controller.running),true,'before true');
+      assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
-      assert.equal((button.disabled && !controller.running),true,'after false');
+      assert.equal((button.disabled && !controller.running), true, 'after false');
     });
-    it('клик по кнопке clear',function () {
+    it('клик по кнопке clear', function () {
       const board = controller.board;
       const button = controller.controls.children[2];
       controller.running = true;
@@ -89,11 +87,11 @@ describe('контроллер', function () {
       assert.equal((!button.disabled && !board.matrix[0][0] && !controller.running),true,'after false');
 
     });
-    it('слайдер speed',function () {
+    it('слайдер speed', function () {
       const slider = document.querySelectorAll('input.slider')[0];
       slider.value = 5;
       controller.slidersChange({target: slider});
-      assert.equal(controller.fps,5)
+      assert.equal(controller.fps,5);
     });
     it('слайдер Width',function () {
       const slider = document.querySelectorAll('input.slider')[1];
