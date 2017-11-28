@@ -1,10 +1,17 @@
 include ./components/standart-button/standart-button
-include ./components/slider/slider
+include ./components/sliders/slider
 doctype html
 html
     head
-        meta(charset = 'utf-8')
-        meta(name='viewport', content="initial-scale=1.0, width=device-width")
+        meta(charset = "utf-8")
+        meta(name="viewport", content="initial-scale=1.0, width=device-width")
+        meta(name="keywords" content="Игра Жизнь клеточный автомат")
+        link(rel="apple-touch-icon", sizes="60x60", href="favicons/apple-touch-icon.png")
+        link(rel="icon", type="image/png", sizes="32x32", href="favicons/favicon-32x32.png")
+        link(rel="icon", type="image/png", sizes="16x16", href="favicons/favicon-16x16.png")
+        link(rel="manifest", href="favicons/manifest.json")
+        link(rel="mask-icon", href="favicons/safari-pinned-tab.svg", color="#5bbad5")
+        meta(name="theme-color", content="#ffffff")
         title Life
     body
         main
@@ -13,22 +20,22 @@ html
                 table#board
                 #controls
                     .container
-                        +standart-button('start','small')
-                        +standart-button('pause','small')
-                        +standart-button('clear','small')
+                        +standart-button({ title:'start', size:'small' })
+                        +standart-button({ title:'pause', size:'small' })
+                        +standart-button({ title:'clear', size:'small' })
                     .container
                         .label speed
-                        +slider(1,10, 1)
+                        +slider({ min: 1, max: 10, value: 1 })
                     .container
                         .label width
-                        +slider(0,100, 10)
+                        +slider({ min: 0, max: 100, value: 10 })
                     .container
                         .label height
-                        +slider(0,100, 10)
+                        +slider({ min: 0, max: 100, value: 10 })
 
             dl Игра «Жизнь»
                 dt — клеточный автомат, придуманный английским математиком Джоном Конвеем в 1970 году.
-            section Каждая клетка на этой поверхности может находиться в двух состояниях: быть «живой» (заполненной) или быть «мёртвой» (пустой). Клетка имеет восемь соседей, окружающих её.
+            section.description Каждая клетка на этой поверхности может находиться в двух состояниях: быть «живой» (заполненной) или быть «мёртвой» (пустой). Клетка имеет восемь соседей, окружающих её.
                 p Распределение живых клеток в начале игры называется первым поколением. Каждое следующее поколение рассчитывается на основе предыдущего по таким правилам:
                 ul
                     li в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;

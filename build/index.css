@@ -2,6 +2,7 @@ body {
   color: #28a290;
   background-color: #d3d3d3;
   margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
 }
 body main {
   width: 710px;
@@ -29,20 +30,20 @@ body main .game #board td {
 body main .game #board .live {
   background-color: #28a290;
 }
-body main .game #controls {
+body main #controls {
   padding-left: 10px;
   width: 300px;
 }
-body main .game #controls .container {
+body main #controls .container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-body main .game #controls .container div.slider {
+body main #controls .container div.slider {
   margin: 10px;
   flex: 1 1 100px;
 }
-body main .game #controls .container .label {
+body main #controls .container .label {
   width: 50px;
   height: 40px;
   line-height: 40px;
@@ -108,12 +109,12 @@ body main .game #controls .container .label {
   border-style: solid;
   border-width: 1px;
   outline: none;
-  background-color: #fff;
-  font-family: 'test';
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
   text-transform: uppercase;
   text-align: center;
   vertical-align: middle;
+  background-color: #fff;
   border-color: #4eb7a8;
   box-shadow: 0 3px 0 #28a290;
   color: #4eb7a8;
@@ -129,21 +130,21 @@ body main .game #controls .container .label {
   border-style: solid;
   border-width: 1px;
 }
-.standart-button_small {
+.standart-button_size-small {
   width: 78px;
   height: 22px;
   font-size: 10px;
   box-shadow: 0 2px 0 #28a290;
 }
-.standart-button_orange {
+.standart-button_color-orange {
   border-color: #e75735;
   box-shadow: 0 3px 0 #bf3e1f;
   color: #e75735;
 }
-.standart-button_orange:hover {
+.standart-button_color-orange:hover {
   background-color: #e75735;
 }
-.standart-button_orange-small {
+.standart-button_color-orange.standart-button_size-small {
   box-shadow: 0 2px 0 #bf3e1f;
 }
 .standart-button:disabled {
@@ -153,7 +154,12 @@ body main .game #controls .container .label {
 }
 .standart-button:disabled:hover {
   background-color: #a9a9a9;
-  color: #fff;
+}
+.standart-button:disabled.standart-button_size-small {
+  box-shadow: 0 2px 0 #808080;
+}
+.standart-button:disabled:hover {
+  background-color: #fff;
 }
 #ripple {
   position: absolute;
@@ -165,11 +171,11 @@ body main .game #controls .container .label {
   background-color: #fff;
   animation: ripple 0.5s forwards;
 }
-div.slider {
+.slider {
   position: relative;
-  font-family: lato-r;
+  font-family: Helvetica, Arial, sans-serif;
 }
-.slider__view {
+.slider .slider__view {
   position: absolute;
   width: 35px;
   height: 24px;
@@ -181,7 +187,7 @@ div.slider {
   text-align: center;
   line-height: 24px;
 }
-.slider__view::after {
+.slider .slider__view::after {
   content: '';
   bottom: -2px;
   left: 15.7px;
@@ -191,22 +197,23 @@ div.slider {
   background-color: inherit;
   transform: rotate(-45deg);
 }
-input[type=range] {
+.slider input.slider__input {
   -webkit-appearance: none;
+  -moz-appearance: none;
   width: 100%;
   margin: 40px 0 0 0;
 }
-input[type=range]:focus {
+.slider input.slider__input:focus {
   outline: none;
 }
-input[type=range]::-webkit-slider-runnable-track {
+.slider input.slider__input::-webkit-slider-runnable-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
   background-color: #d3d3d3;
   cursor: pointer;
 }
-input[type=range]::-webkit-slider-thumb {
+.slider input.slider__input::-webkit-slider-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;
@@ -215,22 +222,23 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
 }
-input[type=range]::-moz-range-track {
+.slider input.slider__input::-moz-range-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
   background-color: #d3d3d3;
   cursor: pointer;
 }
-input[type=range]::-moz-range-thumb {
+.slider input.slider__input::-moz-range-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;
   border-radius: 10px;
   background: #4eb7a8;
   cursor: pointer;
+  border: none;
 }
-input[type=range]::-ms-track {
+.slider input.slider__input::-ms-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
@@ -241,15 +249,15 @@ input[type=range]::-ms-track {
   border-width: 20px 0;
   color: transparent;
 }
-input[type=range]::-ms-fill-lower {
+.slider input.slider__input::-ms-fill-lower {
   background: #ff0;
   border-radius: 10px;
 }
-input[type=range]::-ms-fill-upper {
+.slider input.slider__input::-ms-fill-upper {
   background: #d3d3d3;
   border-radius: 10px;
 }
-input[type=range]::-ms-thumb {
+.slider input.slider__input::-ms-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;
@@ -257,39 +265,5 @@ input[type=range]::-ms-thumb {
   background: #4eb7a8;
   cursor: pointer;
 }
-.slider-percentage {
-  position: relative;
-  font-family: lato-r;
-}
-.slider-percentage__full-line {
-  background-color: #d3d3d3;
-  width: 100%;
-  height: 5px;
-  border-radius: 5px;
-  position: absolute;
-  top: 40px;
-  left: 0;
-}
-.slider-percentage__line {
-  background-color: #4eb7a8;
-  width: 10px;
-  height: 5px;
-  border-radius: 5px;
-  position: absolute;
-  top: 40px;
-  left: 0;
-}
-.slider-percentage input {
-  background-color: transparent;
-}
-.slider-percentage input::-webkit-slider-runnable-track {
-  background-color: transparent;
-}
-.slider-percentage__percent {
-  margin: 0 -10px;
-  color: #d3d3d3;
-  font-size: 10px;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJpbmRleC5jc3MiLCJzb3VyY2VSb290IjoiIn0=*/

@@ -3,6 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <meta name="keywords" content="Игра Жизнь клеточный автомат">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="favicons/manifest.json">
+    <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
     <title>Life</title>
   <link href="index.css" rel="stylesheet"></head>
   <body>
@@ -12,26 +19,29 @@
         <table id="board"></table>
         <div id="controls">
           <div class="container">
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">start</button>
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">pause</button>
-            <button class="standart-button standart-button_blue standart-button_small standart-button_blue-small">clear</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">start</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">pause</button>
+            <button class="standart-button js-standart-button standart-button_color-blue standart-button_size-small">clear</button>
           </div>
           <div class="container">
             <div class="label">speed</div>
             <div class="slider">
-              <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1">
+              <div class="slider__view">1</div>
+              <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
             </div>
           </div>
           <div class="container">
             <div class="label">width</div>
             <div class="slider">
-              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+              <div class="slider__view">10</div>
+              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
             </div>
           </div>
           <div class="container">
             <div class="label">height</div>
             <div class="slider">
-              <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10">
+              <div class="slider__view">10</div>
+              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
             </div>
           </div>
         </div>
@@ -39,7 +49,7 @@
       <dl>Игра «Жизнь»
         <dt>— клеточный автомат, придуманный английским математиком Джоном Конвеем в 1970 году.</dt>
       </dl>
-      <section>Каждая клетка на этой поверхности может находиться в двух состояниях: быть «живой» (заполненной) или быть «мёртвой» (пустой). Клетка имеет восемь соседей, окружающих её.
+      <section class="description">Каждая клетка на этой поверхности может находиться в двух состояниях: быть «живой» (заполненной) или быть «мёртвой» (пустой). Клетка имеет восемь соседей, окружающих её.
         <p>Распределение живых клеток в начале игры называется первым поколением. Каждое следующее поколение рассчитывается на основе предыдущего по таким правилам:</p>
         <ul>
           <li>в пустой (мёртвой) клетке, рядом с которой ровно три живые клетки, зарождается жизнь;</li>

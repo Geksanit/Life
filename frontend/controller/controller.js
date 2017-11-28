@@ -1,120 +1,112 @@
-import {Board} from '../model/model'
-import {newTable,repainter} from '../view/view'
-export var board,table,controls,fps;
-var tableOnclick = function(event) {
-    //console.log(event.target);
-    var target = event.target;
-    if (target.tagName != 'TD') return;
-    var j = target.cellIndex;
-    var i = target.parentElement.sectionRowIndex;
-    board.setCell(i,j);
-    target.classList.toggle("live");
-};
-var controlsOnclick = function (event) {
-    //console.log('oncklick target = ',event.target.innerText);
-    var target = event.target;
-    if (target.tagName != 'BUTTON') return;
-    switch (target.innerHTML) {
-        case 'start':
-            //console.log('test start');
-            board.start();
-            buttonsDisable();
-            anim();
-            break;
-        case 'pause':
-            //console.log('test pause');
-            board.pause();
-            buttonsDisable();
-            break;
-        case 'clear':
-            board.clear();
-            buttonsDisable();
-            repainter(board, table);
-    };
-};
-export var buttonsDisable = function () {
-    var buttons = document.getElementsByTagName('BUTTON');
-    //console.log(buttons);
-    for(var i=0; i<buttons.length; i++){
-        var button = buttons[i];
-        if (button.innerHTML == 'start'){
-            if (board.running) button.disabled = true;
-            else button.disabled = false;
-        };
-        if (button.innerHTML == 'pause'){
-            if (board.running) button.disabled = false;
-            else button.disabled = true;
-        };
-    };
-};
-export var controlsChange = function (event){
-    var target = event.target;
-    //console.log(event);
-    //console.log(event.target.parentElement.previousElementSibling.innerText);
-    if (target.tagName != 'INPUT') return;
-    var value = target.valueAsNumber;
-    //console.dir(value);
-    switch(target.parentElement.previousElementSibling.innerText) {
-        case 'speed':
-            fps = value;
-            break;
-        case 'width':
-            board.resize(board.m,value);
-            newTable(board,table);
-            break;
-        case 'height':
-            board.resize(value,board.n);
-            newTable(board,table);
-    };
-};
-/*
- var tableMouseDoswn = function (event) {
- console.log(event);
- };
- */
-export var init = function () {
-    {
-        board = new Board(10, 10);
-        table = document.getElementById('board');
-        controls = document.getElementById('controls');
-        fps = 1;
+
+import Board from '../model/Board';
+import Painter from '../view/Painter';
+
+export default class Controller {
+  constructor() {
+    this.running = false;
+    this.table = document.getElementById('board');
+    this.controls = document.getElementById('controls');
+    this.board = new Board(10, 10);
+    this.painter = new Painter(this.board, this.table);
+    this.fps = 1;
+    this.painter.newTable();// начальная отрисовка
+    this.buttonsDisable();
+    this.table.onclick = this.tableSetCell.bind(this);
+    this.controls.onclick = this.buttunsOnclick.bind(this);
+    this.controls.onchange = this.slidersChange.bind(this);
+  }
+  buttonsDisable() {
+    const buttons = document.getElementsByTagName('BUTTON');
+    if (buttons === undefined) {
+      console.log('buttuns not found');
+      return;
     }
-    newTable(board, table);//начальная отрисовка
-    table.onclick = tableOnclick;
-    controls.onclick = controlsOnclick;
-    controls.onchange = controlsChange;
-    //table.onmousedown = tableMouse;
-};
-
-export var anim = function(callback){//останавливается и вызывет аргумент, когда матрица перестает меняться
-    console.log('anim started');
-    var oldMatrix;
-    loop();
+    // console.log(buttons);
+    for (let i = 0; i < buttons.length; i += 1) {
+      const button = buttons[i];
+      if (button.innerHTML === 'start') {
+        if (this.running) button.disabled = true;
+        else button.disabled = false;
+      }
+      if (button.innerHTML === 'pause') {
+        if (this.running) button.disabled = false;
+        else button.disabled = true;
+      }
+    }
+  }
+  tableSetCell(event) {
+    // console.log(event.target);
+    const { target } = event;
+    if (target.tagName !== 'TD') return;
+    const j = target.cellIndex;
+    const i = target.parentElement.sectionRowIndex;
+    target.classList.toggle('live');
+    this.board.setCell(i, j);
+  }
+  anim(callback) {
+    // останавливается и вызывет аргумент, когда матрица перестает меняться
+    // console.log('anim started');
+    let oldMatrix;
     function loop() {
-        //console.log('loop');
-        setTimeout(function() {
-            if(board.running) {
-                requestAnimationFrame(loop);//не блокирует поток!
-                //console.log('test');
-                board.worker();
-                repainter(board, table);
-                if (oldMatrix == board.matrix) {//если матрица не меняется, ссылка остаетя актуальной
-                    board.pause();
-                    buttonsDisable();
-                }
-                else oldMatrix = board.matrix;
-            }
-            else {
-                console.log('anim stopped');
-                if(callback) callback();
-            }
-        }, 1000 / fps);
-    };
-};
-
-export var run = function () {
-    init();
-    buttonsDisable();
-    //anim();
-    console.log('run() started');
-};
+      const { fps } = this;
+      setTimeout(() => {
+        if (this.running) {
+          requestAnimationFrame(loop.bind(this));// не блокирует поток!
+          this.board.worker();
+          this.painter.repainter();
+          // если матрица не меняется, ссылка остаетя актуальной
+          if (oldMatrix === this.board.matrix) {
+            this.running = false;
+            this.buttonsDisable();
+          } else oldMatrix = this.board.matrix;
+        } else if (callback) {
+          // console.log('anim stopped');
+          callback();
+        }
+      }, 1000 / fps);
+    }
+    loop.call(this);
+  }
+  buttunsOnclick(event) {
+    const { target } = event;
+    if (target.tagName !== 'BUTTON') return;
+    switch (target.innerHTML) {
+      case 'start':
+        this.running = true;
+        this.buttonsDisable();
+        this.anim();
+        break;
+      case 'pause':
+        this.running = false;
+        this.buttonsDisable();
+        break;
+      case 'clear':
+        this.board.clear();
+        this.running = false;
+        this.buttonsDisable();
+        this.painter.repainter();
+    }
+  }
+  slidersChange(event) {
+    const { target } = event;
+    if (target.tagName !== 'INPUT') return;
+    const value = target.valueAsNumber;
+    switch (target.parentElement.previousElementSibling.innerText) {
+      case 'speed':
+        this.fps = value;
+        break;
+      case 'width':
+        this.running = false;
+        this.buttonsDisable();
+        this.board.resize(this.board.m, value);
+        this.painter.newTable();
+        break;
+      case 'height':
+        this.running = false;
+        this.buttonsDisable();
+        this.board.resize(value, this.board.n);
+        this.painter.newTable();
+    }
+  }
+}

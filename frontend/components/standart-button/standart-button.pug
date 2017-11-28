@@ -1,10 +1,11 @@
-
-mixin standart-button(title,size,color)
+mixin standart-button(options)
+    if !options
+        - options = {}
     -var sizes=['normal','small']; colors=['blue','orange'];
-    if(!title)
-        -title = 'button'
-    if(!size)
-        -size = sizes[0]
-    if(color != colors[0] && color != colors[1])
-        -color = colors[0]
-    button(class="standart-button standart-button_"+color+" standart-button_"+size+" standart-button_"+color+"-"+size /*onclick="buttonClick(event)"*/) #{title}
+    if(!options.title)
+        -options.title = 'button'
+    if(!options.size != sizes[0] && options.size != sizes[1])
+        -options.size = sizes[0]
+    if(options.color != colors[0] && options.color != colors[1])
+        -options.color = colors[0]
+    button(class="standart-button js-standart-button standart-button_color-"+options.color+" standart-button_size-"+options.size) #{options.title}

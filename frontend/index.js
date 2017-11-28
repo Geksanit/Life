@@ -1,6 +1,7 @@
-import './index.styl'
-import './components/slider/slider'
-import './components/standart-button/standart-button'
+import './index.styl';
+import './favicons/favicons';
+import './components/sliders/slider';
+import './components/standart-button/standart-button';
+import Controller from './controller/Controller';
 
-import {run} from './controller/controller'
-run();
+const controller = new Controller();

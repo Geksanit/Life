@@ -1,52 +1,52 @@
 $blue = #4eb7a8 #28a290
 $orange = #e75735 #bf3e1f
 $gray = #f2f2f2 #e5e5e5 #8e8d8d
-$lato-b = 'test'
-
+$font = Helvetica, Arial, sans-serif;
 
 body
-  color $blue[1]
-  background-color lightgrey
-  margin 0
-  main
-    width 710px
-    padding 10px
-    margin auto
-    background-color white
-    .game
-      display flex
-      margin-bottom 20px
-      #board
-        width 400px
-        height auto
-        border 1px solid gray
-        border-collapse collapse
-        td
-          border 1px solid lightgrey
-          background-color white
-          width 40px
-          height 40px
-          box-sizing border-box
-        .live
-          background-color $blue[1]
-      #controls
-        padding-left 10px
-        width 300px
-        .container
-          display flex
-          justify-content space-between
-          align-items flex-end
-          div.slider
-            margin 10px
-            flex 1 1 100px
-          .label
-            width 50px
-            height 40px
-            line-height @height
+    color $blue[1]
+    background-color lightgrey
+    margin 0
+    font-family Helvetica, Arial, sans-serif;
+    main
+        width 710px
+        padding 10px
+        margin auto
+        background-color white
+        .game
+            display flex
+            margin-bottom 20px
+            #board
+                width 400px
+                height auto
+                border 1px solid gray
+                border-collapse collapse
+                td
+                    border 1px solid lightgrey
+                    background-color white
+                    width 40px
+                    height 40px
+                    box-sizing border-box
+                .live
+                    background-color $blue[1]
+        #controls
+            padding-left 10px
+            width 300px
+            .container
+                display flex
+                justify-content space-between
+                align-items flex-end
+                div.slider
+                    margin 10px
+                    flex 1 1 100px
+                .label
+                    width 50px
+                    height 40px
+                    line-height @height
 
 
 @import "./components/standart-button/main.styl"
-standart-button($lato-b,$blue,$orange)
+standart-button($font,$blue,$orange)
 
-@import "./components/slider/main.styl"
-slider(lato-r,$blue)
+@import "./components/sliders/slider.styl"
+slider($font,$blue)
