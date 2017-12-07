@@ -1,7 +1,5 @@
 # Life
 
-[Refactor branch]
-
 Github Pages:   <https://geksanit.github.io/Life/build/>
 
 Coverage: <https://geksanit.github.io/Life/tmp/coverage/report-html/>
