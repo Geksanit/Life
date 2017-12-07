@@ -13,16 +13,15 @@ export default class Controller {
     this.painter.newTable();// начальная отрисовка
     this.buttonsDisable();
     this.table.onclick = this.tableSetCell.bind(this);
-    this.controls.onclick = this.buttunsOnclick.bind(this);
-    this.controls.onchange = this.slidersChange.bind(this);
+    this.controls.onclick = this.setRunning.bind(this);
+    this.controls.onchange = this.resizeBoard.bind(this);
   }
   buttonsDisable() {
     const buttons = document.getElementsByTagName('BUTTON');
     if (buttons === undefined) {
-      console.log('buttuns not found');
+      // console.log('buttuns not found');
       return;
     }
-    // console.log(buttons);
     for (let i = 0; i < buttons.length; i += 1) {
       const button = buttons[i];
       if (button.innerHTML === 'start') {
@@ -36,7 +35,6 @@ export default class Controller {
     }
   }
   tableSetCell(event) {
-    // console.log(event.target);
     const { target } = event;
     if (target.tagName !== 'TD') return;
     const j = target.cellIndex;
@@ -46,7 +44,6 @@ export default class Controller {
   }
   anim(callback) {
     // останавливается и вызывет аргумент, когда матрица перестает меняться
-    // console.log('anim started');
     let oldMatrix;
     function loop() {
       const { fps } = this;
@@ -61,14 +58,13 @@ export default class Controller {
             this.buttonsDisable();
           } else oldMatrix = this.board.matrix;
         } else if (callback) {
-          // console.log('anim stopped');
           callback();
         }
       }, 1000 / fps);
     }
     loop.call(this);
   }
-  buttunsOnclick(event) {
+  setRunning(event) {
     const { target } = event;
     if (target.tagName !== 'BUTTON') return;
     switch (target.innerHTML) {
@@ -88,7 +84,7 @@ export default class Controller {
         this.painter.repainter();
     }
   }
-  slidersChange(event) {
+  resizeBoard(event) {
     const { target } = event;
     if (target.tagName !== 'INPUT') return;
     const value = target.valueAsNumber;

@@ -1,6 +1,5 @@
 export default class Painter {
   constructor(board, table) {
-    // console.log('construct', table);
     this.table = table;
     this.board = board;
   }
@@ -10,7 +9,6 @@ export default class Painter {
     const { matrix } = this.board;
     const m = matrix.length;
     const n = matrix[0].length;
-    // console.log(m,n);
     const width = tableWidth / n;
     const height = width;
 
@@ -19,8 +17,8 @@ export default class Painter {
       const tr = document.createElement('tr');
       for (let j = 0; j < n; j += 1) {
         const td = document.createElement('td');
-        td.style.width = width + 'px';
-        td.style.height = height + 'px';
+        td.style.width = `${width}px`;
+        td.style.height = `${height}px`;
         if (matrix[i][j]) td.className = 'live';
         tr.appendChild(td);
       }
@@ -46,7 +44,6 @@ export default class Painter {
     const tbody = table.children[0];
     const m = matrix.length;
     const n = matrix[0].length;
-    // console.log(m,n);
 
     for (let i = 0; i < m; i += 1) {
       for (let j = 0; j < n; j += 1) {
