@@ -5,7 +5,7 @@ const sliderChange = function sliderChange(element) {
   const min = element.attributes.min.value;
   const max = element.attributes.max.value;
   element.previousElementSibling.innerText = value;
-  element.previousElementSibling.style.left = (((width / (max - min)) * (value - min)) - 8.75) + 'px';
+  element.previousElementSibling.style.left = `${((width / (max - min)) * (value - min)) - 8.75}px`;
 };
 
 const sliderInput = function sliderInput(event) {
@@ -14,8 +14,8 @@ const sliderInput = function sliderInput(event) {
 
 (function initSliders() {
   const elements = document.querySelectorAll('.js-slider__input');
-  for (let i = 0; i < elements.length; i += 1) {
-    sliderChange(elements[i]);
-    elements[i].oninput = sliderInput;
-  }
+  elements.forEach((element) => {
+    sliderChange(element);
+    element.oninput = sliderInput;
+  });
 }());

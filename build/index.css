@@ -23,8 +23,8 @@ body main .game #board {
 body main .game #board td {
   border: 1px solid #d3d3d3;
   background-color: #fff;
-  width: 40px;
-  height: 40px;
+  width: auto;
+  height: auto;
   box-sizing: border-box;
 }
 body main .game #board .live {
@@ -39,14 +39,90 @@ body main #controls .container {
   justify-content: space-between;
   align-items: flex-end;
 }
-body main #controls .container div.slider {
+body main #controls .container .slider-mix {
   margin: 10px;
   flex: 1 1 100px;
+}
+body main #controls .container .button-mix {
+  font-weight: 500;
 }
 body main #controls .container .label {
   width: 50px;
   height: 40px;
   line-height: 40px;
+}
+.standart-button {
+  position: relative;
+  width: 118px;
+  height: 32px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  outline: none;
+  font-family: Helvetica, Arial, sans-serif, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #fff;
+  border-color: #4eb7a8;
+  box-shadow: 0 3px 0 #28a290;
+  color: #4eb7a8;
+}
+.standart-button:hover {
+  background-color: #4eb7a8;
+  color: #fff;
+  cursor: pointer;
+}
+.standart-button:active {
+  bottom: -4px;
+  box-shadow: none;
+  border-style: solid;
+  border-width: 1px;
+}
+.standart-button_size_small {
+  width: 78px;
+  height: 22px;
+  font-size: 10px;
+  box-shadow: 0 2px 0 #28a290;
+}
+.standart-button_color_orange {
+  border-color: #e75735;
+  box-shadow: 0 3px 0 #bf3e1f;
+  color: #e75735;
+}
+.standart-button_color_orange:hover {
+  background-color: #e75735;
+}
+.standart-button_color_orange.standart-button_size_small {
+  box-shadow: 0 2px 0 #bf3e1f;
+}
+.standart-button:disabled {
+  border-color: #a9a9a9;
+  box-shadow: 0 3px 0 #808080;
+  color: #a9a9a9;
+}
+.standart-button:disabled:hover {
+  background-color: #a9a9a9;
+}
+.standart-button:disabled.standart-button_size_small {
+  box-shadow: 0 2px 0 #808080;
+}
+.standart-button:disabled:hover {
+  background-color: #fff;
+}
+#ripple {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  background-color: #fff;
+  animation: ripple 0.5s forwards;
+  pointer-events: none;
 }
 @-moz-keyframes ripple {
   0% {
@@ -100,82 +176,12 @@ body main #controls .container .label {
     transform: scale(1, 1);
   }
 }
-.standart-button {
-  position: relative;
-  width: 118px;
-  height: 32px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border-style: solid;
-  border-width: 1px;
-  outline: none;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #fff;
-  border-color: #4eb7a8;
-  box-shadow: 0 3px 0 #28a290;
-  color: #4eb7a8;
-}
-.standart-button:hover {
-  background-color: #4eb7a8;
-  color: #fff;
-  cursor: pointer;
-}
-.standart-button:active {
-  bottom: -4px;
-  box-shadow: none;
-  border-style: solid;
-  border-width: 1px;
-}
-.standart-button_size-small {
-  width: 78px;
-  height: 22px;
-  font-size: 10px;
-  box-shadow: 0 2px 0 #28a290;
-}
-.standart-button_color-orange {
-  border-color: #e75735;
-  box-shadow: 0 3px 0 #bf3e1f;
-  color: #e75735;
-}
-.standart-button_color-orange:hover {
-  background-color: #e75735;
-}
-.standart-button_color-orange.standart-button_size-small {
-  box-shadow: 0 2px 0 #bf3e1f;
-}
-.standart-button:disabled {
-  border-color: #a9a9a9;
-  box-shadow: 0 3px 0 #808080;
-  color: #a9a9a9;
-}
-.standart-button:disabled:hover {
-  background-color: #a9a9a9;
-}
-.standart-button:disabled.standart-button_size-small {
-  box-shadow: 0 2px 0 #808080;
-}
-.standart-button:disabled:hover {
-  background-color: #fff;
-}
-#ripple {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50px;
-  background-color: #fff;
-  animation: ripple 0.5s forwards;
-}
 .slider {
   position: relative;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif, Arial, sans-serif;
+  font-weight: 700;
 }
-.slider .slider__view {
+.slider__view {
   position: absolute;
   width: 35px;
   height: 24px;
@@ -187,7 +193,7 @@ body main #controls .container .label {
   text-align: center;
   line-height: 24px;
 }
-.slider .slider__view::after {
+.slider__view::after {
   content: '';
   bottom: -2px;
   left: 15.7px;
@@ -197,23 +203,23 @@ body main #controls .container .label {
   background-color: inherit;
   transform: rotate(-45deg);
 }
-.slider input.slider__input {
+.slider__input {
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 100%;
-  margin: 40px 0 0 0;
+  margin: 39px 0 0 0;
 }
-.slider input.slider__input:focus {
+.slider__input:focus {
   outline: none;
 }
-.slider input.slider__input::-webkit-slider-runnable-track {
+.slider__input::-webkit-slider-runnable-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
   background-color: #d3d3d3;
   cursor: pointer;
 }
-.slider input.slider__input::-webkit-slider-thumb {
+.slider__input::-webkit-slider-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;
@@ -222,14 +228,14 @@ body main #controls .container .label {
   cursor: pointer;
   -webkit-appearance: none;
 }
-.slider input.slider__input::-moz-range-track {
+.slider__input::-moz-range-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
   background-color: #d3d3d3;
   cursor: pointer;
 }
-.slider input.slider__input::-moz-range-thumb {
+.slider__input::-moz-range-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;
@@ -238,7 +244,7 @@ body main #controls .container .label {
   cursor: pointer;
   border: none;
 }
-.slider input.slider__input::-ms-track {
+.slider__input::-ms-track {
   width: 100%;
   height: 5px;
   border-radius: 5px;
@@ -249,15 +255,15 @@ body main #controls .container .label {
   border-width: 20px 0;
   color: transparent;
 }
-.slider input.slider__input::-ms-fill-lower {
+.slider__input::-ms-fill-lower {
   background: #ff0;
   border-radius: 10px;
 }
-.slider input.slider__input::-ms-fill-upper {
+.slider__input::-ms-fill-upper {
   background: #d3d3d3;
   border-radius: 10px;
 }
-.slider input.slider__input::-ms-thumb {
+.slider__input::-ms-thumb {
   margin-top: -7.5px;
   height: 20px;
   width: 20px;

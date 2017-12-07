@@ -81,7 +81,7 @@ describe('контроллер', function () {
       const board = controller.board;
       const button = controller.controls.children[2];
       controller.running = true;
-      board.setCell(0,0);
+      board.setCell(0, 0);
       assert.equal((!button.disabled && board.matrix[0][0] && controller.running),true,'before true');
       button.click();
       assert.equal((!button.disabled && !board.matrix[0][0] && !controller.running),true,'after false');
@@ -90,33 +90,33 @@ describe('контроллер', function () {
     it('слайдер speed', function () {
       const slider = document.querySelectorAll('input.slider')[0];
       slider.value = 5;
-      controller.slidersChange({target: slider});
-      assert.equal(controller.fps,5);
+      controller.resizeBoard({ target: slider });
+      assert.equal(controller.fps, 5);
     });
-    it('слайдер Width',function () {
+    it('слайдер Width', function () {
       const slider = document.querySelectorAll('input.slider')[1];
       slider.value = 16;
-      controller.slidersChange({target: slider});
-      assert.equal(controller.board.n,16)
+      controller.resizeBoard({ target: slider });
+      assert.equal(controller.board.n, 16);
     });
-    it('слайдер Height',function () {
+    it('слайдер Height', function () {
       const slider = document.querySelectorAll('input.slider')[2];
       slider.value = 15;
-      controller.slidersChange({target: slider});
-      assert.equal(controller.board.m,15)
+      controller.resizeBoard({ target: slider });
+      assert.equal(controller.board.m, 15);
     });
   });
   
   describe('анимация', function () {
     const board = controller.board;
     it('anim 1', function (done) {
-      board.resize(2,3);
+      board.resize(2, 3);
       board.clear();
       {
-        board.setCell(0,0);
-        board.setCell(0,1);
-        board.setCell(0,2);
-        board.setCell(1,0);
+        board.setCell(0, 0);
+        board.setCell(0, 1);
+        board.setCell(0, 2);
+        board.setCell(1, 0);
       }
       controller.running = true;
       
@@ -124,7 +124,7 @@ describe('контроллер', function () {
       controller.anim(done);
     });
     it('anim 2', function () {
-      assert.deepEqual(board.matrix, [[true,true,false], [true,true,false]]);
+      assert.deepEqual(board.matrix, [[true, true, false], [true, true, false]]);
     });
   });
 });
