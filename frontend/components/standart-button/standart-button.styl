@@ -1,4 +1,4 @@
-standart-button($font,$blue,$orange)
+standart-button($font, $blue, $orange, $gray, $white)
 
   @keyframes ripple {
     0% {
@@ -13,14 +13,15 @@ standart-button($font,$blue,$orange)
       transform: scale(1, 1);
     }
   }
-  $gray = darkgray gray #8e8d8d
 
   setColor($_color)
     border-color $_color[0]
     box-shadow 0 3px 0 $_color[1]
     color $_color[0]
+
     &:hover
       background-color $_color[0]
+
     &.standart-button_size_small
       box-shadow 0 2px 0 $_color[1]
 
@@ -39,15 +40,16 @@ standart-button($font,$blue,$orange)
     text-transform uppercase
     text-align center
     vertical-align middle
-    background-color  white
+    background-color  $white
     border-color $blue[0]
     box-shadow 0 3px 0 $blue[1]
     color $blue[0]
 
     &:hover
       background-color $blue[0]
-      color white
+      color $white
       cursor pointer
+
     &:active
       bottom -4px
       box-shadow none
@@ -64,9 +66,17 @@ standart-button($font,$blue,$orange)
       setColor($orange)
 
     &:disabled
-      setColor($gray)
+      border-color $gray[2]
+      box-shadow 0 3px 0 darken($gray[2], 20)
+      color $gray[2]
+
       &:hover
-        background-color white
+        background-color $gray[2]
+        color $white
+
+      &.standart-button_size_small
+        box-shadow 0 2px 0 darken($gray[2], 20)
+
 
   #ripple
     position absolute
@@ -75,6 +85,6 @@ standart-button($font,$blue,$orange)
     width 50px
     height @width
     border-radius @width
-    background-color white
+    background-color $white
     animation ripple 0.5s forwards
     pointer-events none

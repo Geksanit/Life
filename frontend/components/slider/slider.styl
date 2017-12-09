@@ -1,7 +1,7 @@
-slider($font,$color)
+slider($font, $color, $white, $gray)
   // track - линия
-  $track-color = lightgray
-  // thumb - ручка/ползунок
+  $track-color = $gray[1]
+  // thumb - ползунок
   $thumb-color = $color[0]
   $thumb-radius = 10px
   $thumb-size = 20px
@@ -12,6 +12,7 @@ slider($font,$color)
     border-radius 5px
     background-color $track-color
     cursor pointer
+
   thumb()
     margin-top -7.5px
     height $thumb-size
@@ -31,11 +32,12 @@ slider($font,$color)
       height 24px
       background-color $thumb-color
       border-radius 5px
-      top 0px
+      top 0
       left 50% - 17.5px
-      color white
+      color $white
       text-align center
       line-height 24px
+
       &::after
         content ''
         bottom -2px
@@ -51,16 +53,20 @@ slider($font,$color)
       -moz-appearance none
       width 100%
       margin 39px 0 0 0
+
       &:focus
         outline none
+
       &::-webkit-slider-runnable-track
         track()
+
       &::-webkit-slider-thumb
-        thumb()
         -webkit-appearance none
+        thumb()
 
       &::-moz-range-track
         track()
+
       &::-moz-range-thumb
         thumb()
         border none
@@ -71,11 +77,14 @@ slider($font,$color)
         border-color transparent
         border-width $thumb-size 0
         color transparent
+
       &::-ms-fill-lower
         background yellow
         border-radius 10px
+
       &::-ms-fill-upper
         background $track-color
         border-radius 10px
+
       &::-ms-thumb
         thumb()
