@@ -1,9 +1,31 @@
 export default class Painter {
-  constructor(board, table) {
-    this.table = table;
+  constructor(board, table, controls) {
     this.board = board;
+    this.table = table || document.getElementById('board');
+    this.controls = controls || document.getElementById('controls');
+    this.buttons = this.controls.getElementsByTagName('BUTTON');
   }
-
+  statusToggle(running) {
+    if (!this.buttons) return;
+    for (let i = 0; i < this.buttons.length; i += 1) {
+      const button = this.buttons[i];
+      if (button.innerHTML === 'start') {
+        if (running) button.disabled = true;
+        else button.disabled = false;
+      }
+      if (button.innerHTML === 'pause') {
+        if (running) button.disabled = false;
+        else button.disabled = true;
+      }
+    }
+    const status = this.controls.getElementsByClassName('status')[0];
+    if (!status) return;
+    if (running) status.classList.remove('status_stopped');
+    else status.classList.add('status_stopped');
+  }
+  tableCellToggle(target) {
+    target.classList.toggle('live');
+  }
   painter(tableWidth) {
     // заполнение тела таблицы
     const { matrix } = this.board;

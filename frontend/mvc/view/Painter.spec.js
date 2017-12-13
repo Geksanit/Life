@@ -3,6 +3,10 @@ import Board from '../model/Board';
 import Painter from './Painter';
 
 describe('Представление', function () {
+  // вставка html в контроллере
+  // const div = document.createElement('div');
+  // div.insertAdjacentHTML('beforeEnd', '<div class="game"><table id="board"></table><div id="controls"><div class="container"><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button></div><div class="container"><div class="label">speed</div><div class="slider slider-mix"><div class="slider__view">1</div><input class="slider__input js-slider__input" type="range" min="1" max="10" value="1"></div></div><div class="container"><div class="label">width</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="label">height</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="status"></div></div></div></div>');
+  // document.body.appendChild(div);
   describe('painter', function () {
     const table = document.createElement('table');
     const board = new Board(5, 5);
@@ -66,5 +70,37 @@ describe('Представление', function () {
     it('меняет класс  существующих ячеек в соответствии с моделью', function () {
       assert.equal(tbody.children[1].children[1].className, 'live', 'класс изменился');
     });
+  });
+  describe('tableCellToggle', function () {
+    const table = document.createElement('table');
+    const board = new Board(5, 5);
+    const painter = new Painter(board, table);
+    const td = document.createElement('td');
+    it('переключает класс', function () {
+      painter.tableCellToggle(td);
+      assert.equal(td.classList[0], 'live');
+    });
+    it('переключает класс', function () {
+      painter.tableCellToggle(td);
+      assert.equal(td.classList[0], undefined);
+    });
+  });
+  describe('statusToggle', function () {
+    const painter = new Painter(new Board(5, 5), document.createElement('table'), document.getElementById('controls'));
+    const buttons = painter.buttons;
+    const status = painter.controls.getElementsByClassName('status')[0];
+    it('start', function () {
+      painter.statusToggle(false);
+      assert.equal(buttons[0].disabled, false, 'start button');
+      assert.equal(buttons[1].disabled, true, 'pause button');
+      assert.equal(status.classList[1], 'status_stopped')
+    });
+    it('pause', function () {
+      painter.statusToggle(true);
+      assert.equal(buttons[0].disabled, true, 'start button');
+      assert.equal(buttons[1].disabled, false, 'pause button');
+      assert.equal(status.classList[1], undefined)
+    });
+    
   });
 });

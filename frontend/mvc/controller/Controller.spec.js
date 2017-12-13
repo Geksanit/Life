@@ -6,7 +6,7 @@ describe('контроллер', function () {
   console.log('start controller test');
   describe('вставка html кода', function () {
     const div = document.createElement('div');
-    div.insertAdjacentHTML('beforeEnd', '<div class="game"> <table id="board"></table> <div id="controls"><button class="standart-button standart-button_ standart-button_small standart-button_-small">start</button><button class="standart-button standart-button_ standart-button_small standart-button_-small">pause</button><button class="standart-button standart-button_ standart-button_small standart-button_-small">clear</button> <div class="container"> <div class="label">speed</div> <div class="slider"> <div class="slider__view">1</div><input class="slider" oninput="sliderInput(event)" type="range" min="1" max="10" value="1"> </div> </div> <div class="container"> <div class="label">width</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> <div class="container"> <div class="label">height</div> <div class="slider"> <div class="slider__view">10</div><input class="slider" oninput="sliderInput(event)" type="range" min="0" max="100" value="10"> </div> </div> </div> </div>');
+    div.insertAdjacentHTML('beforeEnd', '<div class="game"><table id="board"></table><div id="controls"><div class="container"><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button></div><div class="container"><div class="label">speed</div><div class="slider slider-mix"><div class="slider__view">1</div><input class="slider__input js-slider__input" type="range" min="1" max="10" value="1"></div></div><div class="container"><div class="label">width</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="label">height</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="status"></div></div></div></div>');
     document.body.appendChild(div);
     it('проверка', function () {
       assert.notEqual(document.getElementsByClassName('game'), null, 'game not in DOM');
@@ -35,8 +35,8 @@ describe('контроллер', function () {
     });
   });
   
-  describe('метод buttonsDisable()', function () {
-    const buttons = controls.children;
+  describe('метод buttonsToggle()', function () {
+    const buttons = controller.controls.getElementsByTagName('BUTTON');
     it('состояние кнопок, когда running = false', function () {
       assert.equal(buttons[0].disabled, false, 'start активен');
       assert.equal(buttons[1].disabled, true, 'pause неактивна');
@@ -44,16 +44,18 @@ describe('контроллер', function () {
     });
     it('состояние кнопок, когда running = true', function () {
       controller.running = true;
-      controller.buttonsDisable();
+      controller.buttonsToggle();
       assert.equal(buttons[0].disabled, true, 'start неактивен');
       assert.equal(buttons[1].disabled, false, 'pause активна');
       assert.equal(buttons[2].disabled, false, 'clear активна');
       controller.running = false;
-      controller.buttonsDisable();
+      controller.buttonsToggle();
     });
   });
   
   describe("события", function () {
+    const buttons = controller.painter.buttons;
+    const sliders = document.querySelectorAll('.slider__input');
     it('клик по ячейке таблицы', function () {
       const cell = controller.table.children[0].children[0].children[0];
       assert.equal(controller.board.matrix[0][0], false, 'изначально ячейка = false');
@@ -63,7 +65,7 @@ describe('контроллер', function () {
       assert.equal(controller.board.matrix[0][0], false, 'клик по ячейке меняет состояние на false');
     });
     it('клик по кнопке start', function (done) {
-      const button = controller.controls.children[0];
+      const button = buttons[0];
       assert.equal(controller.running, false, 'before false');
       button.click();
       assert.equal(button.disabled && controller.running, true, 'after true');
@@ -71,7 +73,7 @@ describe('контроллер', function () {
       setTimeout(done, 1000);
     });
     it('клик по кнопке pause', function () {
-      const button = controller.controls.children[1];
+      const button = buttons[1];
       controller.running = true;
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
@@ -79,30 +81,33 @@ describe('контроллер', function () {
     });
     it('клик по кнопке clear', function () {
       const board = controller.board;
-      const button = controller.controls.children[2];
+      const button = buttons[2];
       controller.running = true;
       board.setCell(0, 0);
-      assert.equal((!button.disabled && board.matrix[0][0] && controller.running),true,'before true');
+      assert.equal((!button.disabled && board.matrix[0][0] && controller.running), true, 'before true');
       button.click();
-      assert.equal((!button.disabled && !board.matrix[0][0] && !controller.running),true,'after false');
+      assert.equal((!button.disabled && !board.matrix[0][0] && !controller.running), true, 'after false');
 
     });
     it('слайдер speed', function () {
-      const slider = document.querySelectorAll('input.slider')[0];
+      const slider = sliders[0];
+      const func = controller.resizeBoard;
       slider.value = 5;
-      controller.resizeBoard({ target: slider });
+      func({ target: slider });
       assert.equal(controller.fps, 5);
     });
     it('слайдер Width', function () {
-      const slider = document.querySelectorAll('input.slider')[1];
+      const slider = sliders[1];
+      const func = controller.resizeBoard;
       slider.value = 16;
-      controller.resizeBoard({ target: slider });
+      func({ target: slider });
       assert.equal(controller.board.n, 16);
     });
     it('слайдер Height', function () {
-      const slider = document.querySelectorAll('input.slider')[2];
+      const slider = sliders[2];
+      const func = controller.resizeBoard;
       slider.value = 15;
-      controller.resizeBoard({ target: slider });
+      func({ target: slider });
       assert.equal(controller.board.m, 15);
     });
   });

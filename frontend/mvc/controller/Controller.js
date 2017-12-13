@@ -8,42 +8,29 @@ export default class Controller {
     this.table = document.getElementById('board');
     this.controls = document.getElementById('controls');
     this.board = new Board(10, 10);
-    this.painter = new Painter(this.board, this.table);
+    this.painter = new Painter(this.board, this.table, this.controls);
     this.fps = 1;
+    this.cellToggle = this.cellToggle.bind(this);
+    this.setRunning = this.setRunning.bind(this);
+    this.resizeBoard = this.resizeBoard.bind(this);
     this.painter.newTable();// начальная отрисовка
-    this.buttonsDisable();
-    this.table.onclick = this.tableSetCell.bind(this);
-    this.controls.onclick = this.setRunning.bind(this);
-    this.controls.onchange = this.resizeBoard.bind(this);
+    this.buttonsToggle();
+    this.table.onclick = this.cellToggle;
+    this.controls.onclick = this.setRunning;
+    this.controls.onchange = this.resizeBoard;
   }
-  buttonsDisable() {
-    const buttons = document.getElementsByTagName('BUTTON');
-    if (buttons === undefined) {
-      // console.log('buttuns not found');
-      return;
-    }
-    for (let i = 0; i < buttons.length; i += 1) {
-      const button = buttons[i];
-      if (button.innerHTML === 'start') {
-        if (this.running) button.disabled = true;
-        else button.disabled = false;
-      }
-      if (button.innerHTML === 'pause') {
-        if (this.running) button.disabled = false;
-        else button.disabled = true;
-      }
-    }
+  buttonsToggle() {
+    this.painter.statusToggle(this.running);
   }
-  tableSetCell(event) {
-    const { target } = event;
+  cellToggle({ target }) {
     if (target.tagName !== 'TD') return;
     const j = target.cellIndex;
     const i = target.parentElement.sectionRowIndex;
-    target.classList.toggle('live');
+    this.painter.tableCellToggle(target);
     this.board.setCell(i, j);
   }
   anim(callback) {
-    // останавливается и вызывет аргумент, когда матрица перестает меняться
+    // останавливается и вызывет аргумент, когда матрица перестает меняться(для тестов)
     let oldMatrix;
     function loop() {
       const { fps } = this;
@@ -55,7 +42,7 @@ export default class Controller {
           // если матрица не меняется, ссылка остаетя актуальной
           if (oldMatrix === this.board.matrix) {
             this.running = false;
-            this.buttonsDisable();
+            this.buttonsToggle();
           } else oldMatrix = this.board.matrix;
         } else if (callback) {
           callback();
@@ -64,28 +51,26 @@ export default class Controller {
     }
     loop.call(this);
   }
-  setRunning(event) {
-    const { target } = event;
+  setRunning({ target }) {
     if (target.tagName !== 'BUTTON') return;
     switch (target.innerHTML) {
       case 'start':
         this.running = true;
-        this.buttonsDisable();
+        this.buttonsToggle();
         this.anim();
         break;
       case 'pause':
         this.running = false;
-        this.buttonsDisable();
+        this.buttonsToggle();
         break;
       case 'clear':
         this.board.clear();
         this.running = false;
-        this.buttonsDisable();
+        this.buttonsToggle();
         this.painter.repainter();
     }
   }
-  resizeBoard(event) {
-    const { target } = event;
+  resizeBoard({ target }) {
     if (target.tagName !== 'INPUT') return;
     const value = target.valueAsNumber;
     switch (target.parentElement.previousElementSibling.innerText) {
@@ -94,13 +79,13 @@ export default class Controller {
         break;
       case 'width':
         this.running = false;
-        this.buttonsDisable();
+        this.buttonsToggle();
         this.board.resize(this.board.m, value);
         this.painter.newTable();
         break;
       case 'height':
         this.running = false;
-        this.buttonsDisable();
+        this.buttonsToggle();
         this.board.resize(value, this.board.n);
         this.painter.newTable();
     }
