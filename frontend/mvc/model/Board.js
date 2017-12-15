@@ -1,4 +1,4 @@
-export default class Board {
+class Board {
   constructor(m = 10, n = 10) {
     // матрица m на n заполненная false
     this.matrix = [];
@@ -110,3 +110,4 @@ export default class Board {
     this.matrix[i][j] = !this.matrix[i][j];
   }
 }
+export default Board;
