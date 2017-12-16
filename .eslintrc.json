@@ -21,6 +21,7 @@
     "no-param-reassign": 0,
     "prefer-template": 2,
     "default-case": 1,
-    "class-methods-use-this": 1
+    "class-methods-use-this": 1,
+    "import/prefer-default-export": 0
   }
 }

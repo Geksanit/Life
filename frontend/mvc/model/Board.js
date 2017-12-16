@@ -1,16 +1,16 @@
 class Board {
-  constructor(m = 10, n = 10) {
+  constructor(rows = 10, columns = 10) {
     // матрица m на n заполненная false
     this.matrix = [];
-    this.m = m;// строки
-    this.n = n;// столбцы
-    for (let i = 0; i < m; i += 1) {
-      const line = [];
-      for (let j = 0; j < n; j += 1) {
-        line.push(false);
+    this.rows = rows;// строки
+    this.columns = columns;// столбцы
+    for (let i = 0; i < rows; i += 1) {
+      const row = [];
+      for (let j = 0; j < columns; j += 1) {
+        row.push(false);
       }
 
-      this.matrix.push(line);
+      this.matrix.push(row);
     }
   }
   resize(m, n) {
@@ -50,39 +50,36 @@ class Board {
       }
     }
 
-    this.m = m;
-    this.n = n;
+    this.rows = m;
+    this.columns = n;
     return this;
   }
   clear() {
-    for (let i = 0; i < this.m; i += 1) {
-      for (let j = 0; j < this.n; j += 1) {
-        this.matrix[i][j] = false;
-      }
-    }
-
+    this.matrix.forEach((row) => {
+      row.forEach((item, i, arr) => {
+        arr[i] = false;
+      });
+    });
     return this;
   }
   worker() {
     // обход всех ячеек с записью нового состояния
     const newMatrix = [];
-    let flag = false;// изменмлась ли матрица?
-    for (let i = 0; i < this.matrix.length; i += 1) {
-      const newLine = [];
-      for (let j = 0; j < this.matrix[0].length; j += 1) {
-        const cell = this.cell(i, j);
-        newLine.push(cell);
-        if (cell !== this.matrix[i][j]) flag = true;
-      }
-
-      newMatrix.push(newLine);
-    }
+    let flag = false;// изменилась ли матрица?
+    this.matrix.forEach((row, i) => {
+      const newRow = [];
+      row.forEach((cell, j) => {
+        const newCell = this.calculateCell(i, j);
+        newRow.push(newCell);
+        if (newCell !== cell) flag = true;
+      });
+      newMatrix.push(newRow);
+    });
 
     if (flag) this.matrix = newMatrix;
     return this;
   }
-  cell(i, j) {
-    // вычисляет новое состояние клетки
+  calculateCell(i, j) {
     // соседи за пределами поля считаются мертвыми
     let count = 0;// живые соседи
     let newCell = this.matrix[i][j];
@@ -106,7 +103,7 @@ class Board {
     else if (count === 3) newCell = true;
     return newCell;
   }
-  setCell(i, j) {
+  toggleCell(i, j) {
     this.matrix[i][j] = !this.matrix[i][j];
   }
 }

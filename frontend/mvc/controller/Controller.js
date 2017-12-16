@@ -2,32 +2,39 @@
 import Board from '../model/Board';
 import Painter from '../view/Painter';
 
-export default class Controller {
+const autobind = (self) => {
+  Object.getOwnPropertyNames(self.constructor.prototype).forEach((key) => {
+    const val = self[key];
+    if (key !== 'constructor' && typeof val === 'function') self[key] = val.bind(self);
+  });
+  return self;
+};
+
+class Controller {
   constructor() {
     this.running = false;
-    this.table = document.getElementById('board');
-    this.controls = document.getElementById('controls');
     this.board = new Board(10, 10);
-    this.painter = new Painter(this.board, this.table, this.controls);
+    this.painter = new Painter(this.board);
+    this.table = this.painter.table;
+    this.controls = this.painter.controls;
     this.fps = 1;
-    this.cellToggle = this.cellToggle.bind(this);
-    this.setRunning = this.setRunning.bind(this);
-    this.resizeBoard = this.resizeBoard.bind(this);
+    autobind(this);
     this.painter.newTable();// начальная отрисовка
-    this.buttonsToggle();
-    this.table.onclick = this.cellToggle;
+    this.showStatus();
+    this.table.onclick = this.toggleCell;
     this.controls.onclick = this.setRunning;
     this.controls.onchange = this.resizeBoard;
   }
-  buttonsToggle() {
-    this.painter.statusToggle(this.running);
+  showStatus() {
+    this.painter.setButtons(this.running);
+    this.painter.setStatus(this.running);
   }
-  cellToggle({ target }) {
+  toggleCell({ target }) {
     if (target.tagName !== 'TD') return;
-    const j = target.cellIndex;
-    const i = target.parentElement.sectionRowIndex;
-    this.painter.tableCellToggle(target);
-    this.board.setCell(i, j);
+    const cell = target.cellIndex;
+    const row = target.parentElement.sectionRowIndex;
+    this.painter.toggleCell(target);
+    this.board.toggleCell(row, cell);
   }
   anim(callback) {
     // останавливается и вызывет аргумент, когда матрица перестает меняться(для тестов)
@@ -38,11 +45,11 @@ export default class Controller {
         if (this.running) {
           requestAnimationFrame(loop.bind(this));// не блокирует поток!
           this.board.worker();
-          this.painter.repainter();
+          this.painter.repaintTable();
           // если матрица не меняется, ссылка остаетя актуальной
           if (oldMatrix === this.board.matrix) {
             this.running = false;
-            this.buttonsToggle();
+            this.showStatus();
           } else oldMatrix = this.board.matrix;
         } else if (callback) {
           callback();
@@ -56,18 +63,18 @@ export default class Controller {
     switch (target.innerHTML) {
       case 'start':
         this.running = true;
-        this.buttonsToggle();
+        this.showStatus();
         this.anim();
         break;
       case 'pause':
         this.running = false;
-        this.buttonsToggle();
+        this.showStatus();
         break;
       case 'clear':
         this.board.clear();
         this.running = false;
-        this.buttonsToggle();
-        this.painter.repainter();
+        this.showStatus();
+        this.painter.repaintTable();
     }
   }
   resizeBoard({ target }) {
@@ -79,15 +86,16 @@ export default class Controller {
         break;
       case 'width':
         this.running = false;
-        this.buttonsToggle();
-        this.board.resize(this.board.m, value);
+        this.showStatus();
+        this.board.resize(this.board.rows, value);
         this.painter.newTable();
         break;
       case 'height':
         this.running = false;
-        this.buttonsToggle();
-        this.board.resize(value, this.board.n);
+        this.showStatus();
+        this.board.resize(value, this.board.columns);
         this.painter.newTable();
     }
   }
 }
+export default Controller;

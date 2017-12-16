@@ -1,14 +1,13 @@
-export default class Painter {
-  constructor(board, table, controls) {
+class Painter {
+  constructor(board) {
     this.board = board;
-    this.table = table || document.getElementById('board');
-    this.controls = controls || document.getElementById('controls');
-    this.buttons = this.controls.getElementsByTagName('BUTTON');
+    this.table = document.getElementById('board');
+    this.controls = document.getElementById('controls');
+    this.buttons = this.controls.querySelectorAll('button');
   }
-  statusToggle(running) {
+  setButtons(running) {
     if (!this.buttons) return;
-    for (let i = 0; i < this.buttons.length; i += 1) {
-      const button = this.buttons[i];
+    this.buttons.forEach((button) => {
       if (button.innerHTML === 'start') {
         if (running) button.disabled = true;
         else button.disabled = false;
@@ -17,62 +16,56 @@ export default class Painter {
         if (running) button.disabled = false;
         else button.disabled = true;
       }
-    }
+    });
+  }
+  setStatus(running) {
     const status = this.controls.getElementsByClassName('status')[0];
     if (!status) return;
     if (running) status.classList.remove('status_stopped');
     else status.classList.add('status_stopped');
   }
-  tableCellToggle(target) {
+  toggleCell(target) {
     target.classList.toggle('live');
   }
-  painter(tableWidth) {
+  paintTbody(tableWidth) {
     // заполнение тела таблицы
-    const { matrix } = this.board;
-    const m = matrix.length;
-    const n = matrix[0].length;
-    const width = tableWidth / n;
-    const height = width;
-
+    const { matrix, columns } = this.board;
+    const size = tableWidth / columns;
     const tbody = document.createElement('tbody');
-    for (let i = 0; i < m; i += 1) {
+    matrix.forEach((row) => {
       const tr = document.createElement('tr');
-      for (let j = 0; j < n; j += 1) {
+      row.forEach((cell) => {
         const td = document.createElement('td');
-        td.style.width = `${width}px`;
-        td.style.height = `${height}px`;
-        if (matrix[i][j]) td.className = 'live';
+        this.setTdClass(td, cell);
+        td.style.width = `${size}px`;
+        td.style.height = `${size}px`;
         tr.appendChild(td);
-      }
-
+      });
       tbody.appendChild(tr);
-    }
-
+    });
     return tbody;
   }
-
   newTable() {
     // для  создания и ресайза таблицы
     const { table } = this;
-    const tbody = this.painter(table.clientWidth);
+    const tbody = this.paintTbody(table.clientWidth);
     if (table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
   }
-
-  repainter() {
+  repaintTable() {
     // изменение класса у ячеек таблицы
     const { table } = this;
     const { matrix } = this.board;
     const tbody = table.children[0];
-    const m = matrix.length;
-    const n = matrix[0].length;
-
-    for (let i = 0; i < m; i += 1) {
-      for (let j = 0; j < n; j += 1) {
-        const td = tbody.children[i].children[j];
-        if (matrix[i][j]) td.className = 'live';
-        else td.className = '';
-      }
-    }
+    matrix.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        this.setTdClass(tbody.children[i].children[j], cell);
+      });
+    });
+  }
+  setTdClass(td, flag) {
+    if (flag) td.className = 'live';
+    else td.className = '';
   }
 }
+export default Painter;
