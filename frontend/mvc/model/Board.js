@@ -1,15 +1,32 @@
+class Event {
+  constructor(sender) {
+    this.sender = sender;
+    this.listeners = [];
+  }
+  attach(listener) {
+    this.listeners.push(listener);
+  }
+  notify(args) {
+    this.listeners.forEach((listener) => {
+      listener(this.sender, args);
+    });
+  }
+}
+
 class Board {
   constructor(rows = 10, columns = 10) {
     // матрица m на n заполненная false
     this.matrix = [];
-    this.rows = rows;// строки
-    this.columns = columns;// столбцы
+    this.rows = rows;
+    this.columns = columns;
+    this.listOldMatrix = [];
+    this.matrixChanged = new Event(this);
+    this.cellToggled = new Event(this);
     for (let i = 0; i < rows; i += 1) {
       const row = [];
       for (let j = 0; j < columns; j += 1) {
         row.push(false);
       }
-
       this.matrix.push(row);
     }
   }
@@ -17,8 +34,6 @@ class Board {
     const { matrix } = this;
     const o = matrix.length;
     const p = matrix[0].length;
-
-    // console.log('resize',o,p,' to ',m,n);
     // убираем столбцы
     if (p > n) {
       for (let i = 0; i < o; i += 1) {
@@ -52,7 +67,8 @@ class Board {
 
     this.rows = m;
     this.columns = n;
-    return this;
+    this.listOldMatrix = [];
+    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   clear() {
     this.matrix.forEach((row) => {
@@ -60,7 +76,8 @@ class Board {
         arr[i] = false;
       });
     });
-    return this;
+    this.listOldMatrix = [];
+    this.matrixChanged.notify({ matrix: this.matrix, clear: true });
   }
   worker() {
     // обход всех ячеек с записью нового состояния
@@ -76,8 +93,21 @@ class Board {
       newMatrix.push(newRow);
     });
 
-    if (flag) this.matrix = newMatrix;
-    return this;
+    if (flag) { // изменилась ли матрица в сравнении с предыдущей ?
+      this.matrix = newMatrix;
+      flag = !this.isRepeat(newMatrix); // а в сравнении со всеми предыдущими ?
+    }
+    this.matrixChanged.notify({ matrix: this.matrix, isChanged: !flag });
+    return flag;
+  }
+  isRepeat(newMatrix) {
+    const flag = this.listOldMatrix.some((matrix) => {
+      if (matrix.length !== newMatrix.length) return false;
+      if (matrix[0].length !== newMatrix[0].length) return false;
+      return matrix.every((row, i) => row.every((cell, j) => (cell === newMatrix[i][j])));
+    });
+    this.listOldMatrix.push(newMatrix);
+    return flag;
   }
   calculateCell(i, j) {
     // соседи за пределами поля считаются мертвыми
@@ -105,6 +135,7 @@ class Board {
   }
   toggleCell(i, j) {
     this.matrix[i][j] = !this.matrix[i][j];
+    this.cellToggled.notify(i, j);
   }
 }
 export default Board;

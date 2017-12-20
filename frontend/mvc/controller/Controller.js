@@ -12,89 +12,80 @@ const autobind = (self) => {
 
 class Controller {
   constructor() {
+    this.model = new Board(10, 10);
+    this.view = new Painter(this.model);
     this.running = false;
-    this.board = new Board(10, 10);
-    this.painter = new Painter(this.board);
-    this.table = this.painter.table;
-    this.controls = this.painter.controls;
     this.fps = 1;
-    autobind(this);
-    this.painter.newTable();// начальная отрисовка
-    this.showStatus();
-    this.table.onclick = this.toggleCell;
-    this.controls.onclick = this.setRunning;
-    this.controls.onchange = this.resizeBoard;
+    this.setSubscription();
+    this.view.newTable(this.model.matrix);// начальная отрисовка
+    this.setRunning(false);
   }
-  showStatus() {
-    this.painter.setButtons(this.running);
-    this.painter.setStatus(this.running);
+  setSubscription() {
+    this.view.tableClicked.attach((sender, event) => {
+      this.toggleCell(event);
+    });
+    this.view.buttonClicked.attach((sender, event) => {
+      this.handlerButtons(event);
+    });
+    this.view.sliderChanged.attach((sender, event) => {
+      this.handlerSliders(event);
+    });
   }
   toggleCell({ target }) {
-    if (target.tagName !== 'TD') return;
     const cell = target.cellIndex;
     const row = target.parentElement.sectionRowIndex;
-    this.painter.toggleCell(target);
-    this.board.toggleCell(row, cell);
+    this.view.toggleCell(target);
+    this.model.toggleCell(row, cell);
+  }
+  setRunning(value) {
+    this.running = value;
+    this.view.setButtons(this.running);
+    this.view.setStatus(this.running);
   }
   anim(callback) {
-    // останавливается и вызывет аргумент, когда матрица перестает меняться(для тестов)
-    let oldMatrix;
+    // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
     function loop() {
-      const { fps } = this;
       setTimeout(() => {
         if (this.running) {
-          requestAnimationFrame(loop.bind(this));// не блокирует поток!
-          this.board.worker();
-          this.painter.repaintTable();
-          // если матрица не меняется, ссылка остаетя актуальной
-          if (oldMatrix === this.board.matrix) {
-            this.running = false;
-            this.showStatus();
-          } else oldMatrix = this.board.matrix;
+          requestAnimationFrame(loop.bind(this));
+          const flag = this.model.worker();
+          if (!flag) { // изменилась ли матрица ?
+            this.setRunning(false);
+          }
         } else if (callback) {
           callback();
         }
-      }, 1000 / fps);
+      }, 1000 / this.fps);
     }
     loop.call(this);
   }
-  setRunning({ target }) {
-    if (target.tagName !== 'BUTTON') return;
+  handlerButtons({ target }) {
     switch (target.innerHTML) {
       case 'start':
-        this.running = true;
-        this.showStatus();
+        this.setRunning(true);
         this.anim();
         break;
       case 'pause':
-        this.running = false;
-        this.showStatus();
+        this.setRunning(false);
         break;
       case 'clear':
-        this.board.clear();
-        this.running = false;
-        this.showStatus();
-        this.painter.repaintTable();
+        this.model.clear();
+        this.setRunning(false);
     }
   }
-  resizeBoard({ target }) {
-    if (target.tagName !== 'INPUT') return;
+  handlerSliders({ target }) {
     const value = target.valueAsNumber;
     switch (target.parentElement.previousElementSibling.innerText) {
       case 'speed':
         this.fps = value;
         break;
       case 'width':
-        this.running = false;
-        this.showStatus();
-        this.board.resize(this.board.rows, value);
-        this.painter.newTable();
+        this.setRunning(false);
+        this.model.resize(this.model.rows, value);
         break;
       case 'height':
-        this.running = false;
-        this.showStatus();
-        this.board.resize(value, this.board.columns);
-        this.painter.newTable();
+        this.setRunning(false);
+        this.model.resize(value, this.model.columns);
     }
   }
 }
