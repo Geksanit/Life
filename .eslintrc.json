@@ -1,7 +1,10 @@
 {
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jasmine": true,
+    "mocha": true,
+    "phantomjs": true
   },
   "parserOptions": {
     "ecmaVersion": 6,
@@ -22,6 +25,7 @@
     "prefer-template": 2,
     "default-case": 1,
     "class-methods-use-this": 1,
-    "import/prefer-default-export": 0
+    "import/prefer-default-export": 0,
+    "prefer-const": 1
   }
 }
