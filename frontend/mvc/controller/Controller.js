@@ -2,14 +2,6 @@
 import Board from '../model/Board';
 import Painter from '../view/Painter';
 
-const autobind = (self) => {
-  Object.getOwnPropertyNames(self.constructor.prototype).forEach((key) => {
-    const val = self[key];
-    if (key !== 'constructor' && typeof val === 'function') self[key] = val.bind(self);
-  });
-  return self;
-};
-
 class Controller {
   constructor() {
     this.model = new Board(10, 10);
@@ -17,7 +9,7 @@ class Controller {
     this.running = false;
     this.fps = 1;
     this.setSubscription();
-    this.view.newTable(this.model.matrix);// начальная отрисовка
+    this.view.initTable(this.model.matrix);// начальная отрисовка
     this.setRunning(false);
   }
   setSubscription() {
@@ -34,7 +26,6 @@ class Controller {
   toggleCell({ target }) {
     const cell = target.cellIndex;
     const row = target.parentElement.sectionRowIndex;
-    this.view.toggleCell(target);
     this.model.toggleCell(row, cell);
   }
   setRunning(value) {
@@ -44,20 +35,21 @@ class Controller {
   }
   anim(callback) {
     // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
-    function loop() {
+    const self = this;
+    const loop = function loop() {
       setTimeout(() => {
-        if (this.running) {
-          requestAnimationFrame(loop.bind(this));
-          const flag = this.model.worker();
-          if (!flag) { // изменилась ли матрица ?
-            this.setRunning(false);
+        if (self.running) {
+          requestAnimationFrame(loop);
+          const flag = self.model.calculateMatrix();
+          if (flag) { // повторилась ли матрица ?
+            self.setRunning(false);
           }
         } else if (callback) {
           callback();
         }
-      }, 1000 / this.fps);
-    }
-    loop.call(this);
+      }, 1000 / self.fps);
+    };
+    loop();
   }
   handlerButtons({ target }) {
     switch (target.innerHTML) {
@@ -69,7 +61,7 @@ class Controller {
         this.setRunning(false);
         break;
       case 'clear':
-        this.model.clear();
+        this.model.clearMatrix();
         this.setRunning(false);
     }
   }
@@ -81,11 +73,11 @@ class Controller {
         break;
       case 'width':
         this.setRunning(false);
-        this.model.resize(this.model.rows, value);
+        this.model.resizeMatrix(this.model.rows, value);
         break;
       case 'height':
         this.setRunning(false);
-        this.model.resize(value, this.model.columns);
+        this.model.resizeMatrix(value, this.model.columns);
     }
   }
 }

@@ -1,31 +1,24 @@
-class Event {
-  constructor(sender) {
-    this.sender = sender;
-    this.listeners = [];
-  }
-  attach(listener) {
-    this.listeners.push(listener);
-  }
-  notify(args) {
-    this.listeners.forEach((listener) => {
-      listener(this.sender, args);
-    });
-  }
-}
+import Event from '../utils/Event';
 
 class Painter {
   constructor(model) {
     this.model = model;
+    this.initDOMElements();
+    this.initEvents();
+    this.initHandlers();
+    this.initSubscription();
+  }
+  initDOMElements() {
     this.table = document.getElementById('board');
     this.controls = document.getElementById('controls');
     this.buttons = this.controls.querySelectorAll('button');
+  }
+  initEvents() {
     this.tableClicked = new Event(this);
     this.buttonClicked = new Event(this);
     this.sliderChanged = new Event(this);
-    this.setHandlers();
-    this.setSubscription();
   }
-  setHandlers() {
+  initHandlers() {
     this.table.onclick = (event) => {
       if (event.target.tagName === 'TD') {
         this.tableClicked.notify(event);
@@ -42,22 +35,20 @@ class Painter {
       }
     };
   }
-  setSubscription() {
+  initSubscription() {
     this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) this.newTable(obj.matrix);
-      else this.repaintTable(obj.matrix);
+      if (obj.resized) this.initTable(obj.matrix);
+      else this.changeTable(obj.matrix);
     });
   }
   setButtons(running) {
     if (!this.buttons) return;
     this.buttons.forEach((button) => {
       if (button.innerHTML === 'start') {
-        if (running) button.disabled = true;
-        else button.disabled = false;
+        button.disabled = running;
       }
       if (button.innerHTML === 'pause') {
-        if (running) button.disabled = false;
-        else button.disabled = true;
+        button.disabled = !running;
       }
     });
   }
@@ -67,18 +58,15 @@ class Painter {
     if (running) status.classList.remove('status_stopped');
     else status.classList.add('status_stopped');
   }
-  toggleCell(target) {
-    target.classList.toggle('live');
-  }
-  paintTbody(matrix, tableWidth) {
+  getNewTbody(matrix, tableWidth) {
     // заполнение тела таблицы
     const columns = matrix[0].length;
     const size = tableWidth / columns;
-    const tbody = document.createElement('tbody');
+    let tbody = document.createElement('tbody');
     matrix.forEach((row) => {
-      const tr = document.createElement('tr');
+      let tr = document.createElement('tr');
       row.forEach((cell) => {
-        const td = document.createElement('td');
+        let td = document.createElement('td');
         this.setTdClass(td, cell);
         td.style.width = `${size}px`;
         td.style.height = `${size}px`;
@@ -88,14 +76,14 @@ class Painter {
     });
     return tbody;
   }
-  newTable(matrix) {
+  initTable(matrix) {
     // для  создания и ресайза таблицы
     const { table } = this;
-    const tbody = this.paintTbody(matrix, table.clientWidth);
+    const tbody = this.getNewTbody(matrix, table.clientWidth);
     if (table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
   }
-  repaintTable(matrix) {
+  changeTable(matrix) {
     // изменение класса у ячеек таблицы
     const { table } = this;
     const tbody = table.children[0];
