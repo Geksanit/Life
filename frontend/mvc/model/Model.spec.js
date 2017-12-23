@@ -1,16 +1,16 @@
 /* global assert */
-import Board from './Board';
+import Model from './Model';
 
 describe('модель', () => {
   const modelRows = 5;
   const modelColumns = 5;
   let model;
   beforeEach(() => {
-    model = new Board(modelRows, modelColumns);
+    model = new Model(modelRows, modelColumns);
   });
   describe('конструктор', () => {
     it('матрица', () => {
-      const board = new Board(2, 2);
+      const board = new Model(2, 2);
       assert.deepEqual(board.matrix, [[false, false], [false, false]], 'должна быть матрица 2 на 2 с ложными значениями');
     });
     it('атрибуты', () => {
@@ -45,7 +45,7 @@ describe('модель', () => {
       assert.equal(model.matrix[1][1], false, 'ячейки обнулились');
     });
     it('calculateMatrix', () => {
-      const arr = new Board(3, 3);
+      const arr = new Model(3, 3);
       let flag;
       arr.toggleCell(0, 0); arr.toggleCell(0, 1); arr.toggleCell(1, 0);
       assert.deepEqual(arr.matrix, [

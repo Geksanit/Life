@@ -1,6 +1,6 @@
 import Event from '../utils/Event';
 
-class Board {
+class Model {
   constructor(rows = 10, columns = 10) {
     this.initMatrix(rows, columns);
     this.rows = rows;
@@ -77,4 +77,4 @@ class Board {
     this.matrixChanged.notify({ matrix: this.matrix });
   }
 }
-export default Board;
+export default Model;

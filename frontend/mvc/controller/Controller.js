@@ -1,11 +1,11 @@
 
-import Board from '../model/Board';
-import Painter from '../view/Painter';
+import Model from '../model/Model';
+import View from '../view/View';
 
 class Controller {
   constructor() {
-    this.model = new Board(10, 10);
-    this.view = new Painter(this.model);
+    this.model = new Model(10, 10);
+    this.view = new View(this.model);
     this.running = false;
     this.fps = 1;
     this.setSubscription();

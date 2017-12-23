@@ -1,6 +1,6 @@
 import Event from '../utils/Event';
 
-class Painter {
+class View {
   constructor(model) {
     this.model = model;
     this.initDOMElements();
@@ -98,4 +98,4 @@ class Painter {
     else td.className = '';
   }
 }
-export default Painter;
+export default View;
