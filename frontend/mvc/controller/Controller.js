@@ -1,93 +1,84 @@
 
-import Board from '../model/Board';
-import Painter from '../view/Painter';
+import Model from '../model/Model';
+import View from '../view/View';
 
-export default class Controller {
+class Controller {
   constructor() {
+    this.model = new Model(10, 10);
+    this.view = new View(this.model);
     this.running = false;
-    this.table = document.getElementById('board');
-    this.controls = document.getElementById('controls');
-    this.board = new Board(10, 10);
-    this.painter = new Painter(this.board, this.table, this.controls);
     this.fps = 1;
-    this.cellToggle = this.cellToggle.bind(this);
-    this.setRunning = this.setRunning.bind(this);
-    this.resizeBoard = this.resizeBoard.bind(this);
-    this.painter.newTable();// начальная отрисовка
-    this.buttonsToggle();
-    this.table.onclick = this.cellToggle;
-    this.controls.onclick = this.setRunning;
-    this.controls.onchange = this.resizeBoard;
+    this.setSubscription();
+    this.view.initTable(this.model.matrix);// начальная отрисовка
+    this.setRunning(false);
   }
-  buttonsToggle() {
-    this.painter.statusToggle(this.running);
+  setSubscription() {
+    this.view.tableClicked.attach((sender, event) => {
+      this.toggleCell(event);
+    });
+    this.view.buttonClicked.attach((sender, event) => {
+      this.handlerButtons(event);
+    });
+    this.view.sliderChanged.attach((sender, event) => {
+      this.handlerSliders(event);
+    });
   }
-  cellToggle({ target }) {
-    if (target.tagName !== 'TD') return;
-    const j = target.cellIndex;
-    const i = target.parentElement.sectionRowIndex;
-    this.painter.tableCellToggle(target);
-    this.board.setCell(i, j);
+  toggleCell({ target }) {
+    const cell = target.cellIndex;
+    const row = target.parentElement.sectionRowIndex;
+    this.model.toggleCell(row, cell);
+  }
+  setRunning(value) {
+    this.running = value;
+    this.view.setButtons(this.running);
+    this.view.setStatus(this.running);
   }
   anim(callback) {
-    // останавливается и вызывет аргумент, когда матрица перестает меняться(для тестов)
-    let oldMatrix;
-    function loop() {
-      const { fps } = this;
+    // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
+    const self = this;
+    const loop = function loop() {
       setTimeout(() => {
-        if (this.running) {
-          requestAnimationFrame(loop.bind(this));// не блокирует поток!
-          this.board.worker();
-          this.painter.repainter();
-          // если матрица не меняется, ссылка остаетя актуальной
-          if (oldMatrix === this.board.matrix) {
-            this.running = false;
-            this.buttonsToggle();
-          } else oldMatrix = this.board.matrix;
+        if (self.running) {
+          requestAnimationFrame(loop);
+          const flag = self.model.calculateMatrix();
+          if (flag) { // повторилась ли матрица ?
+            self.setRunning(false);
+          }
         } else if (callback) {
           callback();
         }
-      }, 1000 / fps);
-    }
-    loop.call(this);
+      }, 1000 / self.fps);
+    };
+    loop();
   }
-  setRunning({ target }) {
-    if (target.tagName !== 'BUTTON') return;
+  handlerButtons({ target }) {
     switch (target.innerHTML) {
       case 'start':
-        this.running = true;
-        this.buttonsToggle();
+        this.setRunning(true);
         this.anim();
         break;
       case 'pause':
-        this.running = false;
-        this.buttonsToggle();
+        this.setRunning(false);
         break;
       case 'clear':
-        this.board.clear();
-        this.running = false;
-        this.buttonsToggle();
-        this.painter.repainter();
+        this.model.clearMatrix();
+        this.setRunning(false);
     }
   }
-  resizeBoard({ target }) {
-    if (target.tagName !== 'INPUT') return;
+  handlerSliders({ target }) {
     const value = target.valueAsNumber;
     switch (target.parentElement.previousElementSibling.innerText) {
       case 'speed':
         this.fps = value;
         break;
       case 'width':
-        this.running = false;
-        this.buttonsToggle();
-        this.board.resize(this.board.m, value);
-        this.painter.newTable();
+        this.setRunning(false);
+        this.model.resizeMatrix(this.model.rows, value);
         break;
       case 'height':
-        this.running = false;
-        this.buttonsToggle();
-        this.board.resize(value, this.board.n);
-        this.painter.newTable();
+        this.setRunning(false);
+        this.model.resizeMatrix(value, this.model.columns);
     }
   }
 }
+export default Controller;
