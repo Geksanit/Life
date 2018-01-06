@@ -13,6 +13,10 @@ class Controller {
     this.setRunning(false);
   }
   setSubscription() {
+    this.model.matrixChanged.attach((sender, obj) => {
+      if (obj.resized) this.view.initTable(obj.matrix);
+      else this.view.changeTable(obj.matrix);
+    });
     this.view.tableClicked.attach((sender, event) => {
       this.toggleCell(event);
     });

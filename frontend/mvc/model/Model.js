@@ -40,8 +40,6 @@ class Model {
   }
   isRepeatMatrix(newMatrix) {
     const flag = this.listOldMatrix.some((matrix) => {
-      if (matrix.length !== newMatrix.length) return false;
-      if (matrix[0].length !== newMatrix[0].length) return false;
       return matrix.every((row, i) => row.every((cell, j) => (cell === newMatrix[i][j])));
     });
     if (flag) this.listOldMatrix = [];

@@ -6,7 +6,6 @@ class View {
     this.initDOMElements();
     this.initEvents();
     this.initHandlers();
-    this.initSubscription();
   }
   initDOMElements() {
     this.table = document.getElementById('board');
@@ -34,12 +33,6 @@ class View {
         this.sliderChanged.notify(event);
       }
     };
-  }
-  initSubscription() {
-    this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) this.initTable(obj.matrix);
-      else this.changeTable(obj.matrix);
-    });
   }
   setButtons(running) {
     if (!this.buttons) return;
