@@ -8,7 +8,7 @@ describe('модель', () => {
   beforeEach(() => {
     model = new Model(modelRows, modelColumns);
   });
-  describe('конструктор', () => {
+  describe('constructor', () => {
     it('матрица', () => {
       const board = new Model(2, 2);
       assert.deepEqual(board.matrix, [[false, false], [false, false]], 'должна быть матрица 2 на 2 с ложными значениями');
@@ -18,74 +18,97 @@ describe('модель', () => {
       assert.equal(model.columns, modelColumns);
     });
   });
-  describe('методы', () => {
-    describe('resizeMatrix', () => {
-      it('увеличение', () => {
-        model.resizeMatrix(50, 40);
-        assert.equal(model.matrix.length, 50, '50 строк матрицы');
-        assert.equal(model.rows, 50, '50 строк');
-        assert.equal(model.matrix[0].length, 40, '40 столбцов матрицы');
-        assert.equal(model.columns, 40, '40 столбцов');
-        assert.equal(model.matrix[49][39], false, 'значение ячейки');
-      });
-      it('уменьшение', () => {
-        model.resizeMatrix(50, 40);
-        model.resizeMatrix(10, 9);
-        assert.equal(model.matrix.length, 10, '10 строк матрицы');
-        assert.equal(model.rows, 10, '10 строк');
-        assert.equal(model.matrix[0].length, 9, '9 столбцов матрицы');
-        assert.equal(model.columns, 9, '9 столбцов');
-      });
+  describe('resizeMatrix', () => {
+    it('увеличение', () => {
+      model.resizeMatrix(50, 40);
+      assert.equal(model.matrix.length, 50, '50 строк матрицы');
+      assert.equal(model.rows, 50, '50 строк');
+      assert.equal(model.matrix[0].length, 40, '40 столбцов матрицы');
+      assert.equal(model.columns, 40, '40 столбцов');
+      assert.equal(model.matrix[49][39], false, 'значение ячейки');
     });
-    it('clearMatrix', () => {
+    it('уменьшение', () => {
+      model.resizeMatrix(50, 40);
+      model.resizeMatrix(10, 9);
+      assert.equal(model.matrix.length, 10, '10 строк матрицы');
+      assert.equal(model.rows, 10, '10 строк');
+      assert.equal(model.matrix[0].length, 9, '9 столбцов матрицы');
+      assert.equal(model.columns, 9, '9 столбцов');
+    });
+  });
+  describe('clearMatrix', () => {
+    it('обнуление ячеек', () => {
       model.toggleCell(0, 0);
       model.toggleCell(1, 1);
       model.clearMatrix();
       assert.equal(model.matrix[0][0], false, 'ячейки обнулились');
       assert.equal(model.matrix[1][1], false, 'ячейки обнулились');
     });
-    it('calculateMatrix', () => {
-      const arr = new Model(3, 3);
-      let flag;
-      arr.toggleCell(0, 0); arr.toggleCell(0, 1); arr.toggleCell(1, 0);
-      assert.deepEqual(arr.matrix, [
+  });
+  describe('calculateMatrix', () => {
+    const board = new Model(3, 3);
+    let flag;
+    board.toggleCell(0, 0); board.toggleCell(0, 1); board.toggleCell(1, 0);
+    it('новое состояние матрицы', () => {
+      assert.deepEqual(board.matrix, [
         [true, true, false], [true, false, false], [false, false, false],
       ]);
-
-      flag = arr.calculateMatrix();
-      assert.deepEqual(arr.matrix, [
+    });
+    it('возвращаемое значение сообщает о неизменении матрицы', () => {
+      flag = board.calculateMatrix();
+      assert.deepEqual(board.matrix, [
         [true, true, false], [true, true, false], [false, false, false],
       ]);
       assert.equal(flag, false, 'матрица не повторилась');
-
-      flag = arr.calculateMatrix();
-      assert.deepEqual(arr.matrix, [
+    });
+    it('возвращаемое значение сообщает об изменении матрицы', () => {
+      flag = board.calculateMatrix();
+      assert.deepEqual(board.matrix, [
         [true, true, false], [true, true, false], [false, false, false],
       ]);
       assert.equal(flag, true, 'матрица повторилась');
     });
-    it('isRepeat', () => {
-      let value = model.isRepeatMatrix(model.matrix);
-      assert.equal(value, false, 'первая проверка');
-      value = model.isRepeatMatrix(model.matrix);
-      assert.equal(value, true, 'вторая проверка');
+  });
+  describe('isRepeat', () => {
+    const board = new Model(3, 3);
+    it('матрица проверяется первый раз', () => {
+      assert.equal(board.isRepeatMatrix(board.matrix), false, 'первая проверка');
     });
-    it('calculateCell', () => {
+    it('при повторной проверке такой же матрицы(по содержимому) обнаруживется повторение', () => {
+      assert.equal(board.isRepeatMatrix(board.matrix), true, 'вторая проверка');
+    });
+  });
+  describe('calculateCell', () => {
+    it('2 живых соседа', () => {
       model.toggleCell(0, 0);
       model.toggleCell(0, 1);
-      assert.equal(model.calculateCell(1, 1), false, '2 живых соседа');
-
-      model.toggleCell(1, 0);
-      assert.equal(model.calculateCell(1, 1), true, '3 живых соседа');
-
-      model.toggleCell(0, 2);
-      assert.equal(model.calculateCell(1, 1), false, '4 живых соседа');
+      assert.equal(model.calculateCell(1, 1), false, 'клетка остается мертвой');
     });
-    it('toggleCell', () => {
+    it('3 живых соседа', () => {
       model.toggleCell(0, 0);
-      assert.equal(model.matrix[0][0], true, 'переключение ячейки');
+      model.toggleCell(0, 1);
+      model.toggleCell(1, 0);
+      assert.equal(model.calculateCell(1, 1), true, 'клетка оживает');
+    });
+    it('4 живых соседа', () => {
       model.toggleCell(0, 0);
-      assert.equal(model.matrix[0][0], false, 'переключение ячейки');
+      model.toggleCell(0, 1);
+      model.toggleCell(1, 0);
+      model.toggleCell(0, 2);
+      assert.equal(model.calculateCell(1, 1), false, 'клетка умирает');
+    });
+  });
+  describe('toggleCell', () => {
+    it('переключение ячейки', () => {
+      assert.equal(model.matrix[0][0], false);
+      model.toggleCell(0, 0);
+      assert.equal(model.matrix[0][0], true);
+    });
+    it('переключение ячейки', () => {
+      assert.equal(model.matrix[0][0], false);
+      model.toggleCell(0, 0);
+      model.toggleCell(0, 0);
+      assert.equal(model.matrix[0][0], false);
     });
   });
 });
