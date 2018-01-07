@@ -1,11 +1,10 @@
-
 import Model from '../model/Model';
 import View from '../view/View';
 
 class Controller {
   constructor() {
     this.model = new Model(10, 10);
-    this.view = new View(this.model);
+    this.view = new View();
     this.running = false;
     this.fps = 1;
     this.setSubscription();
