@@ -1,17 +1,16 @@
 import Event from '../utils/Event';
 
 class View {
-  constructor(model) {
-    this.model = model;
+  constructor() {
     this.initDOMElements();
     this.initEvents();
     this.initHandlers();
-    this.initSubscription();
   }
   initDOMElements() {
     this.table = document.getElementById('board');
     this.controls = document.getElementById('controls');
-    this.buttons = this.controls.querySelectorAll('button');
+    this.buttons = this.controls.getElementsByTagName('button');
+    this.status = this.controls.querySelector('.status');
   }
   initEvents() {
     this.tableClicked = new Event(this);
@@ -35,15 +34,10 @@ class View {
       }
     };
   }
-  initSubscription() {
-    this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) this.initTable(obj.matrix);
-      else this.changeTable(obj.matrix);
-    });
-  }
   setButtons(running) {
     if (!this.buttons) return;
-    this.buttons.forEach((button) => {
+    // forEach в браузере работает, а в тестах нет. по докам его быть не должно
+    Array.prototype.forEach.call(this.buttons, (button) => {
       if (button.innerHTML === 'start') {
         button.disabled = running;
       }
@@ -53,10 +47,9 @@ class View {
     });
   }
   setStatus(running) {
-    const status = this.controls.getElementsByClassName('status')[0];
-    if (!status) return;
-    if (running) status.classList.remove('status_stopped');
-    else status.classList.add('status_stopped');
+    if (!this.status) return;
+    if (running) this.status.classList.remove('status_stopped');
+    else this.status.classList.add('status_stopped');
   }
   getNewTbody(matrix, tableWidth) {
     // заполнение тела таблицы

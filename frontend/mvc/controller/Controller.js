@@ -1,11 +1,10 @@
-
 import Model from '../model/Model';
 import View from '../view/View';
 
 class Controller {
   constructor() {
     this.model = new Model(10, 10);
-    this.view = new View(this.model);
+    this.view = new View();
     this.running = false;
     this.fps = 1;
     this.setSubscription();
@@ -13,8 +12,12 @@ class Controller {
     this.setRunning(false);
   }
   setSubscription() {
+    this.model.matrixChanged.attach((sender, obj) => {
+      if (obj.resized) this.view.initTable(obj.matrix);
+      else this.view.changeTable(obj.matrix);
+    });
     this.view.tableClicked.attach((sender, event) => {
-      this.toggleCell(event);
+      this.handleCell(event);
     });
     this.view.buttonClicked.attach((sender, event) => {
       this.handlerButtons(event);
@@ -22,11 +25,6 @@ class Controller {
     this.view.sliderChanged.attach((sender, event) => {
       this.handlerSliders(event);
     });
-  }
-  toggleCell({ target }) {
-    const cell = target.cellIndex;
-    const row = target.parentElement.sectionRowIndex;
-    this.model.toggleCell(row, cell);
   }
   setRunning(value) {
     this.running = value;
@@ -50,6 +48,11 @@ class Controller {
       }, 1000 / self.fps);
     };
     loop();
+  }
+  handleCell({ target }) {
+    const cell = target.cellIndex;
+    const row = target.parentElement.sectionRowIndex;
+    this.model.toggleCell(row, cell);
   }
   handlerButtons({ target }) {
     switch (target.innerHTML) {

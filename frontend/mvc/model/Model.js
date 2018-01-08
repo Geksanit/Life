@@ -34,16 +34,15 @@ class Model {
     // обход всех ячеек с записью нового состояния
     const newMatrix = this.matrix.map((row, i) => row.map((cell, j) => this.calculateCell(i, j)));
     const flag = this.isRepeatMatrix(newMatrix); // повторилась ли матрица?
-    this.matrixChanged.notify({ matrix: this.matrix });
     this.matrix = newMatrix;
+    this.matrixChanged.notify({ matrix: this.matrix });
     return flag;
   }
   isRepeatMatrix(newMatrix) {
-    const flag = this.listOldMatrix.some((matrix) => {
-      if (matrix.length !== newMatrix.length) return false;
-      if (matrix[0].length !== newMatrix[0].length) return false;
-      return matrix.every((row, i) => row.every((cell, j) => (cell === newMatrix[i][j])));
-    });
+    const flag = this.listOldMatrix.some(matrix =>
+      matrix.every((row, i) =>
+        row.every((cell, j) =>
+          (cell === newMatrix[i][j]))));
     if (flag) this.listOldMatrix = [];
     else this.listOldMatrix.push(newMatrix);
     return flag;
