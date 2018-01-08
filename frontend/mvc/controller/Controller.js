@@ -17,7 +17,7 @@ class Controller {
       else this.view.changeTable(obj.matrix);
     });
     this.view.tableClicked.attach((sender, event) => {
-      this.toggleCell(event);
+      this.handleCell(event);
     });
     this.view.buttonClicked.attach((sender, event) => {
       this.handlerButtons(event);
@@ -25,11 +25,6 @@ class Controller {
     this.view.sliderChanged.attach((sender, event) => {
       this.handlerSliders(event);
     });
-  }
-  toggleCell({ target }) {
-    const cell = target.cellIndex;
-    const row = target.parentElement.sectionRowIndex;
-    this.model.toggleCell(row, cell);
   }
   setRunning(value) {
     this.running = value;
@@ -53,6 +48,11 @@ class Controller {
       }, 1000 / self.fps);
     };
     loop();
+  }
+  handleCell({ target }) {
+    const cell = target.cellIndex;
+    const row = target.parentElement.sectionRowIndex;
+    this.model.toggleCell(row, cell);
   }
   handlerButtons({ target }) {
     switch (target.innerHTML) {

@@ -21,7 +21,7 @@ module.exports = function (config) {
       },
     },
     files: ['frontend/**/*.spec.js'],
-    frameworks: ['chai', 'jasmine'],
+    frameworks: ['chai', 'jasmine', 'sinon'],
     // репортеры необходимы для  наглядного отображения результатов
     reporters: ['mocha', 'coverage'],
     preprocessors: {
@@ -44,7 +44,7 @@ module.exports = function (config) {
       'karma-chai', 'karma-coverage',
       'karma-webpack', 'karma-phantomjs-launcher',
       'karma-mocha-reporter', 'karma-sourcemap-loader',
-      'karma-babel-preprocessor',
+      'karma-babel-preprocessor', 'karma-sinon',
     ],
     webpackMiddleware: {
       noInfo: true,

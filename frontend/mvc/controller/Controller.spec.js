@@ -1,12 +1,44 @@
-/* global assert */
+/* global assert sinon */
 import Controller from './Controller';
 
 describe('контроллер', () => {
-  let controller;
-  console.log('start controller test');
-  describe('вставка html кода', () => {
-    const div = document.createElement('div');
-    div.insertAdjacentHTML('beforeEnd', '<div class="game"><table id="board"></table><div id="controls"><div class="container"><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button><button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button></div><div class="container"><div class="label">speed</div><div class="slider slider-mix"><div class="slider__view">1</div><input class="slider__input js-slider__input" type="range" min="1" max="10" value="1"></div></div><div class="container"><div class="label">width</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="label">height</div><div class="slider slider-mix"><div class="slider__view">10</div><input class="slider__input js-slider__input" type="range" min="0" max="100" value="10"></div></div><div class="container"><div class="status"></div></div></div></div>');
+  let div;
+  describe('подготовка к тестам, вставка html кода', () => {
+    div = document.createElement('div');
+    div.insertAdjacentHTML('beforeEnd', `<div class="game">
+      <table id="board"></table>
+      <div id="controls">
+      <div class="container">
+      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button>
+      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button>
+      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button>
+      </div>
+      <div class="container">
+      <div class="label">speed</div>
+      <div class="slider slider-mix">
+      <div class="slider__view">1</div>
+      <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
+      </div>
+      </div>
+      <div class="container">
+      <div class="label">width</div>
+      <div class="slider slider-mix">
+      <div class="slider__view">10</div>
+      <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
+      </div>
+      </div>
+      <div class="container">
+      <div class="label">height</div>
+      <div class="slider slider-mix">
+      <div class="slider__view">10</div>
+      <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
+      </div>
+      </div>
+      <div class="container">
+      <div class="status"></div>
+      </div>
+      </div>
+      </div>`);
     document.body.appendChild(div);
     it('проверка', () => {
       assert.notEqual(document.getElementsByClassName('game'), null, 'game not in DOM');
@@ -14,122 +46,121 @@ describe('контроллер', () => {
       assert.notEqual(document.getElementById('controls'), null, ' controls not in DOM');
     });
   });
-  /*
-  describe('Создание контроллера', function () {
-    controller = new Controller();
-    it('находит таблицу', function () {
-      assert.equal(controller.table !== undefined, true);
+  const controller = new Controller();
+  describe('constructor', () => {
+    assert.strictEqual(controller.fps, 1);
+    assert.strictEqual(controller.running, false);
+  });
+  describe('setRunning', () => {
+    it('сообщает вью отобразить статус true', () => {
+      const spy1 = sinon.stub(controller.view, 'setButtons');
+      const spy2 = sinon.stub(controller.view, 'setStatus');
+      controller.setRunning(true);
+      assert.strictEqual(controller.running, true);
+      assert.isOk(true);
+      assert.isOk(spy1.calledWith(true));
+      assert.isOk(spy2.calledWith(true));
+      spy1.restore();
+      spy2.restore();
     });
-    it('находит панель управления', function () {
-      assert.equal(controller.controls !== undefined, true);
-    });
-    it('создает модель', function () {
-      assert.equal(controller.board !== undefined, true);
-    });
-    it('создает представление', function () {
-      assert.equal(controller.painter !== undefined, true);
-    });
-    it('создает свойства', function () {
-      assert.equal(controller.running === false, true);
-      assert.equal(controller.fps, 1);
+    it('сообщает вью отобразить статус false', () => {
+      const spy1 = sinon.stub(controller.view, 'setButtons');
+      const spy2 = sinon.stub(controller.view, 'setStatus');
+      controller.setRunning(false);
+      assert.strictEqual(controller.running, false);
+      assert.isOk(spy1.calledWith(false));
+      assert.isOk(spy2.calledWith(false));
+      spy1.restore();
+      spy2.restore();
     });
   });
-  
-  describe('метод buttonsToggle()', function () {
-    const buttons = controller.controls.getElementsByTagName('BUTTON');
-    it('состояние кнопок, когда running = false', function () {
-      assert.equal(buttons[0].disabled, false, 'start активен');
-      assert.equal(buttons[1].disabled, true, 'pause неактивна');
-      assert.equal(buttons[2].disabled, false, 'clear активна');
-    });
-    it('состояние кнопок, когда running = true', function () {
+  describe('anim', () => {
+    const { model } = controller;
+    it('цикл просчета модели и её отбражения', (done) => {
+      model.resizeMatrix(2, 3);
+      model.clearMatrix();
+      model.toggleCell(0, 0);
+      model.toggleCell(0, 1);
+      model.toggleCell(0, 2);
+      model.toggleCell(1, 0);
       controller.running = true;
-      controller.buttonsToggle();
-      assert.equal(buttons[0].disabled, true, 'start неактивен');
-      assert.equal(buttons[1].disabled, false, 'pause активна');
-      assert.equal(buttons[2].disabled, false, 'clear активна');
-      controller.running = false;
-      controller.buttonsToggle();
+      // anim останавливается и вызывет аргумент, когда матрица перестает меняться
+      controller.anim(done);
+    });
+    it('проверка результата', () => {
+      assert.deepEqual(model.matrix, [[true, true, false], [true, true, false]]);
+      model.resizeMatrix(10, 10);
     });
   });
-  
-  describe("события", function () {
-    const buttons = controller.painter.buttons;
-    const sliders = document.querySelectorAll('.slider__input');
-    it('клик по ячейке таблицы', function () {
-      const cell = controller.table.children[0].children[0].children[0];
-      assert.equal(controller.board.matrix[0][0], false, 'изначально ячейка = false');
-      cell.click();
-      assert.equal(controller.board.matrix[0][0], true, 'клик по ячейке меняет состояние на true');
-      cell.click();
-      assert.equal(controller.board.matrix[0][0], false, 'клик по ячейке меняет состояние на false');
+  describe('handleCell', () => {
+    it('вызывет соответствующий метод модели', () => {
+      const table = document.getElementsByTagName('TABLE')[0];
+      const cell = table.children[0].children[2].children[1];
+      const spy = sinon.stub(controller.model, 'toggleCell');
+      controller.handleCell({ target: cell });
+      assert.isOk(spy.calledWith(2, 1));
+      spy.restore();
     });
-    it('клик по кнопке start', function (done) {
-      const button = buttons[0];
+  });
+  describe('handleButtons', () => {
+    it('клик по кнопке start запускает цикл анимации', () => {
+      const button = controller.view.buttons[0];
+      const spy = sinon.stub(controller, 'anim');
       assert.equal(controller.running, false, 'before false');
       button.click();
       assert.equal(button.disabled && controller.running, true, 'after true');
-      controller.running = false;
-      setTimeout(done, 1000);
+      assert.isOk(spy.called);
+      spy.restore();
     });
-    it('клик по кнопке pause', function () {
-      const button = buttons[1];
-      controller.running = true;
+    it('клик по кнопке pause останавливает цикл анимации', () => {
+      const button = controller.view.buttons[1];
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
       assert.equal((button.disabled && !controller.running), true, 'after false');
     });
-    it('клик по кнопке clear', function () {
-      const board = controller.board;
-      const button = buttons[2];
-      controller.running = true;
-      board.setCell(0, 0);
-      assert.equal((!button.disabled && board.matrix[0][0] && controller.running), true, 'before true');
+    it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
+      const button = controller.view.buttons[2];
+      const spy = sinon.stub(controller.model, 'clearMatrix');
+      controller.setRunning(true);
+      assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
-      assert.equal((!button.disabled && !board.matrix[0][0] && !controller.running), true, 'after false');
-
-    });
-    it('слайдер speed', function () {
-      const slider = sliders[0];
-      const func = controller.resizeBoard;
-      slider.value = 5;
-      func({ target: slider });
-      assert.equal(controller.fps, 5);
-    });
-    it('слайдер Width', function () {
-      const slider = sliders[1];
-      const func = controller.resizeBoard;
-      slider.value = 16;
-      func({ target: slider });
-      assert.equal(controller.board.n, 16);
-    });
-    it('слайдер Height', function () {
-      const slider = sliders[2];
-      const func = controller.resizeBoard;
-      slider.value = 15;
-      func({ target: slider });
-      assert.equal(controller.board.m, 15);
+      assert.equal((!button.disabled && !controller.running), true, 'after false');
+      assert.isOk(spy.called);
+      spy.restore();
     });
   });
-  
-  describe('анимация', function () {
-    const board = controller.board;
-    it('anim 1', function (done) {
-      board.resize(2, 3);
-      board.clear();
-      {
-        board.setCell(0, 0);
-        board.setCell(0, 1);
-        board.setCell(0, 2);
-        board.setCell(1, 0);
-      }
-      controller.running = true;
-      
-      // anim останавливается и вызывет аргумент, когда матрица перестает меняться
-      controller.anim(done);
+  describe('handleSliders', () => {
+    it('слайдер speed, регулирует частоту цикла анимации', () => {
+      const slider = controller.view.controls.querySelectorAll('input')[0];
+      slider.value = 5;
+      controller.handlerSliders({ target: slider });
+      assert.equal(controller.fps, 5);
     });
-    it('anim 2', function () {
-      assert.deepEqual(board.matrix, [[true, true, false], [true, true, false]]);
+    it('слайдер Width', () => {
+      const slider = controller.view.controls.querySelectorAll('input')[1];
+      const spy1 = sinon.stub(controller.model, 'resizeMatrix');
+      const spy2 = sinon.stub(controller, 'setRunning');
+      slider.value = 16;
+      controller.handlerSliders({ target: slider });
+      assert.isOk(spy1.calledWith(10, 16));
+      assert.isOk(spy2.calledWith(false));
+      spy1.restore();
+      spy2.restore();
     });
-  });*/
+    it('слайдер Height', () => {
+      const slider = controller.view.controls.querySelectorAll('input')[2];
+      const spy1 = sinon.stub(controller.model, 'resizeMatrix');
+      const spy2 = sinon.stub(controller, 'setRunning');
+      slider.value = 15;
+      controller.handlerSliders({ target: slider });
+      assert.isOk(spy1.calledWith(15, 10));
+      assert.isOk(spy2.calledWith(false));
+      spy1.restore();
+      spy2.restore();
+    });
+  });
+  it('очистка html', () => {
+    document.body.removeChild(div);
+    assert.isNull(document.getElementById('table'));
+  });
 });

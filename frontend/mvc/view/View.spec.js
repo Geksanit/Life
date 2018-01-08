@@ -4,7 +4,7 @@ import View from './View';
 
 describe('Представление', () => {
   let div;
-  describe('вставка html кода', () => {
+  describe('подготовка к тестам, вставка html кода', () => {
     div = document.createElement('div');
     div.insertAdjacentHTML('beforeEnd', `<div class="game">
       <table id="board"></table>
@@ -144,23 +144,23 @@ describe('Представление', () => {
     });
   });
   describe('setButtons', () => {
-    it('аргумент false', () => {
+    it('переключает кнопки, false', () => {
       view.setButtons(false);
       assert.equal(view.buttons[0].disabled, false, 'start button');
       assert.equal(view.buttons[1].disabled, true, 'pause button');
     });
-    it('аргумент true', () => {
+    it('переключает кнопки, true', () => {
       view.setButtons(true);
       assert.equal(view.buttons[0].disabled, true, 'start button');
       assert.equal(view.buttons[1].disabled, false, 'pause button');
     });
   });
   describe('setStatus', () => {
-    it('аргумент false', () => {
+    it('отбражает статус, false', () => {
       view.setStatus(false);
       assert.equal(view.status.classList.contains('status_stopped'), true);
     });
-    it('аргумент true', () => {
+    it('отбражает статус, true', () => {
       view.setStatus(true);
       assert.equal(view.status.classList.contains('status_stopped'), false);
     });
