@@ -1,13 +1,13 @@
-import Event from '../utils/Event';
+import EventSender from '../utils/EventSender';
 
 class View {
-  table: any;
-  controls: any;
-  buttons: any;
-  status: any;
-  tableClicked: Event;
-  buttonClicked: Event;
-  sliderChanged: Event;
+  table: HTMLElement;
+  controls: HTMLElement;
+  buttons: HTMLCollection;
+  status: Element;
+  tableClicked: EventSender;
+  buttonClicked: EventSender;
+  sliderChanged: EventSender;
   constructor() {
     this.initDOMElements();
     this.initEvents();
@@ -20,22 +20,22 @@ class View {
     this.status = this.controls.querySelector('.status');
   }
   initEvents(): void {
-    this.tableClicked = new Event(this);
-    this.buttonClicked = new Event(this);
-    this.sliderChanged = new Event(this);
+    this.tableClicked = new EventSender(this);
+    this.buttonClicked = new EventSender(this);
+    this.sliderChanged = new EventSender(this);
   }
   initHandlers(): void {
-    this.table.onclick = (event): void => {
+    this.table.onclick = (event: MouseEvent): any => {
       if (event.target.tagName === 'TD') {
         this.tableClicked.notify(event);
       }
     };
-    this.controls.onclick = (event): void => {
+    this.controls.onclick = (event: MouseEvent): void => {
       if (event.target.tagName === 'BUTTON') {
         this.buttonClicked.notify(event);
       }
     };
-    this.controls.onchange = (event): void => {
+    this.controls.onchange = (event: Event): void => {
       if (event.target.tagName === 'INPUT') {
         this.sliderChanged.notify(event);
       }
@@ -43,7 +43,8 @@ class View {
   }
   setButtons(running: boolean): void {
     if (!this.buttons) return;
-    // forEach для коллекции в браузере работает, а в тестах нет. по докам его быть не должно
+    // встроенный forEach для коллекции в браузере работает, а в тестах нет
+    // по докам его быть не должно
     Array.prototype.forEach.call(this.buttons, (button) => {
       if (button.innerHTML === 'start') {
         button.disabled = running;
@@ -58,15 +59,15 @@ class View {
     if (running) this.status.classList.remove('status_stopped');
     else this.status.classList.add('status_stopped');
   }
-  getNewTbody(matrix: any, tableWidth: number) {
+  getNewTbody(matrix: boolean[][], tableWidth: number): HTMLElement {
     // заполнение тела таблицы
-    const columns = matrix[0].length;
-    const size = tableWidth / columns;
-    let tbody: any = document.createElement('tbody');
+    const columns: number = matrix[0].length;
+    const size: number = tableWidth / columns;
+    let tbody: HTMLElement = document.createElement('tbody');
     matrix.forEach((row) => {
-      let tr: any = document.createElement('tr');
+      let tr: HTMLTableRowElement = document.createElement('tr');
       row.forEach((cell) => {
-        let td: any = document.createElement('td');
+        let td: HTMLTableCellElement = document.createElement('td');
         this.setTdClass(td, cell);
         td.style.width = `${size}px`;
         td.style.height = `${size}px`;
@@ -76,24 +77,24 @@ class View {
     });
     return tbody;
   }
-  initTable(matrix: Array<object>): void {
+  initTable(matrix: boolean[][]): void {
     // для  создания и ресайза таблицы
     const { table } = this;
-    const tbody = this.getNewTbody(matrix, table.clientWidth);
+    const tbody: HTMLElement = this.getNewTbody(matrix, table.clientWidth);
     if (table.children.length) table.replaceChild(tbody, table.children[0]);
     else table.appendChild(tbody);
   }
-  changeTable(matrix: Array<object>): void {
+  changeTable(matrix: boolean[][]): void {
     // изменение класса у ячеек таблицы
     const { table } = this;
-    const tbody = table.children[0];
-    matrix.forEach((row: Array<boolean>, i: number) => {
+    const tbody: Element = table.children[0];
+    matrix.forEach((row: boolean[], i: number) => {
       row.forEach((cell: boolean, j: number) => {
         this.setTdClass(tbody.children[i].children[j], cell);
       });
     });
   }
-  setTdClass(td: any, flag: boolean): void {
+  setTdClass(td: HTMLTableCellElement, flag: boolean): void {
     if (flag) td.className = 'live';
     else td.className = '';
   }

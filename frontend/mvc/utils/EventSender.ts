@@ -1,4 +1,4 @@
-class Event {
+class EventSender {
   sender: object;
   listeners: Array<(a, b) => void>;
   constructor(sender: any) {
@@ -8,10 +8,10 @@ class Event {
   attach(listener: (a, b) => void): void {
     this.listeners.push(listener);
   }
-  notify(args: any): void {
+  notify(args: object): void {
     this.listeners.forEach((listener) => {
       listener(this.sender, args);
     });
   }
 }
-export default Event;
+export default EventSender;

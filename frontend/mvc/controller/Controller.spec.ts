@@ -1,8 +1,10 @@
-/* global assert */
 import Controller from './Controller.ts';
+import { assert } from 'chai';
+import { SinonStub } from 'sinon';
+import Model from '../Model/Model';
 
 describe('контроллер', () => {
-  let div;
+  let div: HTMLElement;
   describe('подготовка к тестам, вставка html кода', () => {
     div = document.createElement('div');
     div.insertAdjacentHTML('beforeEnd', `<div class="game">
@@ -53,8 +55,8 @@ describe('контроллер', () => {
   });
   describe('setRunning', () => {
     it('сообщает вью отобразить статус true', () => {
-      const spy1 = sinon.stub(controller.view, 'setButtons');
-      const spy2 = sinon.stub(controller.view, 'setStatus');
+      const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
+      const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(true);
       assert.strictEqual(controller.running, true);
       assert.isOk(true);
@@ -64,8 +66,8 @@ describe('контроллер', () => {
       spy2.restore();
     });
     it('сообщает вью отобразить статус false', () => {
-      const spy1 = sinon.stub(controller.view, 'setButtons');
-      const spy2 = sinon.stub(controller.view, 'setStatus');
+      const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
+      const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(false);
       assert.strictEqual(controller.running, false);
       assert.isOk(spy1.calledWith(false));
@@ -75,7 +77,7 @@ describe('контроллер', () => {
     });
   });
   describe('anim', () => {
-    const { model } = controller;
+    const { model }: Model = controller;
     it('цикл просчета модели и её отбражения', (done) => {
       model.resizeMatrix(2, 3);
       model.clearMatrix();
@@ -94,9 +96,9 @@ describe('контроллер', () => {
   });
   describe('handleCell', () => {
     it('вызывет соответствующий метод модели', () => {
-      const table = document.getElementsByTagName('TABLE')[0];
-      const cell = table.children[0].children[2].children[1];
-      const spy = sinon.stub(controller.model, 'toggleCell');
+      const table: HTMLTableElement = document.getElementsByTagName('TABLE')[0];
+      const cell: HTMLTableCellElement = table.children[0].children[2].children[1];
+      const spy: SinonStub = sinon.stub(controller.model, 'toggleCell');
       controller.handleCell({ target: cell });
       assert.isOk(spy.calledWith(2, 1));
       spy.restore();
@@ -104,8 +106,8 @@ describe('контроллер', () => {
   });
   describe('handleButtons', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
-      const button = controller.view.buttons[0];
-      const spy = sinon.stub(controller, 'anim');
+      const button: HTMLButtonElement = controller.view.buttons[0];
+      const spy: SinonStub = sinon.stub(controller, 'anim');
       assert.equal(controller.running, false, 'before false');
       button.click();
       assert.equal(button.disabled && controller.running, true, 'after true');
@@ -113,14 +115,14 @@ describe('контроллер', () => {
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
-      const button = controller.view.buttons[1];
+      const button: HTMLButtonElement = controller.view.buttons[1];
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
       assert.equal((button.disabled && !controller.running), true, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
-      const button = controller.view.buttons[2];
-      const spy = sinon.stub(controller.model, 'clearMatrix');
+      const button: HTMLButtonElement = controller.view.buttons[2];
+      const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
@@ -131,16 +133,16 @@ describe('контроллер', () => {
   });
   describe('handleSliders', () => {
     it('слайдер speed, регулирует частоту цикла анимации', () => {
-      const slider = controller.view.controls.querySelectorAll('input')[0];
-      slider.value = 5;
+      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[0];
+      slider.value = '5';
       controller.handlerSliders({ target: slider });
       assert.equal(controller.fps, 5);
     });
     it('слайдер Width', () => {
-      const slider = controller.view.controls.querySelectorAll('input')[1];
-      const spy1 = sinon.stub(controller.model, 'resizeMatrix');
-      const spy2 = sinon.stub(controller, 'setRunning');
-      slider.value = 16;
+      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[1];
+      const spy1: SinonStub = sinon.stub(controller.model, 'resizeMatrix');
+      const spy2: SinonStub = sinon.stub(controller, 'setRunning');
+      slider.value = '16';
       controller.handlerSliders({ target: slider });
       assert.isOk(spy1.calledWith(10, 16));
       assert.isOk(spy2.calledWith(false));
@@ -148,10 +150,10 @@ describe('контроллер', () => {
       spy2.restore();
     });
     it('слайдер Height', () => {
-      const slider = controller.view.controls.querySelectorAll('input')[2];
-      const spy1 = sinon.stub(controller.model, 'resizeMatrix');
-      const spy2 = sinon.stub(controller, 'setRunning');
-      slider.value = 15;
+      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[2];
+      const spy1: SinonStub = sinon.stub(controller.model, 'resizeMatrix');
+      const spy2: SinonStub = sinon.stub(controller, 'setRunning');
+      slider.value = '15';
       controller.handlerSliders({ target: slider });
       assert.isOk(spy1.calledWith(15, 10));
       assert.isOk(spy2.calledWith(false));

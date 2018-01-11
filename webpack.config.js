@@ -44,8 +44,13 @@ const baseConfig = {
       },
     }, */{
       test: /\.tsx?$/,
-      use: 'ts-loader',
-      exclude: [/node_modules/, __dirname +'./frontend/**/*.spec.ts'],
+      use: {
+        loader: 'ts-loader',
+        options: {
+          onlyCompileBundledFiles: true,
+        },
+      },
+      exclude: /node_modules/,
     }, {
       test: /\.pug$/,
       use: {
