@@ -2,6 +2,10 @@ import Model from '../model/Model';
 import View from '../view/View';
 
 class Controller {
+  model: Model;
+  view: View;
+  running: boolean;
+  fps: number;
   constructor() {
     this.model = new Model(10, 10);
     this.view = new View();
@@ -11,7 +15,7 @@ class Controller {
     this.view.initTable(this.model.matrix);// начальная отрисовка
     this.setRunning(false);
   }
-  setSubscription() {
+  setSubscription():void {
     this.model.matrixChanged.attach((sender, obj) => {
       if (obj.resized) this.view.initTable(obj.matrix);
       else this.view.changeTable(obj.matrix);
@@ -26,19 +30,19 @@ class Controller {
       this.handlerSliders(event);
     });
   }
-  setRunning(value) {
+  setRunning(value: boolean): void {
     this.running = value;
     this.view.setButtons(this.running);
     this.view.setStatus(this.running);
   }
-  anim(callback) {
+  anim(callback?): void {
     // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
     const self = this;
     const loop = function loop() {
       setTimeout(() => {
         if (self.running) {
           requestAnimationFrame(loop);
-          const flag = self.model.calculateMatrix();
+          const flag: boolean = self.model.calculateMatrix();
           if (flag) { // повторилась ли матрица ?
             self.setRunning(false);
           }
@@ -49,12 +53,12 @@ class Controller {
     };
     loop();
   }
-  handleCell({ target }) {
-    const cell = target.cellIndex;
-    const row = target.parentElement.sectionRowIndex;
+  handleCell({ target }): void {
+    const cell: number = target.cellIndex;
+    const row: number = target.parentElement.sectionRowIndex;
     this.model.toggleCell(row, cell);
   }
-  handlerButtons({ target }) {
+  handlerButtons({ target }): void {
     switch (target.innerHTML) {
       case 'start':
         this.setRunning(true);
@@ -68,8 +72,8 @@ class Controller {
         this.setRunning(false);
     }
   }
-  handlerSliders({ target }) {
-    const value = target.valueAsNumber;
+  handlerSliders({ target }): void {
+    const value: number = target.valueAsNumber;
     switch (target.parentElement.previousElementSibling.innerText) {
       case 'speed':
         this.fps = value;

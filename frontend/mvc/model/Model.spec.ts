@@ -1,5 +1,5 @@
 /* global assert */
-import Model from './Model';
+import Model from './Model.ts';
 
 describe('модель', () => {
   const modelRows = 5;

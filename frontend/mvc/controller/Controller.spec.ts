@@ -1,5 +1,5 @@
-/* global assert sinon */
-import Controller from './Controller';
+/* global assert */
+import Controller from './Controller.ts';
 
 describe('контроллер', () => {
   let div;

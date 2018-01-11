@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const baseConfig = {
   context: __dirname + '/frontend',
   entry: {
-    'index': './index.js',
+    'index': './index.ts',
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -20,6 +20,9 @@ const baseConfig = {
   ],
   cache: true,
   devtool: 'inline-source-map',
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
   resolveLoader: {
     modules: ['node_modules'],
     moduleExtensions: ['-loader'],
@@ -27,10 +30,11 @@ const baseConfig = {
   },
   module: {
     rules: [{
+      test: /\.ts$/,
       enforce: 'pre',
-      test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'eslint-loader',
+      loader: 'tslint-loader',
+      options: { configFile: './tslint.json' },
     }, /*{
       test: /\.js$/,
       exclude: /node_modules/,
@@ -38,7 +42,11 @@ const baseConfig = {
       options: {
         presets: ['env'],
       },
-    },*/ {
+    }, */{
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: [/node_modules/, __dirname +'./frontend/**/*.spec.ts'],
+    }, {
       test: /\.pug$/,
       use: {
         loader: 'pug',

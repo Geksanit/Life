@@ -1,6 +1,6 @@
 /* global assert */
-import Model from '../model/Model';
-import View from './View';
+import Model from '../model/Model.ts';
+import View from './View.ts';
 
 describe('Представление', () => {
   let div;

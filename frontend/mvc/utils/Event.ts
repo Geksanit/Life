@@ -1,12 +1,14 @@
 class Event {
-  constructor(sender) {
+  sender: object;
+  listeners: Array<(a, b) => void>;
+  constructor(sender: any) {
     this.sender = sender;
     this.listeners = [];
   }
-  attach(listener) {
+  attach(listener: (a, b) => void): void {
     this.listeners.push(listener);
   }
-  notify(args) {
+  notify(args: any): void {
     this.listeners.forEach((listener) => {
       listener(this.sender, args);
     });

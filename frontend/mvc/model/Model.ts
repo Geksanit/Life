@@ -1,14 +1,19 @@
 import Event from '../utils/Event';
 
 class Model {
-  constructor(rows = 10, columns = 10) {
+  matrix: Array<object>;
+  rows: number;
+  columns: number;
+  listOldMatrix: Array<object>;
+  matrixChanged: Event;
+  constructor(rows: number = 10, columns: number = 10) {
     this.initMatrix(rows, columns);
     this.rows = rows;
     this.columns = columns;
     this.listOldMatrix = [];
     this.matrixChanged = new Event(this);
   }
-  initMatrix(rows, columns) {
+  initMatrix(rows: number, columns: number): void {
     this.matrix = [];
     for (let i = 0; i < rows; i += 1) {
       let row = [];
@@ -18,39 +23,40 @@ class Model {
       this.matrix.push(row);
     }
   }
-  resizeMatrix(rows, columns) {
+  resizeMatrix(rows: number, columns: number): void {
     this.initMatrix(rows, columns);
     this.rows = rows;
     this.columns = columns;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
-  clearMatrix() {
+  clearMatrix(): void {
     this.initMatrix(this.rows, this.columns);
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix });
   }
-  calculateMatrix() {
+  calculateMatrix(): boolean {
     // обход всех ячеек с записью нового состояния
-    const newMatrix = this.matrix.map((row, i) => row.map((cell, j) => this.calculateCell(i, j)));
-    const flag = this.isRepeatMatrix(newMatrix); // повторилась ли матрица?
+    const newMatrix: Array<object> = this.matrix.map((row: Array<object>, i: number) =>
+      row.map((cell: Array<boolean>, j: number) => this.calculateCell(i, j)));
+    const flag: boolean = this.isRepeatMatrix(newMatrix);
     this.matrix = newMatrix;
     this.matrixChanged.notify({ matrix: this.matrix });
-    return flag;
+    return flag;// повторилась матрица?
   }
-  isRepeatMatrix(newMatrix) {
-    const flag = this.listOldMatrix.some(matrix =>
-      matrix.every((row, i) =>
-        row.every((cell, j) =>
+  isRepeatMatrix(newMatrix): boolean {
+    const flag: boolean = this.listOldMatrix.some((matrix: Array<object>) =>
+      matrix.every((row: Array<object>, i: number) =>
+        row.every((cell: Array<boolean>, j: number) =>
           (cell === newMatrix[i][j]))));
     if (flag) this.listOldMatrix = [];
     else this.listOldMatrix.push(newMatrix);
     return flag;
   }
-  calculateCell(row, column) {
+  calculateCell(row: number, column: number): boolean {
     // соседи за пределами поля считаются мертвыми
-    let count = 0;// живые соседи
-    let newCell = this.matrix[row][column];
+    let count: number = 0;// живые соседи
+    let newCell: boolean = this.matrix[row][column];
 
     if (this.matrix[row - 1]) {
       if (this.matrix[row - 1][column - 1]) count += 1;
@@ -71,7 +77,7 @@ class Model {
     else if (count === 3) newCell = true;
     return newCell;
   }
-  toggleCell(row, column) {
+  toggleCell(row: number, column: number): void {
     this.matrix[row][column] = !this.matrix[row][column];
     this.matrixChanged.notify({ matrix: this.matrix });
   }
