@@ -165,8 +165,10 @@ describe('Представление', () => {
       assert.equal(view.status.classList.contains('status_stopped'), false);
     });
   });
-  it('очистка html', () => {
-    document.body.removeChild(div);
-    assert.isNull(document.getElementById('table'));
+  describe('очистка html', () => {
+    it('проверка', () => {
+      document.body.removeChild(div);
+      assert.isNull(document.getElementById('table'));
+    });
   });
 });

@@ -20,7 +20,7 @@ module.exports = (config) => {
       },
     },
     files: ['frontend/**/*.spec.ts'],
-    frameworks: ['chai', 'jasmine', 'sinon'],
+    frameworks: ['chai', 'mocha', 'sinon'],
     // репортеры необходимы для  наглядного отображения результатов
     reporters: ['mocha', 'coverage'],
     preprocessors: {
@@ -31,7 +31,7 @@ module.exports = (config) => {
       resolve: webpackConfig.resolve,
     },
     plugins: [
-      'karma-jasmine', 'karma-mocha',
+      'karma-mocha',
       'karma-chai', 'karma-coverage',
       'karma-webpack', 'karma-phantomjs-launcher',
       'karma-mocha-reporter', 'karma-sourcemap-loader',

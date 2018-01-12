@@ -78,6 +78,7 @@ describe('контроллер', () => {
   describe('anim', () => {
     const { model } = controller;
     it('цикл просчета модели и её отбражения', (done) => {
+      controller.fps = 100;// что бы не превысить таймаут ожидания done
       model.resizeMatrix(2, 3);
       model.clearMatrix();
       model.toggleCell(0, 0);
@@ -160,8 +161,10 @@ describe('контроллер', () => {
       spy2.restore();
     });
   });
-  it('очистка html', () => {
-    document.body.removeChild(div);
-    assert.isNull(document.getElementById('table'));
+  describe('очистка html', () => {
+    it('проверка', () => {
+      document.body.removeChild(div);
+      assert.isNull(document.getElementById('table'));
+    });
   });
 });
