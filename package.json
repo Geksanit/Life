@@ -4,9 +4,9 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "webpack --env production",
-    "dev": "nodemon --watch webpack.config.js --exec \"webpack-dev-server --env development\"",
-    "test": "karma start karma.conf.js --browsers PhantomJS"
+    "build": "./node_modules/.bin/webpack --env production",
+    "dev": "./node_modules/.bin/nodemon --watch webpack.config.js --exec \"./node_modules/.bin/webpack-dev-server --env development\"",
+    "test": "./node_modules/.bin/karma start karma.conf.js --browsers PhantomJS"
   },
   "keywords": [],
   "author": "",
