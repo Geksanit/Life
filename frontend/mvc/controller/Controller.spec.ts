@@ -1,13 +1,12 @@
 import Controller from './Controller.ts';
 import { assert } from 'chai';
 import { SinonStub } from 'sinon';
-import Model from '../Model/Model';
 
 describe('контроллер', () => {
   let div: HTMLElement;
   describe('подготовка к тестам, вставка html кода', () => {
     div = document.createElement('div');
-    div.insertAdjacentHTML('beforeEnd', `<div class="game">
+    div.insertAdjacentHTML('beforeend', `<div class="game">
       <table id="board"></table>
       <div id="controls">
       <div class="container">
@@ -77,7 +76,7 @@ describe('контроллер', () => {
     });
   });
   describe('anim', () => {
-    const { model }: Model = controller;
+    const { model } = controller;
     it('цикл просчета модели и её отбражения', (done) => {
       model.resizeMatrix(2, 3);
       model.clearMatrix();
@@ -96,8 +95,8 @@ describe('контроллер', () => {
   });
   describe('handleCell', () => {
     it('вызывет соответствующий метод модели', () => {
-      const table: HTMLTableElement = document.getElementsByTagName('TABLE')[0];
-      const cell: HTMLTableCellElement = table.children[0].children[2].children[1];
+      const table = document.getElementsByTagName('TABLE')[0] as HTMLTableElement;
+      const cell = table.rows[2].cells[1] as HTMLTableCellElement;
       const spy: SinonStub = sinon.stub(controller.model, 'toggleCell');
       controller.handleCell({ target: cell });
       assert.isOk(spy.calledWith(2, 1));
@@ -106,7 +105,7 @@ describe('контроллер', () => {
   });
   describe('handleButtons', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
-      const button: HTMLButtonElement = controller.view.buttons[0];
+      const button = controller.view.buttons[0] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller, 'anim');
       assert.equal(controller.running, false, 'before false');
       button.click();
@@ -115,13 +114,13 @@ describe('контроллер', () => {
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
-      const button: HTMLButtonElement = controller.view.buttons[1];
+      const button = controller.view.buttons[1] as HTMLButtonElement;
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
       assert.equal((button.disabled && !controller.running), true, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
-      const button: HTMLButtonElement = controller.view.buttons[2];
+      const button = controller.view.buttons[2] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
       assert.equal((!button.disabled && controller.running), true, 'before true');

@@ -1,7 +1,7 @@
 class EventSender {
   sender: object;
   listeners: Array<(a, b) => void>;
-  constructor(sender: any) {
+  constructor(sender: object) {
     this.sender = sender;
     this.listeners = [];
   }

@@ -72,19 +72,19 @@ describe('Представление', () => {
     it('создает и заполняет tbody в соостветсви с моделью', () => {
       model.toggleCell(1, 1);
       const tbody = view.getNewTbody(model.matrix, tableWidth);
-      assert.equal(tbody.children.length, modelRows, '5 строк');
-      assert.equal(tbody.children[0].children.length, modelColumns, '5 столбцов');
+      assert.equal(tbody.rows.length, modelRows, '5 строк');
+      assert.equal(tbody.rows[1].cells.length, modelColumns, '5 столбцов');
     });
     it('сразу задает класс живым ячейкам', () => {
       model.toggleCell(1, 1);
       const tbody = view.getNewTbody(model.matrix, tableWidth);
-      assert.equal(tbody.children[1].children[1].className, 'live', 'класс живой клетки');
+      assert.equal(tbody.rows[1].cells[1].className, 'live', 'класс живой клетки');
     });
     it('вычисляет ширину ячейки, в инлайн стили', () => {
       model.toggleCell(1, 1);
       const tbody = view.getNewTbody(model.matrix, tableWidth);
-      assert.equal(tbody.children[1].children[1].style.width, `${tableWidth / modelColumns}px`, 'ширина');
-      assert.equal(tbody.children[1].children[1].style.height, `${tableWidth / modelColumns}px`, 'высота');
+      assert.equal(tbody.rows[1].cells[1].style.width, `${tableWidth / modelColumns}px`, 'ширина');
+      assert.equal(tbody.rows[1].cells[1].style.height, `${tableWidth / modelColumns}px`, 'высота');
     });
   });
   describe('initTable', () => {
@@ -95,9 +95,9 @@ describe('Представление', () => {
       view.initTable(model.matrix);
       assert.equal(table.children.length, 1, 'появился tbody');
       const tbody = table.children[0];
-      assert.equal(tbody.children.length, modelRows, 'строки');
-      assert.equal(tbody.children[0].children.length, modelColumns, 'столбцы');
-      assert.equal(tbody.children[1].children[1].className, 'live', 'класс живой клетки');
+      assert.equal(tbody.rows.length, modelRows, 'строки');
+      assert.equal(tbody.rows[0].cells.length, modelColumns, 'столбцы');
+      assert.equal(tbody.rows[1].cells[1].className, 'live', 'класс живой клетки');
     });
     it('заменяет tbody, если есть', () => {
       const { table } = view;
@@ -105,15 +105,15 @@ describe('Представление', () => {
       view.initTable(model.matrix);
       const tbody = table.children[0];
       assert.equal(table.children.length, 1, 'в таблице только 1 tbody');
-      assert.equal(tbody.children[1].children[1].className, '', 'класс клетки');
-      assert.equal(tbody.children[2].children[2].className, 'live', 'класс клетки');
+      assert.equal(tbody.rows[1].cells[1].className, '', 'класс клетки');
+      assert.equal(tbody.rows[2].cells[2].className, 'live', 'класс клетки');
     });
     it('при ресайзе модели таблица тоже меняется', () => {
       model.resizeMatrix(8, 9);
       view.initTable(model.matrix);
       const tbody = view.table.children[0];
-      assert.equal(tbody.children.length, 8, '8 строк');
-      assert.equal(tbody.children[0].children.length, 9, '9 столбцов');
+      assert.equal(tbody.rows.length, 8, '8 строк');
+      assert.equal(tbody.rows[0].cells.length, 9, '9 столбцов');
       model.resizeMatrix(5, 5);
       view.initTable(model.matrix);
     });
@@ -122,18 +122,18 @@ describe('Представление', () => {
     it('размер не меняет', () => {
       view.changeTable(model.matrix);
       const tbody = view.table.children[0];
-      assert.equal(tbody.children.length, modelRows);
-      assert.equal(tbody.children[0].children.length, modelColumns);
+      assert.equal(tbody.rows.length, modelRows);
+      assert.equal(tbody.rows[0].cells.length, modelColumns);
     });
     it('меняет класс  существующих ячеек в соответствии с моделью', () => {
       model.toggleCell(3, 3);
       view.changeTable(model.matrix);
       const tbody = view.table.children[0];
-      assert.equal(tbody.children[3].children[3].className, 'live', 'класс изменился');
+      assert.equal(tbody.rows[3].cells[3].className, 'live', 'класс изменился');
     });
   });
   describe('setTdClass', () => {
-    const td = document.createElement('td');
+    const td = document.createElement('td') as HTMLTableCellElement;
     it('переключает класс', () => {
       view.setTdClass(td, true);
       assert.equal(td.classList[0], 'live');

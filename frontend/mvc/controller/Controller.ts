@@ -38,7 +38,7 @@ class Controller {
   anim(callback?): void {
     // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
     const self = this;
-    const loop = function loop() {
+    const loop = () => {
       setTimeout(() => {
         if (self.running) {
           requestAnimationFrame(loop);

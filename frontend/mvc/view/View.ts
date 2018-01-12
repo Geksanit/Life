@@ -1,10 +1,10 @@
 import EventSender from '../utils/EventSender';
 
 class View {
-  table: HTMLElement;
+  table: HTMLTableElement;
   controls: HTMLElement;
-  buttons: HTMLCollection;
-  status: Element;
+  buttons: NodeListOf<HTMLButtonElement>;
+  status: HTMLElement;
   tableClicked: EventSender;
   buttonClicked: EventSender;
   sliderChanged: EventSender;
@@ -14,10 +14,10 @@ class View {
     this.initHandlers();
   }
   initDOMElements(): void {
-    this.table = document.getElementById('board');
+    this.table = document.getElementById('board') as HTMLTableElement;
     this.controls = document.getElementById('controls');
     this.buttons = this.controls.getElementsByTagName('button');
-    this.status = this.controls.querySelector('.status');
+    this.status = this.controls.querySelector('.status') as HTMLElement;
   }
   initEvents(): void {
     this.tableClicked = new EventSender(this);
@@ -25,18 +25,21 @@ class View {
     this.sliderChanged = new EventSender(this);
   }
   initHandlers(): void {
-    this.table.onclick = (event: MouseEvent): any => {
-      if (event.target.tagName === 'TD') {
+    this.table.onclick = (event: MouseEvent): void => {
+      const element = event.target as HTMLElement;
+      if (element.tagName === 'TD') {
         this.tableClicked.notify(event);
       }
     };
     this.controls.onclick = (event: MouseEvent): void => {
-      if (event.target.tagName === 'BUTTON') {
+      const element = event.target as HTMLElement;
+      if (element.tagName === 'BUTTON') {
         this.buttonClicked.notify(event);
       }
     };
     this.controls.onchange = (event: Event): void => {
-      if (event.target.tagName === 'INPUT') {
+      const element = event.target as HTMLElement;
+      if (element.tagName === 'INPUT') {
         this.sliderChanged.notify(event);
       }
     };
@@ -59,11 +62,11 @@ class View {
     if (running) this.status.classList.remove('status_stopped');
     else this.status.classList.add('status_stopped');
   }
-  getNewTbody(matrix: boolean[][], tableWidth: number): HTMLElement {
+  getNewTbody(matrix: boolean[][], tableWidth: number): HTMLTableSectionElement {
     // заполнение тела таблицы
     const columns: number = matrix[0].length;
     const size: number = tableWidth / columns;
-    let tbody: HTMLElement = document.createElement('tbody');
+    let tbody: HTMLTableSectionElement = document.createElement('tbody');
     matrix.forEach((row) => {
       let tr: HTMLTableRowElement = document.createElement('tr');
       row.forEach((cell) => {
@@ -85,18 +88,15 @@ class View {
     else table.appendChild(tbody);
   }
   changeTable(matrix: boolean[][]): void {
-    // изменение класса у ячеек таблицы
-    const { table } = this;
-    const tbody: Element = table.children[0];
     matrix.forEach((row: boolean[], i: number) => {
       row.forEach((cell: boolean, j: number) => {
-        this.setTdClass(tbody.children[i].children[j], cell);
+        this.setTdClass(this.table.rows[i].cells[j], cell);
       });
     });
   }
   setTdClass(td: HTMLTableCellElement, flag: boolean): void {
-    if (flag) td.className = 'live';
-    else td.className = '';
+    if (flag) td.classList.add('live');
+    else td.classList.remove('live');
   }
 }
 export default View;
