@@ -109,12 +109,15 @@ describe('Представление', () => {
       assert.equal(tbody.rows[2].cells[2].className, 'live', 'класс клетки');
     });
     it('при ресайзе модели таблица тоже меняется', () => {
-      model.resizeMatrix(8, 9);
+      model.setWidthMatrix(9);
+      model.setHeightMatrix(8);
       view.initTable(model.matrix);
       const tbody = view.table.children[0];
       assert.equal(tbody.rows.length, 8, '8 строк');
       assert.equal(tbody.rows[0].cells.length, 9, '9 столбцов');
-      model.resizeMatrix(5, 5);
+      // возврат в исходное состояние
+      model.setWidthMatrix(5);
+      model.setHeightMatrix(5);
       view.initTable(model.matrix);
     });
   });

@@ -79,7 +79,8 @@ describe('контроллер', () => {
     const { model } = controller;
     it('цикл просчета модели и её отбражения', (done) => {
       controller.fps = 100;// что бы не превысить таймаут ожидания done
-      model.resizeMatrix(2, 3);
+      model.setHeightMatrix(2);
+      model.setWidthMatrix(3);
       model.clearMatrix();
       model.toggleCell(0, 0);
       model.toggleCell(0, 1);
@@ -91,7 +92,8 @@ describe('контроллер', () => {
     });
     it('проверка результата', () => {
       assert.deepEqual(model.matrix, [[true, true, false], [true, true, false]]);
-      model.resizeMatrix(10, 10);
+      model.setHeightMatrix(10);
+      model.setWidthMatrix(10);
     });
   });
   describe('handleCell', () => {
@@ -140,22 +142,22 @@ describe('контроллер', () => {
     });
     it('слайдер Width', () => {
       const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[1];
-      const spy1: SinonStub = sinon.stub(controller.model, 'resizeMatrix');
+      const spy1: SinonStub = sinon.stub(controller.model, 'setWidthMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
       slider.value = '16';
       controller.handlerSliders({ target: slider });
-      assert.isOk(spy1.calledWith(10, 16));
+      assert.isOk(spy1.calledWith(16));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();
       spy2.restore();
     });
     it('слайдер Height', () => {
       const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[2];
-      const spy1: SinonStub = sinon.stub(controller.model, 'resizeMatrix');
+      const spy1: SinonStub = sinon.stub(controller.model, 'setHeightMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
       slider.value = '15';
       controller.handlerSliders({ target: slider });
-      assert.isOk(spy1.calledWith(15, 10));
+      assert.isOk(spy1.calledWith(15));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();
       spy2.restore();

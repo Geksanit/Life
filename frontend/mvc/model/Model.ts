@@ -23,10 +23,48 @@ class Model {
       this.matrix.push(row);
     }
   }
-  resizeMatrix(rows: number, columns: number): void {
-    this.initMatrix(rows, columns);
-    this.rows = rows;
-    this.columns = columns;
+  setWidthMatrix(newValue: number): void {
+    const { matrix } = this;
+    const oldValue: number = this.columns;
+
+    // убираем столбцы
+    if (oldValue > newValue) {
+      matrix.forEach((row: boolean[]) => {
+        row.splice(newValue - 1, oldValue - newValue);
+      });
+    }
+
+    // добавляем столбцы
+    if (oldValue < newValue) {
+      matrix.forEach((row: boolean[]) => {
+        for (let j = oldValue; j < newValue; j += 1) {
+          row.push(false);
+        }
+      });
+    }
+    this.columns = newValue;
+    this.listOldMatrix = [];
+    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
+  }
+  setHeightMatrix(newValue: number): void {
+    const { matrix } = this;
+    const oldValue: number = this.rows;
+
+    // убираем строки
+    if (oldValue > newValue) matrix.splice(newValue - 1, oldValue - newValue);
+
+    // добавляем строки
+    if (oldValue < newValue) {
+      const newRow: boolean[] = [];
+      for (let j = 0; j < this.columns; j += 1) {
+        newRow.push(false);
+      }
+      // копию новой пустой строки вставляем нужное число раз
+      for (let i = oldValue; i < newValue; i += 1) {
+        matrix.push(newRow.slice());
+      }
+    }
+    this.rows = newValue;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }

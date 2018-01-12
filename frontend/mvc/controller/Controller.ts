@@ -80,11 +80,11 @@ class Controller {
         break;
       case 'width':
         this.setRunning(false);
-        this.model.resizeMatrix(this.model.rows, value);
+        this.model.setWidthMatrix(value);
         break;
       case 'height':
         this.setRunning(false);
-        this.model.resizeMatrix(value, this.model.columns);
+        this.model.setHeightMatrix(value);
     }
   }
 }

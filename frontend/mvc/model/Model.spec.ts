@@ -2,8 +2,8 @@ import Model from './Model.ts';
 import { assert } from 'chai';
 
 describe('модель', () => {
-  const modelRows: number = 5;
-  const modelColumns: number = 5;
+  const modelRows: number = 10;
+  const modelColumns: number = 10;
   let model: Model;
   beforeEach(() => {
     model = new Model(modelRows, modelColumns);
@@ -18,22 +18,58 @@ describe('модель', () => {
       assert.equal(model.columns, modelColumns);
     });
   });
-  describe('resizeMatrix', () => {
-    it('увеличение', () => {
-      model.resizeMatrix(50, 40);
-      assert.equal(model.matrix.length, 50, '50 строк матрицы');
-      assert.equal(model.rows, 50, '50 строк');
-      assert.equal(model.matrix[0].length, 40, '40 столбцов матрицы');
-      assert.equal(model.columns, 40, '40 столбцов');
-      assert.equal(model.matrix[49][39], false, 'значение ячейки');
+  describe('setWidthMatrix', () => {
+    it('увеличение числа столбцов матрицы', () => {
+      const { matrix } = model;
+      const newValue: number = 40;
+      model.toggleCell(0, 0);
+      assert.equal(matrix[0][0], true, 'значение ячейки до');
+      assert.isOk(matrix[0].length < newValue, 'было меньше столбцов');
+
+      model.setWidthMatrix(newValue);
+      assert.equal(matrix[0].length, newValue, 'число столбцов матрицы');
+      assert.equal(model.columns, newValue, 'свойсво модели');
+      assert.equal(matrix[0][newValue-1], false, 'значение новой ячейки');
+      assert.equal(matrix[0][0], true, 'значение ячейки не меняется');
     });
-    it('уменьшение', () => {
-      model.resizeMatrix(50, 40);
-      model.resizeMatrix(10, 9);
-      assert.equal(model.matrix.length, 10, '10 строк матрицы');
-      assert.equal(model.rows, 10, '10 строк');
-      assert.equal(model.matrix[0].length, 9, '9 столбцов матрицы');
-      assert.equal(model.columns, 9, '9 столбцов');
+    it('уменьшение числа столбцов', () => {
+      const { matrix } = model;
+      const newValue: number = 5;
+      model.toggleCell(0, 0);
+      assert.equal(matrix[0][0], true, 'значение ячейки до');
+      assert.isOk(matrix[0].length > newValue, 'было больше столбцов');
+
+      model.setWidthMatrix(newValue);
+      assert.equal(matrix[0].length, newValue, 'число столбцов матрицы');
+      assert.equal(model.columns, newValue, 'свойсво модели');
+      assert.equal(matrix[0][0], true, 'значение ячейки не меняется');
+    });
+  });
+  describe('setHeightMatrix', () => {
+    it('увеличение числа срок матрицы', () => {
+      const { matrix } = model;
+      const newValue: number = 50;
+      model.toggleCell(0, 0);
+      assert.equal(matrix[0][0], true, 'значение ячейки до');
+      assert.isOk(matrix.length < newValue, 'было меньше строк');
+
+      model.setHeightMatrix(newValue);
+      assert.equal(matrix.length, newValue, 'число строк матрицы');
+      assert.equal(model.rows, newValue, 'свойсво модели');
+      assert.equal(matrix[newValue-1][0], false, 'значение новой ячейки');
+      assert.equal(matrix[0][0], true, 'значение ячейки не меняется');
+    });
+    it('уменьшение числа строк', () => {
+      const { matrix } = model;
+      const newValue: number = 4;
+      model.toggleCell(0, 0);
+      assert.equal(matrix[0][0], true, 'значение ячейки до');
+      assert.isOk(matrix.length > newValue, 'было больше строк');
+
+      model.setHeightMatrix(newValue);
+      assert.equal(matrix.length, newValue, 'число строк матрицы');
+      assert.equal(model.rows, newValue, 'свойсво модели');
+      assert.equal(matrix[0][0], true, 'значение ячейки не меняется');
     });
   });
   describe('clearMatrix', () => {
