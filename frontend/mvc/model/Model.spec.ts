@@ -1,16 +1,16 @@
-/* global assert */
-import Model from './Model';
+import Model from './Model.ts';
+import { assert } from 'chai';
 
 describe('модель', () => {
-  const modelRows = 5;
-  const modelColumns = 5;
-  let model;
+  const modelRows: number = 5;
+  const modelColumns: number = 5;
+  let model: Model;
   beforeEach(() => {
     model = new Model(modelRows, modelColumns);
   });
   describe('constructor', () => {
     it('матрица', () => {
-      const board = new Model(2, 2);
+      const board: Model = new Model(2, 2);
       assert.deepEqual(board.matrix, [[false, false], [false, false]], 'должна быть матрица 2 на 2 с ложными значениями');
     });
     it('атрибуты', () => {
@@ -46,8 +46,8 @@ describe('модель', () => {
     });
   });
   describe('calculateMatrix', () => {
-    const board = new Model(3, 3);
-    let flag;
+    const board: Model = new Model(3, 3);
+    let flag: boolean;
     board.toggleCell(0, 0); board.toggleCell(0, 1); board.toggleCell(1, 0);
     it('новое состояние матрицы', () => {
       assert.deepEqual(board.matrix, [
@@ -70,7 +70,7 @@ describe('модель', () => {
     });
   });
   describe('isRepeat', () => {
-    const board = new Model(3, 3);
+    const board: Model = new Model(3, 3);
     it('матрица проверяется первый раз', () => {
       assert.equal(board.isRepeatMatrix(board.matrix), false, 'первая проверка');
     });

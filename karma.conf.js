@@ -1,7 +1,6 @@
-/**
- * Created by DNS on 07.11.2017.
- */
-module.exports = function (config) {
+const webpackConfig = require('./webpack.karma.config');
+
+module.exports = (config) => {
   config.set({
     browsers: ['Chrome'],
     hostname: 'localhost',
@@ -20,24 +19,16 @@ module.exports = function (config) {
         istanbul: { noCompact: true },
       },
     },
-    files: ['frontend/**/*.spec.js'],
+    files: ['frontend/**/*.spec.ts'],
     frameworks: ['chai', 'jasmine', 'sinon'],
     // репортеры необходимы для  наглядного отображения результатов
     reporters: ['mocha', 'coverage'],
     preprocessors: {
-      'frontend/**/*.spec.js': ['webpack', 'babel', 'sourcemap', 'coverage'],
+      'frontend/**/*.spec.ts': ['webpack', 'sourcemap', 'coverage'],
     },
-    babelPreprocessor: {
-      options: {
-        presets: ['env'],
-        sourceMap: 'inline',
-      },
-      filename: function (file) {
-        return file.originalPath.replace(/\.js$/, '.es5.js');
-      },
-      sourceFileName: function (file) {
-        return file.originalPath;
-      },
+    webpack: {
+      module: webpackConfig.module,
+      resolve: webpackConfig.resolve,
     },
     plugins: [
       'karma-jasmine', 'karma-mocha',
