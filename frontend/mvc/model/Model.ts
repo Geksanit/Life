@@ -59,7 +59,6 @@ class Model {
       for (let j = 0; j < this.columns; j += 1) {
         newRow.push(false);
       }
-      // копию новой пустой строки вставляем нужное число раз
       for (let i = oldValue; i < newValue; i += 1) {
         matrix.push(newRow.slice());
       }
@@ -80,7 +79,7 @@ class Model {
     const flag: boolean = this.isRepeatMatrix(newMatrix);
     this.matrix = newMatrix;
     this.matrixChanged.notify({ matrix: this.matrix });
-    return flag;// повторилась матрица?
+    return flag;
   }
   isRepeatMatrix(newMatrix): boolean {
     const flag: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
@@ -98,13 +97,11 @@ class Model {
     const { matrix } = this;
     const indexes: number[] = [-1, 0, 1];
 
-    // обход окресности ячейки
     indexes.forEach((i: number) => {
-      const indexRow = row + i;// строка может не существовать
+      const indexRow = row + i;
       if (matrix[indexRow]) {
         indexes.forEach((j: number) => {
-          const indexCell = column + j;// ячейка тоже может не существовать
-          // вычисляемая ячейка не считается
+          const indexCell = column + j;
           if (matrix[indexRow][indexCell] && (i !== 0 || j !== 0)) count += 1;
         });
       }

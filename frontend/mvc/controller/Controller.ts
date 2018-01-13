@@ -36,7 +36,7 @@ class Controller {
     this.view.setStatus(this.running);
   }
   anim(callback?): void {
-    // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
+    // останавливается и вызывет callback(для тестов), когда матрица перестает меняться
     const self = this;
     const loop = () => {
       setTimeout(() => {

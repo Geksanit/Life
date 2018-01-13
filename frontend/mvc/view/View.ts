@@ -63,7 +63,6 @@ class View {
     else this.status.classList.add('status_stopped');
   }
   getNewTbody(matrix: boolean[][], tableWidth: number): HTMLTableSectionElement {
-    // заполнение тела таблицы
     const columns: number = matrix[0].length;
     const size: number = tableWidth / columns;
     let tbody: HTMLTableSectionElement = document.createElement('tbody');
