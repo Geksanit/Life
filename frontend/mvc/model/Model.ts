@@ -95,22 +95,22 @@ class Model {
     // соседи за пределами поля считаются мертвыми
     let count: number = 0;// живые соседи
     let newCell: boolean = this.matrix[row][column];
+    const { matrix } = this;
+    const indexes: number[] = [-1, 0, 1];
 
-    if (this.matrix[row - 1]) {
-      if (this.matrix[row - 1][column - 1]) count += 1;
-      if (this.matrix[row - 1][column]) count += 1;
-      if (this.matrix[row - 1][column + 1]) count += 1;
-    }
-
-    if (this.matrix[row][column - 1]) count += 1;
-    if (this.matrix[row][column + 1]) count += 1;
-
-    if (this.matrix[row + 1]) {
-      if (this.matrix[row + 1][column - 1]) count += 1;
-      if (this.matrix[row + 1][column]) count += 1;
-      if (this.matrix[row + 1][column + 1]) count += 1;
-    }
-
+    // обход окресности ячейки
+    indexes.forEach((i: number) => {
+      const indexRow = row + i;// строка может не существовать
+      if (matrix[indexRow]) {
+        indexes.forEach((j: number) => {
+          const indexCell = column + j;// ячейка тоже может не существовать
+          // вычисляемая ячейка не считается
+          if (matrix[indexRow][indexCell] && (i !== 0 || j !== 0)) count += 1;
+        });
+      }
+    });
+    // при count=2 ячейка сохраняет своё состояние
+    // в остальных случаях новое состояние от неё не зависит
     if (count < 2 || count > 3) newCell = false;
     else if (count === 3) newCell = true;
     return newCell;
