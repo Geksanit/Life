@@ -1,10 +1,10 @@
 import EventSender from '../utils/EventSender';
 
 class View {
-  table: HTMLTableElement;
-  controls: HTMLElement;
-  buttons: NodeListOf<HTMLButtonElement>;
-  status: HTMLElement;
+  $table: JQuery;
+  $controls: JQuery;
+  $buttons: JQuery;
+  $status: JQuery;
   tableClicked: EventSender;
   buttonClicked: EventSender;
   sliderChanged: EventSender;
@@ -14,10 +14,10 @@ class View {
     this.initHandlers();
   }
   initDOMElements(): void {
-    this.table = document.getElementById('board') as HTMLTableElement;
-    this.controls = document.getElementById('controls');
-    this.buttons = this.controls.getElementsByTagName('button');
-    this.status = this.controls.querySelector('.status') as HTMLElement;
+    this.$table = $('#board');
+    this.$controls = $('#controls');
+    this.$buttons = this.$controls.find('button');
+    this.$status = this.$controls.find('.status');
   }
   initEvents(): void {
     this.tableClicked = new EventSender(this);
@@ -25,77 +25,62 @@ class View {
     this.sliderChanged = new EventSender(this);
   }
   initHandlers(): void {
-    this.table.onclick = (event: MouseEvent): void => {
-      const element = event.target as HTMLElement;
-      if (element.tagName === 'TD') {
-        this.tableClicked.notify(event);
-      }
-    };
-    this.controls.onclick = (event: MouseEvent): void => {
-      const element = event.target as HTMLElement;
-      if (element.tagName === 'BUTTON') {
-        this.buttonClicked.notify(event);
-      }
-    };
-    this.controls.onchange = (event: Event): void => {
-      const element = event.target as HTMLElement;
-      if (element.tagName === 'INPUT') {
-        this.sliderChanged.notify(event);
-      }
-    };
+    this.$table.on('click.view', 'td', (event) => {
+      this.tableClicked.notify(event);
+    });
+    this.$controls.on('click.view', 'button', (event) => {
+      this.buttonClicked.notify(event);
+    });
+    this.$controls.on('change.view', 'input', (event) => {
+      this.sliderChanged.notify(event);
+    });
   }
   setButtons(running: boolean): void {
-    if (!this.buttons) return;
-    // встроенный forEach для коллекции в браузере работает, а в тестах нет
-    // по докам его быть не должно
-    Array.prototype.forEach.call(this.buttons, (button) => {
-      if (button.innerHTML === 'start') {
-        button.disabled = running;
+    this.$buttons.each((index, button) => {
+      const $button = $(button);
+      if ($button.text() === 'start') {
+        $button.prop('disabled', running);
       }
-      if (button.innerHTML === 'pause') {
-        button.disabled = !running;
+      if ($button.text() === 'pause') {
+        $button.prop('disabled', !running);
       }
     });
   }
   setStatus(running: boolean): void {
-    if (!this.status) return;
-    if (running) this.status.classList.remove('status_stopped');
-    else this.status.classList.add('status_stopped');
+    if (running) this.$status.removeClass('status_stopped');
+    else this.$status.addClass('status_stopped');
   }
-  getNewTbody(matrix: boolean[][], tableWidth: number): HTMLTableSectionElement {
+  getNewTbody(matrix: boolean[][], tableWidth: number): JQuery {
     const columns: number = matrix[0].length;
     const size: number = tableWidth / columns;
-    let tbody: HTMLTableSectionElement = document.createElement('tbody');
-    matrix.forEach((row) => {
-      let tr: HTMLTableRowElement = document.createElement('tr');
-      row.forEach((cell) => {
-        let td: HTMLTableCellElement = document.createElement('td');
-        this.setTdClass(td, cell);
-        td.style.width = `${size}px`;
-        td.style.height = `${size}px`;
-        tr.appendChild(td);
+    const rows = matrix.map((row) => {
+      const cells = row.map((cell) => {
+        let $td = $('<td/>').css({ width: size, height: size });
+        this.setTdClass($td, cell);
+        return $td;
       });
-      tbody.appendChild(tr);
+      return $('<tr/>').append(cells);
     });
-    return tbody;
+    return $('<tbody/>').append(rows);
   }
   initTable(matrix: boolean[][]): void {
-    // для  создания и ресайза таблицы
-    const { table } = this;
-    const tbody: HTMLElement = this.getNewTbody(matrix, table.clientWidth);
-    if (table.children.length) table.replaceChild(tbody, table.children[0]);
-    else table.appendChild(tbody);
+    const { $table } = this;
+    const $newTbody = this.getNewTbody(matrix, $table.width());
+    const $oldTbody = $table.find('tbody');
+    if ($oldTbody.length) $oldTbody.replaceWith($newTbody);
+    else $table.append($newTbody);
   }
   changeTable(matrix: boolean[][]): void {
+    const table = this.$table[0] as HTMLTableElement;
     matrix.forEach((row: boolean[], i: number) => {
       row.forEach((cell: boolean, j: number) => {
-        this.setTdClass(this.table.rows[i].cells[j], cell);
+        this.setTdClass($(table.rows[i].cells[j]), cell);
       });
     });
   }
-  setTdClass(td: HTMLTableCellElement, flag: boolean): void {
-    if (flag) td.classList.add('live');
-    else td.classList.remove('live');
+  setTdClass($td: JQuery, flag: boolean): void {
+    if (flag) $td.addClass('live');
+    else $td.removeClass('live');
   }
 }
 export default View;

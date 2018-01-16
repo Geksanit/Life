@@ -59,7 +59,7 @@ class Controller {
     this.model.toggleCell(row, cell);
   }
   handlerButtons({ target }): void {
-    switch (target.innerHTML) {
+    switch ($(target).text()) {
       case 'start':
         this.setRunning(true);
         this.anim();

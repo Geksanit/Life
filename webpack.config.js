@@ -15,6 +15,10 @@ const baseConfig = {
     library: 'scripts',
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      $: __dirname + '/frontend/scripts/jquery-3.2.1.min.js',
+      jQuery: __dirname + '/frontend/scripts/jquery-3.2.1.min.js',
+    }),
     new ExtractTextPlugin('[name].css', { allChunks: true }),
     new HtmlWebpackPlugin({ filename: 'index.html', chunks: ['index'], template: './index.pug' }),
   ],

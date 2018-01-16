@@ -108,7 +108,7 @@ describe('контроллер', () => {
   });
   describe('handleButtons', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
-      const button = controller.view.buttons[0] as HTMLButtonElement;
+      const button = controller.view.$buttons[0] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller, 'anim');
       assert.equal(controller.running, false, 'before false');
       button.click();
@@ -117,13 +117,13 @@ describe('контроллер', () => {
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
-      const button = controller.view.buttons[1] as HTMLButtonElement;
+      const button = controller.view.$buttons[1] as HTMLButtonElement;
       assert.equal((!button.disabled && controller.running), true, 'before true');
       button.click();
       assert.equal((button.disabled && !controller.running), true, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
-      const button = controller.view.buttons[2] as HTMLButtonElement;
+      const button = controller.view.$buttons[2] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
       assert.equal((!button.disabled && controller.running), true, 'before true');
@@ -135,13 +135,13 @@ describe('контроллер', () => {
   });
   describe('handleSliders', () => {
     it('слайдер speed, регулирует частоту цикла анимации', () => {
-      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[0];
+      const slider = controller.view.$controls.find('input')[0] as HTMLInputElement;
       slider.value = '5';
       controller.handlerSliders({ target: slider });
       assert.equal(controller.fps, 5);
     });
     it('слайдер Width', () => {
-      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[1];
+      const slider = controller.view.$controls.find('input')[1] as HTMLInputElement;
       const spy1: SinonStub = sinon.stub(controller.model, 'setWidthMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
       slider.value = '16';
@@ -152,7 +152,7 @@ describe('контроллер', () => {
       spy2.restore();
     });
     it('слайдер Height', () => {
-      const slider: HTMLInputElement = controller.view.controls.querySelectorAll('input')[2];
+      const slider = controller.view.$controls.find('input')[2] as HTMLInputElement;
       const spy1: SinonStub = sinon.stub(controller.model, 'setHeightMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
       slider.value = '15';

@@ -1,9 +1,12 @@
+const webpack = require('webpack');
 
 module.exports = {
-  entry: './src/app.ts',
-  output: {
-    filename: 'dist/bundle.js',
-  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: __dirname + '/frontend/scripts/jquery-3.2.1.min.js',
+      jQuery: __dirname + '/frontend/scripts/jquery-3.2.1.min.js',
+    }),
+  ],
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '.jsx'],
   },
