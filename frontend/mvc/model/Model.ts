@@ -27,14 +27,12 @@ class Model {
     const { matrix } = this;
     const oldValue: number = this.columns;
 
-    // убираем столбцы
     if (oldValue > newValue) {
       matrix.forEach((row: boolean[]) => {
         row.splice(newValue - 1, oldValue - newValue);
       });
     }
 
-    // добавляем столбцы
     if (oldValue < newValue) {
       matrix.forEach((row: boolean[]) => {
         for (let j = oldValue; j < newValue; j += 1) {
@@ -50,10 +48,8 @@ class Model {
     const { matrix } = this;
     const oldValue: number = this.rows;
 
-    // убираем строки
     if (oldValue > newValue) matrix.splice(newValue - 1, oldValue - newValue);
 
-    // добавляем строки
     if (oldValue < newValue) {
       const newRow: boolean[] = [];
       for (let j = 0; j < this.columns; j += 1) {
@@ -73,7 +69,6 @@ class Model {
     this.matrixChanged.notify({ matrix: this.matrix });
   }
   calculateMatrix(): boolean {
-    // обход всех ячеек с записью нового состояния
     const newMatrix: boolean[][] = this.matrix.map((row: boolean[], i: number) =>
       row.map((cell: boolean, j: number) => this.calculateCell(i, j)));
     const flag: boolean = this.isRepeatMatrix(newMatrix);
@@ -91,26 +86,25 @@ class Model {
     return flag;
   }
   calculateCell(row: number, column: number): boolean {
-    // соседи за пределами поля считаются мертвыми
-    let count: number = 0;// живые соседи
-    let newCell: boolean = this.matrix[row][column];
     const { matrix } = this;
-    const indexes: number[] = [-1, 0, 1];
+    const countLivingNeighbors : number = this.getCountLivingNeighbors(row, column, matrix);
+    let newCell: boolean = matrix[row][column];
 
-    indexes.forEach((i: number) => {
-      const indexRow = row + i;
-      if (matrix[indexRow]) {
-        indexes.forEach((j: number) => {
-          const indexCell = column + j;
-          if (matrix[indexRow][indexCell] && (i !== 0 || j !== 0)) count += 1;
-        });
-      }
-    });
-    // при count=2 ячейка сохраняет своё состояние
-    // в остальных случаях новое состояние от неё не зависит
-    if (count < 2 || count > 3) newCell = false;
-    else if (count === 3) newCell = true;
+    if (countLivingNeighbors < 2 || countLivingNeighbors > 3) newCell = false;
+    else if (countLivingNeighbors === 3) newCell = true;
     return newCell;
+  }
+  getCountLivingNeighbors (row: number, column: number, matrix: boolean[][]): number {
+    const indexes: number[] = [-1, 0, 1];
+    return indexes.reduce((count: number, i: number): number => {
+      const indexRow: number = row + i;
+      if (!matrix[indexRow]) return count;
+      return count + indexes.reduce((countInRow: number, j: number): number => {
+        const indexCell: number = column + j;
+        if (!matrix[indexRow][indexCell] || (i === 0 && j === 0)) return countInRow;
+        return countInRow + 1;
+      }, 0);
+    }, 0);
   }
   toggleCell(row: number, column: number): void {
     this.matrix[row][column] = !this.matrix[row][column];
