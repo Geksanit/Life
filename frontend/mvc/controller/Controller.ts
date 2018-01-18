@@ -37,19 +37,18 @@ class Controller {
   }
   anim(callback?): void {
     // останавливается и вызывет callback(для тестов), когда матрица перестает меняться
-    const self = this;
     const loop = () => {
       setTimeout(() => {
-        if (self.running) {
+        if (this.running) {
           requestAnimationFrame(loop);
-          const flag: boolean = self.model.calculateMatrix();
+          const flag: boolean = this.model.calculateMatrix();
           if (flag) { // повторилась ли матрица ?
-            self.setRunning(false);
+            this.setRunning(false);
           }
         } else if (callback) {
           callback();
         }
-      }, 1000 / self.fps);
+      }, 1000 / this.fps);
     };
     loop();
   }
