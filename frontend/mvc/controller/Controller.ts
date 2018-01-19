@@ -2,10 +2,10 @@ import Model from '../model/Model';
 import View from '../view/View';
 
 class Controller {
-  private model: Model;
-  private view: View;
+  model: Model;
+  view: View;
   private running: boolean;
-  private fps: number;
+  fps: number;
   constructor() {
     this.model = new Model(10, 10);
     this.view = new View();

@@ -14,10 +14,10 @@ class View {
     this.initHandlers();
   }
   initDOMElements(): void {
-    this.$table = $('#board');
-    this.$controls = $('#controls');
-    this.$buttons = this.$controls.find('button');
-    this.$status = this.$controls.find('.status');
+    this.$table = $('.js-game__board');
+    this.$controls = $('.js-game__controls');
+    this.$buttons = this.$controls.find('.js-game__button');
+    this.$status = this.$controls.find('.js-game__status');
   }
   initEvents(): void {
     this.tableClicked = new EventSender(this);
@@ -47,8 +47,8 @@ class View {
     });
   }
   setStatus(running: boolean): void {
-    if (running) this.$status.removeClass('status_stopped');
-    else this.$status.addClass('status_stopped');
+    if (running) this.$status.removeClass('game__status_stopped');
+    else this.$status.addClass('game__status_stopped');
   }
   getNewTbody(matrix: boolean[][], tableWidth: number): JQuery {
     const columns: number = matrix[0].length;

@@ -7,44 +7,44 @@ describe('Представление', () => {
   describe('подготовка к тестам, вставка html кода', () => {
     div = document.createElement('div');
     div.insertAdjacentHTML('beforeEnd', `<div class="game">
-      <table id="board"></table>
-      <div id="controls">
-      <div class="container">
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button>
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button>
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button>
+      <table class="js-game__board"></table>
+      <div class="js-game__controls">
+      <div class="game__container">
+      <button class="js-game__button">start</button>
+      <button class="js-game__button">pause</button>
+      <button class="js-game__button">clear</button>
       </div>
-      <div class="container">
-      <div class="label">speed</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">speed</div>
+      <div class="game__slider">
       <div class="slider__view">1</div>
       <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
       </div>
       </div>
-      <div class="container">
-      <div class="label">width</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">width</div>
+      <div class="game__slider">
       <div class="slider__view">10</div>
       <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
       </div>
       </div>
-      <div class="container">
-      <div class="label">height</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">height</div>
+      <div class="game__slider">
       <div class="slider__view">10</div>
       <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
       </div>
       </div>
-      <div class="container">
-      <div class="status"></div>
+      <div class="game__container">
+      <div class="js-game__status"></div>
       </div>
       </div>
       </div>`);
     document.body.appendChild(div);
     it('проверка', () => {
-      assert.notEqual(document.getElementsByClassName('game'), null, 'game not in DOM');
-      assert.notEqual(document.getElementById('board'), null, 'board not in DOM');
-      assert.notEqual(document.getElementById('controls'), null, ' controls not in DOM');
+      assert.notEqual(document.querySelector('.game'), null, 'game not in DOM');
+      assert.notEqual(document.querySelector('.js-game__board'), null, 'board not in DOM');
+      assert.notEqual(document.querySelector('.js-game__controls'), null, ' controls not in DOM');
     });
   });
   const modelRows = 5;
@@ -58,13 +58,13 @@ describe('Представление', () => {
   });
   describe('конструктор', () => {
     it('initDOMElements', () => {
-      assert.equal(view.$table[0], document.getElementById('board'), 'таблица');
+      assert.equal(view.$table[0], document.querySelector('.js-game__board'), 'таблица');
       assert.isDefined(view.$table[0], 'таблица');
-      assert.equal(view.$controls[0], document.getElementById('controls'), 'контейнер');
+      assert.equal(view.$controls[0], document.querySelector('.js-game__controls'), 'контейнер');
       assert.isDefined(view.$controls[0], 'контейнер');
-      assert.deepEqual(view.$buttons[0], document.querySelector('button'), 'кнопки');
+      assert.deepEqual(view.$buttons[0], document.querySelector('.js-game__button'), 'кнопки');
       assert.isOk(view.$buttons.length === 3, '3 кнопки');
-      assert.equal(view.$status[0], document.querySelector('.status'), 'статус');
+      assert.equal(view.$status[0], document.querySelector('.js-game__status'), 'статус');
       assert.isDefined(view.$status[0], 'статус');
     });
   });
@@ -161,17 +161,17 @@ describe('Представление', () => {
   describe('setStatus', () => {
     it('отбражает статус, false', () => {
       view.setStatus(false);
-      assert.equal(view.$status.hasClass('status_stopped'), true);
+      assert.equal(view.$status.hasClass('game__status_stopped'), true);
     });
     it('отбражает статус, true', () => {
       view.setStatus(true);
-      assert.equal(view.$status.hasClass('status_stopped'), false);
+      assert.equal(view.$status.hasClass('game__status_stopped'), false);
     });
   });
   describe('очистка html', () => {
     it('проверка', () => {
       document.body.removeChild(div);
-      assert.isNull(document.getElementById('table'));
+      assert.isNull(document.querySelector('.game'));
     });
   });
 });

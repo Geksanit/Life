@@ -6,58 +6,58 @@ describe('контроллер', () => {
   let div: HTMLElement;
   describe('подготовка к тестам, вставка html кода', () => {
     div = document.createElement('div');
-    div.insertAdjacentHTML('beforeend', `<div class="game">
-      <table id="board"></table>
-      <div id="controls">
-      <div class="container">
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button>
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button>
-      <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button>
+    div.insertAdjacentHTML('beforeEnd', `<div class="game">
+      <table class="js-game__board"></table>
+      <div class="js-game__controls">
+      <div class="game__container">
+      <button class="js-game__button">start</button>
+      <button class="js-game__button">pause</button>
+      <button class="js-game__button">clear</button>
       </div>
-      <div class="container">
-      <div class="label">speed</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">speed</div>
+      <div class="game__slider">
       <div class="slider__view">1</div>
       <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
       </div>
       </div>
-      <div class="container">
-      <div class="label">width</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">width</div>
+      <div class="game__slider">
       <div class="slider__view">10</div>
       <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
       </div>
       </div>
-      <div class="container">
-      <div class="label">height</div>
-      <div class="slider slider-mix">
+      <div class="game__container">
+      <div class="game__label">height</div>
+      <div class="game__slider">
       <div class="slider__view">10</div>
       <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
       </div>
       </div>
-      <div class="container">
-      <div class="status"></div>
+      <div class="game__container">
+      <div class="js-game__status"></div>
       </div>
       </div>
       </div>`);
     document.body.appendChild(div);
     it('проверка', () => {
-      assert.notEqual(document.getElementsByClassName('game'), null, 'game not in DOM');
-      assert.notEqual(document.getElementById('board'), null, 'board not in DOM');
-      assert.notEqual(document.getElementById('controls'), null, ' controls not in DOM');
+      assert.notEqual(document.querySelector('.game'), null, 'game not in DOM');
+      assert.notEqual(document.querySelector('.js-game__board'), null, 'board not in DOM');
+      assert.notEqual(document.querySelector('.js-game__controls'), null, ' controls not in DOM');
     });
   });
   const controller = new Controller();
   describe('constructor', () => {
     assert.strictEqual(controller.fps, 1);
-    assert.strictEqual(controller.running, false);
+    assert.strictEqual(controller.isRunning(), false);
   });
   describe('setRunning', () => {
     it('сообщает вью отобразить статус true', () => {
       const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
       const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(true);
-      assert.strictEqual(controller.running, true);
+      assert.strictEqual(controller.isRunning(), true);
       assert.isOk(true);
       assert.isOk(spy1.calledWith(true));
       assert.isOk(spy2.calledWith(true));
@@ -68,7 +68,7 @@ describe('контроллер', () => {
       const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
       const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(false);
-      assert.strictEqual(controller.running, false);
+      assert.strictEqual(controller.isRunning(), false);
       assert.isOk(spy1.calledWith(false));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();
@@ -86,7 +86,7 @@ describe('контроллер', () => {
       model.toggleCell(0, 1);
       model.toggleCell(0, 2);
       model.toggleCell(1, 0);
-      controller.running = true;
+      controller.setRunning(true);
       // anim останавливается и вызывет аргумент, когда матрица перестает меняться
       controller.anim(done);
     });
@@ -110,25 +110,25 @@ describe('контроллер', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
       const button = controller.view.$buttons[0] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller, 'anim');
-      assert.equal(controller.running, false, 'before false');
+      assert.equal(controller.isRunning(), false, 'before false');
       button.click();
-      assert.equal(button.disabled && controller.running, true, 'after true');
+      assert.equal(button.disabled && controller.isRunning(), true, 'after true');
       assert.isOk(spy.called);
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
       const button = controller.view.$buttons[1] as HTMLButtonElement;
-      assert.equal((!button.disabled && controller.running), true, 'before true');
+      assert.equal((!button.disabled && controller.isRunning()), true, 'before true');
       button.click();
-      assert.equal((button.disabled && !controller.running), true, 'after false');
+      assert.equal((button.disabled && !controller.isRunning()), true, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
       const button = controller.view.$buttons[2] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
-      assert.equal((!button.disabled && controller.running), true, 'before true');
+      assert.equal((!button.disabled && controller.isRunning()), true, 'before true');
       button.click();
-      assert.equal((!button.disabled && !controller.running), true, 'after false');
+      assert.equal((!button.disabled && !controller.isRunning()), true, 'after false');
       assert.isOk(spy.called);
       spy.restore();
     });
