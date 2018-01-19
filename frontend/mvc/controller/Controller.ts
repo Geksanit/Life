@@ -2,14 +2,13 @@ import Model from '../model/Model';
 import View from '../view/View';
 
 class Controller {
-  model: Model;
-  view: View;
-  running: boolean;
-  fps: number;
+  private model: Model;
+  private view: View;
+  private running: boolean;
+  private fps: number;
   constructor() {
     this.model = new Model(10, 10);
     this.view = new View();
-    this.running = false;
     this.fps = 1;
     this.setSubscription();
     this.view.initTable(this.model.matrix);// начальная отрисовка
@@ -35,11 +34,14 @@ class Controller {
     this.view.setButtons(this.running);
     this.view.setStatus(this.running);
   }
+  isRunning(): boolean {
+    return this.running;
+  }
   anim(callback?): void {
     // останавливается и вызывет callback(для тестов), когда матрица перестает меняться
     const loop = () => {
       setTimeout(() => {
-        if (this.running) {
+        if (this.isRunning()) {
           requestAnimationFrame(loop);
           const flag: boolean = this.model.calculateMatrix();
           if (flag) { // повторилась ли матрица ?
