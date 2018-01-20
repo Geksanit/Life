@@ -7,7 +7,7 @@ interface IController {
 class Controller implements IController{
   model: IModel;
   view: IView;
-  private running: boolean;
+  isRunning: boolean;
   fps: number;
   constructor(model: IModel, view: IView) {
     this.model = model;
@@ -33,23 +33,18 @@ class Controller implements IController{
     });
   }
   setRunning(value: boolean): void {
-    this.running = value;
-    this.view.setButtons(this.running);
-    this.view.setStatus(this.running);
-  }
-  isRunning(): boolean {
-    return this.running;
+    this.isRunning = value;
+    this.view.setButtons(this.isRunning);
+    this.view.setStatus(this.isRunning);
   }
   anim(callback?): void {
     // останавливается и вызывет callback(для тестов), когда матрица перестает меняться
     const loop = () => {
       setTimeout(() => {
-        if (this.isRunning()) {
+        if (this.isRunning) {
           requestAnimationFrame(loop);
-          const flag: boolean = this.model.calculateMatrix();
-          if (flag) { // повторилась ли матрица ?
-            this.setRunning(false);
-          }
+          this.model.calculateMatrix();
+          if (this.model.isRepeatMatrix()) this.setRunning(false);
         } else if (callback) {
           callback();
         }

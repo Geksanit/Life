@@ -52,14 +52,14 @@ describe('контроллер', () => {
   const controller = new Controller(new Model(10, 10), new View());
   describe('constructor', () => {
     assert.strictEqual(controller.fps, 1);
-    assert.strictEqual(controller.isRunning(), false);
+    assert.strictEqual(controller.isRunning, false);
   });
   describe('setRunning', () => {
     it('сообщает вью отобразить статус true', () => {
       const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
       const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(true);
-      assert.strictEqual(controller.isRunning(), true);
+      assert.strictEqual(controller.isRunning, true);
       assert.isOk(true);
       assert.isOk(spy1.calledWith(true));
       assert.isOk(spy2.calledWith(true));
@@ -70,7 +70,7 @@ describe('контроллер', () => {
       const spy1: SinonStub = sinon.stub(controller.view, 'setButtons');
       const spy2: SinonStub = sinon.stub(controller.view, 'setStatus');
       controller.setRunning(false);
-      assert.strictEqual(controller.isRunning(), false);
+      assert.strictEqual(controller.isRunning, false);
       assert.isOk(spy1.calledWith(false));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();
@@ -109,23 +109,23 @@ describe('контроллер', () => {
   describe('handleButtons', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
       const spy: SinonStub = sinon.stub(controller, 'anim');
-      assert.equal(controller.isRunning(), false, 'before false');
+      assert.equal(controller.isRunning, false, 'before false');
       controller.handlerButtons({ nameButton: 'start' });
-      assert.equal(controller.isRunning(), true, 'after true');
+      assert.equal(controller.isRunning, true, 'after true');
       assert.isOk(spy.called);
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
-      assert.equal((controller.isRunning()), true, 'before true');
+      assert.equal((controller.isRunning), true, 'before true');
       controller.handlerButtons({ nameButton: 'pause' });
-      assert.equal((controller.isRunning()), false, 'after false');
+      assert.equal((controller.isRunning), false, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
       const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
-      assert.equal((controller.isRunning()), true, 'before true');
+      assert.equal((controller.isRunning), true, 'before true');
       controller.handlerButtons({ nameButton: 'clear' });
-      assert.equal((controller.isRunning()), false, 'after false');
+      assert.equal((controller.isRunning), false, 'after false');
       assert.isOk(spy.called);
       spy.restore();
     });

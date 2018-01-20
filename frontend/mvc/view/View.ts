@@ -93,8 +93,8 @@ class View implements IView{
       });
     });
   }
-  setTdClass($td: JQuery, flag: boolean): void {
-    if (flag) $td.addClass('live');
+  setTdClass($td: JQuery, isLive: boolean): void {
+    if (isLive) $td.addClass('live');
     else $td.removeClass('live');
   }
 }

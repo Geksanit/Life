@@ -8,7 +8,8 @@ interface IModel {
   setWidthMatrix(newValue: number): void;
   setHeightMatrix(newValue: number): void;
   clearMatrix(): void;
-  calculateMatrix(): boolean;
+  calculateMatrix(): void;
+  isRepeatMatrix(): boolean;
   toggleCell(row: number, column: number): void;
 }
 
@@ -80,22 +81,19 @@ class Model implements IModel{
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix });
   }
-  calculateMatrix(): boolean {
-    const newMatrix: boolean[][] = this.matrix.map((row: boolean[], i: number) =>
+  calculateMatrix(): void {
+    this.matrix = this.matrix.map((row: boolean[], i: number) =>
       row.map((cell: boolean, j: number) => this.calculateCell(i, j)));
-    const flag: boolean = this.isRepeatMatrix(newMatrix);
-    this.matrix = newMatrix;
     this.matrixChanged.notify({ matrix: this.matrix });
-    return flag;
   }
-  isRepeatMatrix(newMatrix): boolean {
-    const flag: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
+  isRepeatMatrix(): boolean {
+    const result: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
       matrix.every((row: boolean[], i: number) =>
         row.every((cell: boolean, j: number) =>
-          (cell === newMatrix[i][j]))));
-    if (flag) this.listOldMatrix = [];
-    else this.listOldMatrix.push(newMatrix);
-    return flag;
+          (cell === this.matrix[i][j]))));
+    if (result) this.listOldMatrix = [];
+    else this.listOldMatrix.push(this.matrix);
+    return result;
   }
   calculateCell(row: number, column: number): boolean {
     const { matrix } = this;

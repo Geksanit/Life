@@ -83,35 +83,20 @@ describe('модель', () => {
   });
   describe('calculateMatrix', () => {
     const board: Model = new Model(3, 3);
-    let flag: boolean;
     board.toggleCell(0, 0); board.toggleCell(0, 1); board.toggleCell(1, 0);
-    it('новое состояние матрицы', () => {
+    it('вычисляет новое состояние матрицы', () => {
       assert.deepEqual(board.matrix, [
         [true, true, false], [true, false, false], [false, false, false],
       ]);
     });
-    it('возвращаемое значение сообщает о неизменении матрицы', () => {
-      flag = board.calculateMatrix();
-      assert.deepEqual(board.matrix, [
-        [true, true, false], [true, true, false], [false, false, false],
-      ]);
-      assert.equal(flag, false, 'матрица не повторилась');
-    });
-    it('возвращаемое значение сообщает об изменении матрицы', () => {
-      flag = board.calculateMatrix();
-      assert.deepEqual(board.matrix, [
-        [true, true, false], [true, true, false], [false, false, false],
-      ]);
-      assert.equal(flag, true, 'матрица повторилась');
-    });
   });
   describe('isRepeat', () => {
     const board: Model = new Model(3, 3);
-    it('матрица проверяется первый раз', () => {
-      assert.equal(board.isRepeatMatrix(board.matrix), false, 'первая проверка');
+    it('матрица проверяется первый раз и запоминается', () => {
+      assert.equal(board.isRepeatMatrix(), false, 'первая проверка');
     });
     it('при повторной проверке такой же матрицы(по содержимому) обнаруживется повторение', () => {
-      assert.equal(board.isRepeatMatrix(board.matrix), true, 'вторая проверка');
+      assert.equal(board.isRepeatMatrix(), true, 'вторая проверка');
     });
   });
   describe('calculateCell', () => {
