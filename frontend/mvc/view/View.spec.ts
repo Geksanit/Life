@@ -1,5 +1,5 @@
-import Model from '../model/Model.ts';
-import View from './View.ts';
+import { Model } from '../model/Model.ts';
+import { View } from './View.ts';
 import { assert } from 'chai';
 
 describe('Представление', () => {

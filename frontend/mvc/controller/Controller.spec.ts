@@ -1,4 +1,6 @@
 import Controller from './Controller.ts';
+import { Model } from '../model/Model';
+import { View } from '../view/View';
 import { assert } from 'chai';
 import { SinonStub } from 'sinon';
 
@@ -47,7 +49,7 @@ describe('контроллер', () => {
       assert.notEqual(document.querySelector('.js-game__controls'), null, ' controls not in DOM');
     });
   });
-  const controller = new Controller();
+  const controller = new Controller(new Model(10, 10), new View());
   describe('constructor', () => {
     assert.strictEqual(controller.fps, 1);
     assert.strictEqual(controller.isRunning(), false);

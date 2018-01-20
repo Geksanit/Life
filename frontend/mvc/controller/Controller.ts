@@ -1,14 +1,17 @@
-import Model from '../model/Model';
-import View from '../view/View';
+import { IModel } from '../model/Model';
+import { IView } from '../view/View';
 
-class Controller {
-  model: Model;
-  view: View;
+interface IController {
+}
+
+class Controller implements IController{
+  model: IModel;
+  view: IView;
   private running: boolean;
   fps: number;
-  constructor() {
-    this.model = new Model(10, 10);
-    this.view = new View();
+  constructor(model: IModel, view: IView) {
+    this.model = model;
+    this.view = view;
     this.fps = 1;
     this.setSubscription();
     this.view.initTable(this.model.matrix);// начальная отрисовка
