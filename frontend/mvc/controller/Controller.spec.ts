@@ -100,65 +100,54 @@ describe('контроллер', () => {
   });
   describe('handleCell', () => {
     it('вызывет соответствующий метод модели', () => {
-      const table = document.getElementsByTagName('TABLE')[0] as HTMLTableElement;
-      const cell = table.rows[2].cells[1] as HTMLTableCellElement;
       const spy: SinonStub = sinon.stub(controller.model, 'toggleCell');
-      controller.handleCell({ target: cell });
+      controller.handleCell({ row: 2, cell:1 });
       assert.isOk(spy.calledWith(2, 1));
       spy.restore();
     });
   });
   describe('handleButtons', () => {
     it('клик по кнопке start запускает цикл анимации', () => {
-      const button = controller.view.$buttons[0] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller, 'anim');
       assert.equal(controller.isRunning(), false, 'before false');
-      button.click();
-      assert.equal(button.disabled && controller.isRunning(), true, 'after true');
+      controller.handlerButtons({ nameButton: 'start' });
+      assert.equal(controller.isRunning(), true, 'after true');
       assert.isOk(spy.called);
       spy.restore();
     });
     it('клик по кнопке pause останавливает цикл анимации', () => {
-      const button = controller.view.$buttons[1] as HTMLButtonElement;
-      assert.equal((!button.disabled && controller.isRunning()), true, 'before true');
-      button.click();
-      assert.equal((button.disabled && !controller.isRunning()), true, 'after false');
+      assert.equal((controller.isRunning()), true, 'before true');
+      controller.handlerButtons({ nameButton: 'pause' });
+      assert.equal((controller.isRunning()), false, 'after false');
     });
     it('клик по кнопке clear очищает матрицу модели и останавливает цикл анимации', () => {
-      const button = controller.view.$buttons[2] as HTMLButtonElement;
       const spy: SinonStub = sinon.stub(controller.model, 'clearMatrix');
       controller.setRunning(true);
-      assert.equal((!button.disabled && controller.isRunning()), true, 'before true');
-      button.click();
-      assert.equal((!button.disabled && !controller.isRunning()), true, 'after false');
+      assert.equal((controller.isRunning()), true, 'before true');
+      controller.handlerButtons({ nameButton: 'clear' });
+      assert.equal((controller.isRunning()), false, 'after false');
       assert.isOk(spy.called);
       spy.restore();
     });
   });
   describe('handleSliders', () => {
     it('слайдер speed, регулирует частоту цикла анимации', () => {
-      const slider = controller.view.$controls.find('input')[0] as HTMLInputElement;
-      slider.value = '5';
-      controller.handlerSliders({ target: slider });
+      controller.handlerSliders({ value: 5, nameSlider: 'speed' });
       assert.equal(controller.fps, 5);
     });
     it('слайдер Width', () => {
-      const slider = controller.view.$controls.find('input')[1] as HTMLInputElement;
       const spy1: SinonStub = sinon.stub(controller.model, 'setWidthMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
-      slider.value = '16';
-      controller.handlerSliders({ target: slider });
+      controller.handlerSliders({ value: 16, nameSlider: 'width' });
       assert.isOk(spy1.calledWith(16));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();
       spy2.restore();
     });
     it('слайдер Height', () => {
-      const slider = controller.view.$controls.find('input')[2] as HTMLInputElement;
       const spy1: SinonStub = sinon.stub(controller.model, 'setHeightMatrix');
       const spy2: SinonStub = sinon.stub(controller, 'setRunning');
-      slider.value = '15';
-      controller.handlerSliders({ target: slider });
+      controller.handlerSliders({ value: 15, nameSlider: 'height' });
       assert.isOk(spy1.calledWith(15));
       assert.isOk(spy2.calledWith(false));
       spy1.restore();

@@ -57,13 +57,11 @@ class Controller implements IController{
     };
     loop();
   }
-  handleCell({ target }): void {
-    const cell: number = target.cellIndex;
-    const row: number = target.parentElement.sectionRowIndex;
+  handleCell({ row, cell }): void {
     this.model.toggleCell(row, cell);
   }
-  handlerButtons({ target }): void {
-    switch ($(target).text()) {
+  handlerButtons({ nameButton }): void {
+    switch (nameButton) {
       case 'start':
         this.setRunning(true);
         this.anim();
@@ -76,9 +74,8 @@ class Controller implements IController{
         this.setRunning(false);
     }
   }
-  handlerSliders({ target }): void {
-    const value: number = target.valueAsNumber;
-    switch (target.parentElement.previousElementSibling.innerText) {
+  handlerSliders({ value, nameSlider }): void {
+    switch (nameSlider) {
       case 'speed':
         this.fps = value;
         break;

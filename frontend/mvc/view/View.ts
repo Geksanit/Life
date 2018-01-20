@@ -35,14 +35,19 @@ class View implements IView{
     this.sliderChanged = new EventSender(this);
   }
   initHandlers(): void {
-    this.$table.on('click.view', 'td', (event) => {
-      this.tableClicked.notify(event);
+    this.$table.on('click.view', 'td', ({ target }) => {
+      const cell: number = $(target).prop('cellIndex') as number;
+      const row: number = $(target.parentElement).prop('sectionRowIndex') as number;
+      this.tableClicked.notify({ row, cell });
     });
-    this.$controls.on('click.view', 'button', (event) => {
-      this.buttonClicked.notify(event);
+    this.$controls.on('click.view', 'button', ({ target }) => {
+      const nameButton: string = $(target).text();
+      this.buttonClicked.notify({ nameButton });
     });
-    this.$controls.on('change.view', 'input', (event) => {
-      this.sliderChanged.notify(event);
+    this.$controls.on('change.view', 'input', ({ target }) => {
+      const value: number = Number($(target).val());
+      const nameSlider: string = $(target.parentElement.previousElementSibling).text();
+      this.sliderChanged.notify({ value, nameSlider });
     });
   }
   setButtons(running: boolean): void {
