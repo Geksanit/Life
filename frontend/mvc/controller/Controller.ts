@@ -16,8 +16,8 @@ class Controller {
   }
   setSubscription():void {
     this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) this.view.initTable(obj.matrix);
-      else this.view.changeTable(obj.matrix);
+      if (obj.resized) { this.view.initTable(obj.matrix); }
+      else { this.view.changeTable(obj.matrix); }
     });
     this.view.tableClicked.attach((sender, { row, cell }) => {
       this.model.toggleCell(row, cell);
@@ -56,10 +56,8 @@ class Controller {
         if (this.isRunning) {
           requestAnimationFrame(loop);
           this.model.calculateMatrix();
-          if (this.model.isRepeatMatrix()) this.setRunning(false);
-        } else if (callback) {
-          callback();
-        }
+          if (this.model.isRepeatMatrix()) { this.setRunning(false); }
+        } else if (callback) { callback(); }
       }, 1000 / this.fps);
     };
     loop();

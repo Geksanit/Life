@@ -81,8 +81,8 @@ class View implements IView{
   }
   setStatus(running: boolean): void {
     this.setButtons(running);
-    if (running) this.$status.removeClass('game__status_stopped');
-    else this.$status.addClass('game__status_stopped');
+    if (running) { this.$status.removeClass('game__status_stopped'); }
+    else { this.$status.addClass('game__status_stopped'); }
   }
   getNewTbody(matrix: boolean[][], tableWidth: number): JQuery {
     const columns: number = matrix[0].length;
@@ -101,8 +101,8 @@ class View implements IView{
     const { $table } = this;
     const $newTbody = this.getNewTbody(matrix, $table.width());
     const $oldTbody = $table.find('tbody');
-    if ($oldTbody.length) $oldTbody.replaceWith($newTbody);
-    else $table.append($newTbody);
+    if ($oldTbody.length) { $oldTbody.replaceWith($newTbody); }
+    else { $table.append($newTbody); }
   }
   changeTable(matrix: boolean[][]): void {
     const table = this.$table[0] as HTMLTableElement;
@@ -113,8 +113,8 @@ class View implements IView{
     });
   }
   setTdClass($td: JQuery, isLive: boolean): void {
-    if (isLive) $td.addClass(CLASS_CEIL_LIVE);
-    else $td.removeClass(CLASS_CEIL_LIVE);
+    if (isLive) { $td.addClass(CLASS_CEIL_LIVE); }
+    else { $td.removeClass(CLASS_CEIL_LIVE); }
   }
 }
 
