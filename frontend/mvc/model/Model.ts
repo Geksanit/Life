@@ -71,14 +71,18 @@ class Model implements IModel{
   }
   calculateMatrix(): void {
     this.matrix = this.matrix.map((row: boolean[], i: number) =>
-      row.map((cell: boolean, j: number) => this.calculateCell(i, j)));
+      row.map((cell: boolean, j: number) => this.calculateCell(i, j)),
+    );
     this.matrixChanged.notify({ matrix: this.matrix });
   }
   isRepeatMatrix(): boolean {
     const result: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
       matrix.every((row: boolean[], i: number) =>
         row.every((cell: boolean, j: number) =>
-          (cell === this.matrix[i][j]))));
+          (cell === this.matrix[i][j]),
+        ),
+      ),
+    );
     if (result) this.listOldMatrix = [];
     else this.listOldMatrix.push(this.matrix);
     return result;
