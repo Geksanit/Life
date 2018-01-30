@@ -24,41 +24,48 @@ class Model implements IModel{
       this.matrix.push(row);
     }
   }
-  setWidthMatrix(newValue: number): void {
-    const { matrix } = this;
-    const oldValue: number = this.columns;
+  getMatrixCopy(): boolean[][] {
+    return this.matrix.map(row =>
+      row.map(cell => cell),
+    );
+  }
+  setWidthMatrix(newWidth: number): void {
+    const oldWidth: number = this.columns;
+    let newMatrix: boolean[][] = this.getMatrixCopy();
 
-    if (oldValue > newValue) {
-      matrix.forEach((row: boolean[]) => {
-        row.splice(newValue - 1, oldValue - newValue);
+    if (oldWidth > newWidth) {
+      newMatrix.forEach((row: boolean[]) => {
+        row.splice(newWidth - 1, oldWidth - newWidth);
       });
-    } else if (oldValue < newValue) {
-      matrix.forEach((row: boolean[]) => {
-        for (let j = oldValue; j < newValue; j += 1) {
+    } else if (oldWidth < newWidth) {
+      newMatrix.forEach((row: boolean[]) => {
+        for (let j = oldWidth; j < newWidth; j += 1) {
           row.push(false);
         }
       });
     }
-    this.columns = newValue;
+    this.matrix = newMatrix;
+    this.columns = newWidth;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
-  setHeightMatrix(newValue: number): void {
+  setHeightMatrix(newHeight: number): void {
     const { matrix } = this;
-    const oldValue: number = this.rows;
+    let newMatrix = [];
 
-    if (oldValue > newValue) {
-      matrix.splice(newValue - 1, oldValue - newValue);
-    } else if (oldValue < newValue) {
-      const newRow: boolean[] = [];
-      for (let j = 0; j < this.columns; j += 1) {
-        newRow.push(false);
-      }
-      for (let i = oldValue; i < newValue; i += 1) {
-        matrix.push(newRow.slice());
+    for (let i = 0; i < newHeight; i += 1) {
+      if (i < matrix.length) {
+        newMatrix[i] = matrix[i].map(ceil => ceil);
+      } else {
+        let newRow = [];
+        for (let j = 0; j < this.columns; j += 1) {
+          newRow[j] = false;
+        }
+        newMatrix[i] = newRow;
       }
     }
-    this.rows = newValue;
+    this.matrix = newMatrix;
+    this.rows = newHeight;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
