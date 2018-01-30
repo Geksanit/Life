@@ -2,9 +2,12 @@ import IEventSender from '../utils/IEventSender';
 
 interface IView {
   tableClicked: IEventSender;
-  buttonClicked: IEventSender;
-  sliderChanged: IEventSender;
-  setButtons(running: boolean): void;
+  startClicked: IEventSender;
+  pauseClicked: IEventSender;
+  clearClicked: IEventSender;
+  widthChanged: IEventSender;
+  heightChanged: IEventSender;
+  speedChanged: IEventSender;
   setStatus(running: boolean): void;
   initTable(matrix: boolean[][]): void;
   changeTable(matrix: boolean[][]): void;

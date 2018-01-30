@@ -7,8 +7,12 @@ class View implements IView{
   $buttons: JQuery;
   $status: JQuery;
   tableClicked: EventSender;
-  buttonClicked: EventSender;
-  sliderChanged: EventSender;
+  startClicked: EventSender;
+  pauseClicked: EventSender;
+  clearClicked: EventSender;
+  widthChanged: EventSender;
+  heightChanged: EventSender;
+  speedChanged: EventSender;
   constructor() {
     this.initDOMElements();
     this.initEvents();
@@ -22,8 +26,12 @@ class View implements IView{
   }
   initEvents(): void {
     this.tableClicked = new EventSender(this);
-    this.buttonClicked = new EventSender(this);
-    this.sliderChanged = new EventSender(this);
+    this.startClicked = new EventSender(this);
+    this.pauseClicked = new EventSender(this);
+    this.clearClicked = new EventSender(this);
+    this.widthChanged = new EventSender(this);
+    this.heightChanged = new EventSender(this);
+    this.speedChanged = new EventSender(this);
   }
   initHandlers(): void {
     this.$table.on('click.view', 'td', ({ target }) => {
@@ -33,12 +41,30 @@ class View implements IView{
     });
     this.$controls.on('click.view', 'button', ({ target }) => {
       const nameButton: string = $(target).text();
-      this.buttonClicked.notify({ nameButton });
+      switch (nameButton) {
+        case 'start':
+          this.startClicked.notify({});
+          break;
+        case 'pause':
+          this.pauseClicked.notify({});
+          break;
+        case 'clear':
+          this.clearClicked.notify({});
+      }
     });
     this.$controls.on('change.view', 'input', ({ target }) => {
       const value: number = Number($(target).val());
       const nameSlider: string = $(target.parentElement.previousElementSibling).text();
-      this.sliderChanged.notify({ value, nameSlider });
+      switch (nameSlider) {
+        case 'speed':
+          this.speedChanged.notify({ value });
+          break;
+        case 'width':
+          this.widthChanged.notify({ value });
+          break;
+        case 'height':
+          this.heightChanged.notify({ value });
+      }
     });
   }
   setButtons(running: boolean): void {
@@ -53,6 +79,7 @@ class View implements IView{
     });
   }
   setStatus(running: boolean): void {
+    this.setButtons(running);
     if (running) this.$status.removeClass('game__status_stopped');
     else this.$status.addClass('game__status_stopped');
   }
@@ -89,4 +116,5 @@ class View implements IView{
     else $td.removeClass('live');
   }
 }
+
 export default View;
