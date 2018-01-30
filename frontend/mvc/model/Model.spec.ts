@@ -1,4 +1,4 @@
-import { Model } from './Model.ts';
+import Model from './Model.ts';
 import { assert } from 'chai';
 
 describe('модель', () => {

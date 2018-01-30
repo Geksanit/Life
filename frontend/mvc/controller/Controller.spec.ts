@@ -1,6 +1,6 @@
 import Controller from './Controller.ts';
-import { Model } from '../model/Model';
-import { View } from '../view/View';
+import Model from '../model/Model';
+import View from '../view/View';
 import { assert } from 'chai';
 import { SinonStub } from 'sinon';
 

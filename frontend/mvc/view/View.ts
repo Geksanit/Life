@@ -1,14 +1,5 @@
 import EventSender from '../utils/EventSender';
-
-interface IView {
-  tableClicked: EventSender;
-  buttonClicked: EventSender;
-  sliderChanged: EventSender;
-  setButtons(running: boolean): void;
-  setStatus(running: boolean): void;
-  initTable(matrix: boolean[][]): void;
-  changeTable(matrix: boolean[][]): void;
-}
+import IView from './IView';
 
 class View implements IView{
   $table: JQuery;
@@ -98,4 +89,4 @@ class View implements IView{
     else $td.removeClass('live');
   }
 }
-export { View, IView };
+export default View;

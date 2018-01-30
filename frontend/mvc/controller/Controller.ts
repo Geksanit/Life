@@ -1,10 +1,7 @@
-import { IModel } from '../model/Model';
-import { IView } from '../view/View';
+import IModel from '../model/IModel';
+import IView from '../view/IView';
 
-interface IController {
-}
-
-class Controller implements IController{
+class Controller {
   model: IModel;
   view: IView;
   isRunning: boolean;

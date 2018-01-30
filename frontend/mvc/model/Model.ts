@@ -1,17 +1,5 @@
 import Event from '../utils/EventSender';
-
-interface IModel {
-  matrix: boolean[][];
-  matrixChanged: Event;
-  rows: number;
-  columns: number;
-  setWidthMatrix(newValue: number): void;
-  setHeightMatrix(newValue: number): void;
-  clearMatrix(): void;
-  calculateMatrix(): void;
-  isRepeatMatrix(): boolean;
-  toggleCell(row: number, column: number): void;
-}
+import IModel from './IModel';
 
 class Model implements IModel{
   matrix: boolean[][];
@@ -121,4 +109,4 @@ class Model implements IModel{
     this.matrixChanged.notify({ matrix: this.matrix });
   }
 }
-export { Model, IModel };
+export default Model;
