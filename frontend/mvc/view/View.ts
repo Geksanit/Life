@@ -1,6 +1,9 @@
 import EventSender from '../utils/EventSender';
 import IView from './IView';
 
+const CLASS_CEIL = 'game__ceil';
+const CLASS_CEIL_LIVE = 'game__ceil_live';
+
 class View implements IView{
   $table: JQuery;
   $controls: JQuery;
@@ -86,7 +89,7 @@ class View implements IView{
     const size: number = tableWidth / columns;
     const rows = matrix.map((row) => {
       const cells = row.map((cell) => {
-        let $td = $('<td/>').css({ width: size, height: size });
+        let $td = $('<td/>').css({ width: size, height: size }).addClass(CLASS_CEIL);
         this.setTdClass($td, cell);
         return $td;
       });
@@ -110,8 +113,8 @@ class View implements IView{
     });
   }
   setTdClass($td: JQuery, isLive: boolean): void {
-    if (isLive) $td.addClass('live');
-    else $td.removeClass('live');
+    if (isLive) $td.addClass(CLASS_CEIL_LIVE);
+    else $td.removeClass(CLASS_CEIL_LIVE);
   }
 }
 

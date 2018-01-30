@@ -5,8 +5,8 @@ class Slider {
   constructor(element) {
     this.$element = $(element);
     this.$parent = this.$element.parent();
-    this.$view = this.$parent.find('.slider__view');
-    this.$line = this.$parent.find('.slider__line');
+    this.$view = this.$parent.find('.js-slider__view');
+    this.$line = this.$parent.find('.js-slider__line');
     this.sliderChange.call(this);
     this.$element.on('input.slider', this.sliderChange.bind(this));
   }

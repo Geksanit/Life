@@ -14,4 +14,4 @@ class Button {
   }
 }
 let buttons = [];
-$('.standart-button').each((index, element) => buttons.push(new Button(element)));
+$('.js-standart-button').each((index, element) => buttons.push(new Button(element)));
