@@ -20,20 +20,20 @@ html
                 table.js-game__board.game__board
                 .js-game__controls.game__controls
                     .game__container
-                        +standart-button({ mix:'game__button js-game__button', title:'start', size:'small' })
-                        +standart-button({ mix:'game__button js-game__button', title:'pause', size:'small' })
-                        +standart-button({ mix:'game__button js-game__button', title:'clear', size:'small' })
+                        +standart-button({ mix:'game__button js-game__button-start', title:'start', size:'small' })
+                        +standart-button({ mix:'game__button js-game__button-pause', title:'pause', size:'small' })
+                        +standart-button({ mix:'game__button js-game__button-clear', title:'clear', size:'small' })
                     .game__container
                         .game__label speed
-                        +slider({ mix:'game__slider', min: 1, max: 10, value: 1, line: true, view: true })
+                        +slider({ mix:'game__slider js-game__slider-speed', min: 1, max: 10, value: 1, line: true, view: true })
                     .game__container
                         .game__label width
-                        +slider({ mix:'game__slider', min: 1, max: 100, value: 10, line: true, view: true })
+                        +slider({ mix:'game__slider js-game__slider-width', min: 1, max: 100, value: 10, line: true, view: true })
                     .game__container
                         .game__label height
-                        +slider({ mix:'game__slider', min: 1, max: 100, value: 10, line: true, view: true })
+                        +slider({ mix:'game__slider js-game__slider-height', min: 1, max: 100, value: 10, line: true, view: true })
                     .game__container
-                        .js-game__status.game__status
+                        .game__status.js-game__status
 
             dl Игра «Жизнь»
                 dt — клеточный автомат, придуманный английским математиком Джоном Конвеем в 1970 году.

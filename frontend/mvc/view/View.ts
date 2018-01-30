@@ -4,8 +4,14 @@ import IView from './IView';
 class View implements IView{
   $table: JQuery;
   $controls: JQuery;
-  $buttons: JQuery;
+  $buttonStart: JQuery;
+  $buttonPause: JQuery;
+  $buttonClear: JQuery;
+  $sliderSpeed: JQuery;
+  $sliderWidth: JQuery;
+  $sliderHeight: JQuery;
   $status: JQuery;
+
   tableClicked: EventSender;
   startClicked: EventSender;
   pauseClicked: EventSender;
@@ -21,7 +27,12 @@ class View implements IView{
   initDOMElements(): void {
     this.$table = $('.js-game__board');
     this.$controls = $('.js-game__controls');
-    this.$buttons = this.$controls.find('.js-game__button');
+    this.$buttonStart = this.$controls.find('.js-game__button-start');
+    this.$buttonPause = this.$controls.find('.js-game__button-pause');
+    this.$buttonClear = this.$controls.find('.js-game__button-clear');
+    this.$sliderSpeed = this.$controls.find('.js-game__slider-speed');
+    this.$sliderWidth = this.$controls.find('.js-game__slider-width');
+    this.$sliderHeight = this.$controls.find('.js-game__slider-height');
     this.$status = this.$controls.find('.js-game__status');
   }
   initEvents(): void {
@@ -39,44 +50,31 @@ class View implements IView{
       const row: number = $(target.parentElement).prop('sectionRowIndex') as number;
       this.tableClicked.notify({ row, cell });
     });
-    this.$controls.on('click.view', 'button', ({ target }) => {
-      const nameButton: string = $(target).text();
-      switch (nameButton) {
-        case 'start':
-          this.startClicked.notify({});
-          break;
-        case 'pause':
-          this.pauseClicked.notify({});
-          break;
-        case 'clear':
-          this.clearClicked.notify({});
-      }
+    this.$buttonStart.on('click.view', () => {
+      this.startClicked.notify({});
     });
-    this.$controls.on('change.view', 'input', ({ target }) => {
+    this.$buttonPause.on('click.view', () => {
+      this.pauseClicked.notify({});
+    });
+    this.$buttonClear.on('click.view', () => {
+      this.clearClicked.notify({});
+    });
+    this.$sliderSpeed.on('change.view', ({ target }) => {
       const value: number = Number($(target).val());
-      const nameSlider: string = $(target.parentElement.previousElementSibling).text();
-      switch (nameSlider) {
-        case 'speed':
-          this.speedChanged.notify({ value });
-          break;
-        case 'width':
-          this.widthChanged.notify({ value });
-          break;
-        case 'height':
-          this.heightChanged.notify({ value });
-      }
+      this.speedChanged.notify({ value });
+    });
+    this.$sliderWidth.on('change.view', ({ target }) => {
+      const value: number = Number($(target).val());
+      this.widthChanged.notify({ value });
+    });
+    this.$sliderHeight.on('change.view', ({ target }) => {
+      const value: number = Number($(target).val());
+      this.heightChanged.notify({ value });
     });
   }
   setButtons(running: boolean): void {
-    this.$buttons.each((index, button) => {
-      const $button = $(button);
-      if ($button.text() === 'start') {
-        $button.prop('disabled', running);
-      }
-      if ($button.text() === 'pause') {
-        $button.prop('disabled', !running);
-      }
-    });
+    this.$buttonStart.prop('disabled', running);
+    this.$buttonPause.prop('disabled', !running);
   }
   setStatus(running: boolean): void {
     this.setButtons(running);
