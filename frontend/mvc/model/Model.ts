@@ -24,26 +24,18 @@ class Model implements IModel{
       this.matrix.push(row);
     }
   }
-  getMatrixCopy(): boolean[][] {
-    return this.matrix.map(row =>
-      row.map(cell => cell),
-    );
-  }
   setWidthMatrix(newWidth: number): void {
     const oldWidth: number = this.columns;
-    let newMatrix: boolean[][] = this.getMatrixCopy();
-
-    if (oldWidth > newWidth) {
-      newMatrix.forEach((row: boolean[]) => {
-        row.splice(newWidth - 1, oldWidth - newWidth);
-      });
-    } else if (oldWidth < newWidth) {
-      newMatrix.forEach((row: boolean[]) => {
-        for (let j = oldWidth; j < newWidth; j += 1) {
-          row.push(false);
-        }
-      });
+    let newCells = [];
+    for (let i = oldWidth; i < newWidth; i += 1) {
+      newCells = newCells.concat(false);
     }
+    const newMatrix: boolean[][] = this.matrix.map((row) => {
+      if (oldWidth < newWidth) {
+        return row.concat(newCells);
+      }
+      return row.slice(0, newWidth);
+    });
     this.matrix = newMatrix;
     this.columns = newWidth;
     this.listOldMatrix = [];
