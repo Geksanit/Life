@@ -1,10 +1,10 @@
 import IEventSender from '../utils/IEventSender';
 
 interface IView {
-  tableClicked: IEventSender;
-  startClicked: IEventSender;
-  pauseClicked: IEventSender;
-  clearClicked: IEventSender;
+  tableCellChanged: IEventSender;
+  startEvent: IEventSender;
+  pauseEvent: IEventSender;
+  clearEvent: IEventSender;
   widthChanged: IEventSender;
   heightChanged: IEventSender;
   speedChanged: IEventSender;

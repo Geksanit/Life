@@ -15,10 +15,10 @@ class View implements IView{
   $sliderHeight: JQuery;
   $status: JQuery;
 
-  tableClicked: EventSender;
-  startClicked: EventSender;
-  pauseClicked: EventSender;
-  clearClicked: EventSender;
+  tableCellChanged: EventSender;
+  startEvent: EventSender;
+  pauseEvent: EventSender;
+  clearEvent: EventSender;
   widthChanged: EventSender;
   heightChanged: EventSender;
   speedChanged: EventSender;
@@ -39,10 +39,10 @@ class View implements IView{
     this.$status = this.$controls.find('.js-game__status');
   }
   initEvents(): void {
-    this.tableClicked = new EventSender(this);
-    this.startClicked = new EventSender(this);
-    this.pauseClicked = new EventSender(this);
-    this.clearClicked = new EventSender(this);
+    this.tableCellChanged = new EventSender(this);
+    this.startEvent = new EventSender(this);
+    this.pauseEvent = new EventSender(this);
+    this.clearEvent = new EventSender(this);
     this.widthChanged = new EventSender(this);
     this.heightChanged = new EventSender(this);
     this.speedChanged = new EventSender(this);
@@ -51,16 +51,16 @@ class View implements IView{
     this.$table.on('click.view', 'td', ({ target }) => {
       const cell: number = $(target).prop('cellIndex') as number;
       const row: number = $(target.parentElement).prop('sectionRowIndex') as number;
-      this.tableClicked.notify({ row, cell });
+      this.tableCellChanged.notify({ row, cell });
     });
     this.$buttonStart.on('click.view', () => {
-      this.startClicked.notify({});
+      this.startEvent.notify({});
     });
     this.$buttonPause.on('click.view', () => {
-      this.pauseClicked.notify({});
+      this.pauseEvent.notify({});
     });
     this.$buttonClear.on('click.view', () => {
-      this.clearClicked.notify({});
+      this.clearEvent.notify({});
     });
     this.$sliderSpeed.on('change.view', ({ target }) => {
       const value: number = Number($(target).val());

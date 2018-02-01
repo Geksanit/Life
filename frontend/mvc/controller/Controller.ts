@@ -11,7 +11,7 @@ class Controller {
     this.view = view;
     this.fps = 1;
     this.setSubscription();
-    this.view.initTable(this.model.matrix);// начальная отрисовка
+    this.view.initTable(this.model.matrix);
     this.setRunning(false);
   }
   setSubscription():void {
@@ -19,17 +19,17 @@ class Controller {
       if (obj.resized) { this.view.initTable(obj.matrix); }
       else { this.view.changeTable(obj.matrix); }
     });
-    this.view.tableClicked.attach((sender, { row, cell }) => {
+    this.view.tableCellChanged.attach((sender, { row, cell }) => {
       this.model.toggleCell(row, cell);
     });
-    this.view.startClicked.attach(() => {
+    this.view.startEvent.attach(() => {
       this.setRunning(true);
       this.anim();
     });
-    this.view.pauseClicked.attach(() => {
+    this.view.pauseEvent.attach(() => {
       this.setRunning(false);
     });
-    this.view.clearClicked.attach(() => {
+    this.view.clearEvent.attach(() => {
       this.model.clearMatrix();
       this.setRunning(false);
     });
