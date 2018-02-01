@@ -14,43 +14,43 @@ body main .game {
   display: flex;
   margin-bottom: 20px;
 }
-body main .game #board {
+body main .game__board {
   width: 400px;
   height: auto;
   border-collapse: collapse;
 }
-body main .game #board td {
+body main .game__ceil {
   border: 1px solid #e5e5e5;
   background-color: #fff;
   width: auto;
   height: auto;
   box-sizing: border-box;
 }
-body main .game #board .live {
+body main .game__ceil_live {
   background-color: #28a290;
 }
-body main #controls {
+body main .game__controls {
   padding-left: 10px;
   width: 300px;
 }
-body main #controls .container {
+body main .game__container {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-body main #controls .container .slider-mix {
+body main .game__slider {
   margin: 10px;
   flex: 1 1 100px;
 }
-body main #controls .container .button-mix {
+body main .game__button {
   font-weight: 500;
 }
-body main #controls .container .label {
+body main .game__label {
   width: 50px;
   height: 40px;
   line-height: 40px;
 }
-body main #controls .container .status {
+body main .game__status {
   margin-top: 50px;
   text-align: center;
   font-size: 2rem;
@@ -60,10 +60,10 @@ body main #controls .container .status {
   height: 50px;
   line-height: 50px;
 }
-body main #controls .container .status:before {
+body main .game__status:before {
   content: 'game started';
 }
-body main #controls .container .status_stopped:before {
+body main .game__status_stopped:before {
   content: 'game stopped';
   color: #8e8d8d;
 }
