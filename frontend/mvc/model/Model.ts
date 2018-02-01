@@ -1,5 +1,6 @@
 import Event from '../utils/EventSender';
 import IModel from './IModel';
+import '../../scripts/arrayFrom-polyfill';
 
 class Model implements IModel{
   matrix: boolean[][];
@@ -15,48 +16,27 @@ class Model implements IModel{
     this.matrixChanged = new Event(this);
   }
   initMatrix(rows: number, columns: number): void {
-    this.matrix = [];
-    for (let i = 0; i < rows; i += 1) {
-      let row = [];
-      for (let j = 0; j < columns; j += 1) {
-        row.push(false);
-      }
-      this.matrix.push(row);
-    }
+    this.matrix = Array.from(Array(rows), () => Array.from(Array(columns), () => false));
+  }
+  getNewRow(length: number): boolean[] {
+    return Array.from(Array(length), () => false);
   }
   setWidthMatrix(newWidth: number): void {
-    const oldWidth: number = this.columns;
-    let newCells = [];
-    for (let i = oldWidth; i < newWidth; i += 1) {
-      newCells = newCells.concat(false);
-    }
-    const newMatrix: boolean[][] = this.matrix.map((row) => {
-      if (oldWidth < newWidth) {
-        return row.concat(newCells);
+    this.matrix = this.matrix.map((row) => {
+      if (this.columns < newWidth) {
+        return row.concat(this.getNewRow(newWidth - this.columns));
       }
       return row.slice(0, newWidth);
     });
-    this.matrix = newMatrix;
     this.columns = newWidth;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   setHeightMatrix(newHeight: number): void {
-    const { matrix } = this;
-    let newMatrix = [];
-
-    for (let i = 0; i < newHeight; i += 1) {
-      if (i < matrix.length) {
-        newMatrix[i] = matrix[i].map(ceil => ceil);
-      } else {
-        let newRow = [];
-        for (let j = 0; j < this.columns; j += 1) {
-          newRow[j] = false;
-        }
-        newMatrix[i] = newRow;
-      }
-    }
-    this.matrix = newMatrix;
+    this.matrix = Array.from(Array(newHeight), (row, i) => {
+      if (i < this.rows) { return this.matrix[i].slice(); }
+      return this.getNewRow(this.columns);
+    });
     this.rows = newHeight;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
