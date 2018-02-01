@@ -16,36 +16,45 @@
     <main>
       <h1>Игра «Жизнь»</h1>
       <div class="game">
-        <table id="board"></table>
-        <div id="controls">
-          <div class="container">
-            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">start</button>
-            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">pause</button>
-            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small button-mix">clear</button>
+        <table class="js-game__board game__board"></table>
+        <div class="js-game__controls game__controls">
+          <div class="game__container">
+            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small game__button js-game__button-start">start</button>
+            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small game__button js-game__button-pause">pause</button>
+            <button class="standart-button js-standart-button standart-button_color_blue standart-button_size_small game__button js-game__button-clear">clear</button>
           </div>
-          <div class="container">
-            <div class="label">speed</div>
-            <div class="slider slider-mix">
-              <div class="slider__view">1</div>
-              <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
+          <div class="game__container">
+            <div class="game__label">speed</div>
+            <div class="game__slider">
+              <div class="slider slider_color_undefined js-game__slider-speed">
+                <div class="slider__view js-slider__view">1</div>
+                <div class="slider__line js-slider__line"></div>
+                <input class="slider__input js-slider__input" type="range" min="1" max="10" value="1">
+              </div>
             </div>
           </div>
-          <div class="container">
-            <div class="label">width</div>
-            <div class="slider slider-mix">
-              <div class="slider__view">10</div>
-              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
+          <div class="game__container">
+            <div class="game__label">width</div>
+            <div class="game__slider">
+              <div class="slider slider_color_undefined js-game__slider-width">
+                <div class="slider__view js-slider__view">10</div>
+                <div class="slider__line js-slider__line"></div>
+                <input class="slider__input js-slider__input" type="range" min="1" max="100" value="10">
+              </div>
             </div>
           </div>
-          <div class="container">
-            <div class="label">height</div>
-            <div class="slider slider-mix">
-              <div class="slider__view">10</div>
-              <input class="slider__input js-slider__input" type="range" min="0" max="100" value="10">
+          <div class="game__container">
+            <div class="game__label">height</div>
+            <div class="game__slider">
+              <div class="slider slider_color_undefined js-game__slider-height">
+                <div class="slider__view js-slider__view">10</div>
+                <div class="slider__line js-slider__line"></div>
+                <input class="slider__input js-slider__input" type="range" min="1" max="100" value="10">
+              </div>
             </div>
           </div>
-          <div class="container">
-            <div class="status"></div>
+          <div class="game__container">
+            <div class="game__status js-game__status"></div>
           </div>
         </div>
       </div>

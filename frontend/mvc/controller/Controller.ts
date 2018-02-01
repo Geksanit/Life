@@ -1,91 +1,66 @@
-import Model from '../model/Model';
-import View from '../view/View';
+import IModel from '../model/IModel';
+import IView from '../view/IView';
 
 class Controller {
-  model: Model;
-  view: View;
-  running: boolean;
+  model: IModel;
+  view: IView;
+  isRunning: boolean;
   fps: number;
-  constructor() {
-    this.model = new Model(10, 10);
-    this.view = new View();
-    this.running = false;
+  constructor(model: IModel, view: IView) {
+    this.model = model;
+    this.view = view;
     this.fps = 1;
     this.setSubscription();
-    this.view.initTable(this.model.matrix);// начальная отрисовка
+    this.view.initTable(this.model.matrix);
     this.setRunning(false);
   }
   setSubscription():void {
     this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) this.view.initTable(obj.matrix);
-      else this.view.changeTable(obj.matrix);
+      if (obj.resized) { this.view.initTable(obj.matrix); }
+      else { this.view.changeTable(obj.matrix); }
     });
-    this.view.tableClicked.attach((sender, event) => {
-      this.handleCell(event);
+    this.view.tableCellChanged.attach((sender, { row, cell }) => {
+      this.model.toggleCell(row, cell);
     });
-    this.view.buttonClicked.attach((sender, event) => {
-      this.handlerButtons(event);
+    this.view.startEvent.attach(() => {
+      this.setRunning(true);
+      this.anim();
     });
-    this.view.sliderChanged.attach((sender, event) => {
-      this.handlerSliders(event);
+    this.view.pauseEvent.attach(() => {
+      this.setRunning(false);
+    });
+    this.view.clearEvent.attach(() => {
+      this.model.clearMatrix();
+      this.setRunning(false);
+    });
+    this.view.speedChanged.attach((sender, options) => {
+      this.fps = options.value;
+    });
+    this.view.widthChanged.attach((sender, options) => {
+      this.setRunning(false);
+      this.model.setWidthMatrix(options.value);
+    });
+    this.view.heightChanged.attach((sender, options) => {
+      this.setRunning(false);
+      this.model.setHeightMatrix(options.value);
     });
   }
   setRunning(value: boolean): void {
-    this.running = value;
-    this.view.setButtons(this.running);
-    this.view.setStatus(this.running);
+    this.isRunning = value;
+    this.view.setStatus(this.isRunning);
   }
   anim(callback?): void {
-    // останавливается и вызывет аргумент callback(для тестов), когда матрица перестает меняться
-    const self = this;
+    // останавливается и вызывет callback(для тестов), когда матрица перестает меняться
     const loop = () => {
       setTimeout(() => {
-        if (self.running) {
+        if (this.isRunning) {
           requestAnimationFrame(loop);
-          const flag: boolean = self.model.calculateMatrix();
-          if (flag) { // повторилась ли матрица ?
-            self.setRunning(false);
-          }
-        } else if (callback) {
-          callback();
-        }
-      }, 1000 / self.fps);
+          this.model.calculateMatrix();
+          if (this.model.isRepeatMatrix()) { this.setRunning(false); }
+        } else if (callback) { callback(); }
+      }, 1000 / this.fps);
     };
     loop();
-  }
-  handleCell({ target }): void {
-    const cell: number = target.cellIndex;
-    const row: number = target.parentElement.sectionRowIndex;
-    this.model.toggleCell(row, cell);
-  }
-  handlerButtons({ target }): void {
-    switch (target.innerHTML) {
-      case 'start':
-        this.setRunning(true);
-        this.anim();
-        break;
-      case 'pause':
-        this.setRunning(false);
-        break;
-      case 'clear':
-        this.model.clearMatrix();
-        this.setRunning(false);
-    }
-  }
-  handlerSliders({ target }): void {
-    const value: number = target.valueAsNumber;
-    switch (target.parentElement.previousElementSibling.innerText) {
-      case 'speed':
-        this.fps = value;
-        break;
-      case 'width':
-        this.setRunning(false);
-        this.model.resizeMatrix(this.model.rows, value);
-        break;
-      case 'height':
-        this.setRunning(false);
-        this.model.resizeMatrix(value, this.model.columns);
-    }
   }
 }
 export default Controller;

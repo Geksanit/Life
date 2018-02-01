@@ -1,4 +1,6 @@
-class EventSender {
+import IEventSender from './IEventSender';
+
+class EventSender implements IEventSender {
   sender: object;
   listeners: Array<(a, b) => void>;
   constructor(sender: object) {
@@ -14,4 +16,5 @@ class EventSender {
     });
   }
 }
+
 export default EventSender;

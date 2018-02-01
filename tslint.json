@@ -1,7 +1,7 @@
 {
   "extends": "tslint-config-airbnb-base",
   "rules": {
-    "linebreak-style": false, //{"severity": "warning"}
+    "linebreak-style": true, //{"severity": "warning"}
     "no-magic-numbers": false
   }
 }

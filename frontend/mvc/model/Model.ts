@@ -1,6 +1,8 @@
 import Event from '../utils/EventSender';
+import IModel from './IModel';
+import '../../scripts/arrayFrom-polyfill';
 
-class Model {
+class Model implements IModel{
   matrix: boolean[][];
   rows: number;
   columns: number;
@@ -14,19 +16,28 @@ class Model {
     this.matrixChanged = new Event(this);
   }
   initMatrix(rows: number, columns: number): void {
-    this.matrix = [];
-    for (let i = 0; i < rows; i += 1) {
-      let row = [];
-      for (let j = 0; j < columns; j += 1) {
-        row.push(false);
-      }
-      this.matrix.push(row);
-    }
+    this.matrix = Array.from(Array(rows), () => Array.from(Array(columns), () => false));
   }
-  resizeMatrix(rows: number, columns: number): void {
-    this.initMatrix(rows, columns);
-    this.rows = rows;
-    this.columns = columns;
+  getNewRow(length: number): boolean[] {
+    return Array.from(Array(length), () => false);
+  }
+  setWidthMatrix(newWidth: number): void {
+    this.matrix = this.matrix.map((row) => {
+      if (this.columns < newWidth) {
+        return row.concat(this.getNewRow(newWidth - this.columns));
+      }
+      return row.slice(0, newWidth);
+    });
+    this.columns = newWidth;
+    this.listOldMatrix = [];
+    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
+  }
+  setHeightMatrix(newHeight: number): void {
+    this.matrix = Array.from(Array(newHeight), (row, i) => {
+      if (i < this.rows) { return this.matrix[i].slice(); }
+      return this.getNewRow(this.columns);
+    });
+    this.rows = newHeight;
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
@@ -35,47 +46,44 @@ class Model {
     this.listOldMatrix = [];
     this.matrixChanged.notify({ matrix: this.matrix });
   }
-  calculateMatrix(): boolean {
-    // обход всех ячеек с записью нового состояния
-    const newMatrix: boolean[][] = this.matrix.map((row: boolean[], i: number) =>
-      row.map((cell: boolean, j: number) => this.calculateCell(i, j)));
-    const flag: boolean = this.isRepeatMatrix(newMatrix);
-    this.matrix = newMatrix;
+  calculateMatrix(): void {
+    this.matrix = this.matrix.map((row: boolean[], i: number) =>
+      row.map((cell: boolean, j: number) => this.calculateCell(i, j)),
+    );
     this.matrixChanged.notify({ matrix: this.matrix });
-    return flag;// повторилась матрица?
   }
-  isRepeatMatrix(newMatrix): boolean {
-    const flag: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
+  isRepeatMatrix(): boolean {
+    const result: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
       matrix.every((row: boolean[], i: number) =>
         row.every((cell: boolean, j: number) =>
-          (cell === newMatrix[i][j]))));
-    if (flag) this.listOldMatrix = [];
-    else this.listOldMatrix.push(newMatrix);
-    return flag;
+          (cell === this.matrix[i][j]),
+        ),
+      ),
+    );
+    if (result) { this.listOldMatrix = []; }
+    else { this.listOldMatrix.push(this.matrix); }
+    return result;
   }
   calculateCell(row: number, column: number): boolean {
-    // соседи за пределами поля считаются мертвыми
-    let count: number = 0;// живые соседи
-    let newCell: boolean = this.matrix[row][column];
+    const { matrix } = this;
+    const countLivingNeighbors : number = this.getCountLivingNeighbors(row, column, matrix);
+    let newCell: boolean = matrix[row][column];
 
-    if (this.matrix[row - 1]) {
-      if (this.matrix[row - 1][column - 1]) count += 1;
-      if (this.matrix[row - 1][column]) count += 1;
-      if (this.matrix[row - 1][column + 1]) count += 1;
-    }
-
-    if (this.matrix[row][column - 1]) count += 1;
-    if (this.matrix[row][column + 1]) count += 1;
-
-    if (this.matrix[row + 1]) {
-      if (this.matrix[row + 1][column - 1]) count += 1;
-      if (this.matrix[row + 1][column]) count += 1;
-      if (this.matrix[row + 1][column + 1]) count += 1;
-    }
-
-    if (count < 2 || count > 3) newCell = false;
-    else if (count === 3) newCell = true;
+    if (countLivingNeighbors < 2 || countLivingNeighbors > 3) { newCell = false; }
+    else if (countLivingNeighbors === 3) { newCell = true; }
     return newCell;
+  }
+  getCountLivingNeighbors (row: number, column: number, matrix: boolean[][]): number {
+    const indexes: number[] = [-1, 0, 1];
+    return indexes.reduce((count: number, i: number): number => {
+      const indexRow: number = row + i;
+      if (!matrix[indexRow]) { return count; }
+      return count + indexes.reduce((countInRow: number, j: number): number => {
+        const indexCell: number = column + j;
+        if (!matrix[indexRow][indexCell] || (i === 0 && j === 0)) { return countInRow; }
+        return countInRow + 1;
+      }, 0);
+    }, 0);
   }
   toggleCell(row: number, column: number): void {
     this.matrix[row][column] = !this.matrix[row][column];

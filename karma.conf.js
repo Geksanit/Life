@@ -7,8 +7,6 @@ module.exports = (config) => {
     port: 9050,
     browserNoActivityTimeout: 60000,
     // singleRun: true, //just run once by default
-
-    // конфигурация репортов о покрытии кода тестами
     coverageReporter: {
       dir: 'tmp/coverage/',
       reporters: [
@@ -20,8 +18,7 @@ module.exports = (config) => {
       },
     },
     files: ['frontend/**/*.spec.ts'],
-    frameworks: ['chai', 'jasmine', 'sinon'],
-    // репортеры необходимы для  наглядного отображения результатов
+    frameworks: ['chai', 'mocha', 'sinon'],
     reporters: ['mocha', 'coverage'],
     preprocessors: {
       'frontend/**/*.spec.ts': ['webpack', 'sourcemap', 'coverage'],
@@ -29,9 +26,10 @@ module.exports = (config) => {
     webpack: {
       module: webpackConfig.module,
       resolve: webpackConfig.resolve,
+      plugins: webpackConfig.plugins,
     },
     plugins: [
-      'karma-jasmine', 'karma-mocha',
+      'karma-mocha',
       'karma-chai', 'karma-coverage',
       'karma-webpack', 'karma-phantomjs-launcher',
       'karma-mocha-reporter', 'karma-sourcemap-loader',
