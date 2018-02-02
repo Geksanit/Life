@@ -6,13 +6,13 @@ class Model implements IModel{
   matrix: boolean[][];
   rows: number;
   columns: number;
-  listOldMatrix: boolean[][][];
+  stateHistory: boolean[][][];
   matrixChanged: Event;
   constructor(rows: number = 10, columns: number = 10) {
     this.initMatrix(rows, columns);
     this.rows = rows;
     this.columns = columns;
-    this.listOldMatrix = [];
+    this.stateHistory = [];
     this.matrixChanged = new Event(this);
   }
   initMatrix(rows: number, columns: number): void {
@@ -29,7 +29,7 @@ class Model implements IModel{
       return row.slice(0, newWidth);
     });
     this.columns = newWidth;
-    this.listOldMatrix = [];
+    this.stateHistory = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   setHeightMatrix(newHeight: number): void {
@@ -38,12 +38,12 @@ class Model implements IModel{
       return this.getNewRow(this.columns);
     });
     this.rows = newHeight;
-    this.listOldMatrix = [];
+    this.stateHistory = [];
     this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   clearMatrix(): void {
     this.initMatrix(this.rows, this.columns);
-    this.listOldMatrix = [];
+    this.stateHistory = [];
     this.matrixChanged.notify({ matrix: this.matrix });
   }
   calculateMatrix(): void {
@@ -53,15 +53,15 @@ class Model implements IModel{
     this.matrixChanged.notify({ matrix: this.matrix });
   }
   isRepeatMatrix(): boolean {
-    const result: boolean = this.listOldMatrix.some((matrix: boolean[][]) =>
+    const result: boolean = this.stateHistory.some((matrix: boolean[][]) =>
       matrix.every((row: boolean[], i: number) =>
         row.every((cell: boolean, j: number) =>
           (cell === this.matrix[i][j]),
         ),
       ),
     );
-    if (result) { this.listOldMatrix = []; }
-    else { this.listOldMatrix.push(this.matrix); }
+    if (result) { this.stateHistory = []; }
+    else { this.stateHistory.push(this.matrix); }
     return result;
   }
   calculateCell(row: number, column: number): boolean {
