@@ -15,9 +15,9 @@ class Controller {
     this.setRunning(false);
   }
   setSubscription():void {
-    this.model.matrixChanged.attach((sender, obj) => {
-      if (obj.resized) { this.view.initTable(obj.matrix); }
-      else { this.view.changeTable(obj.matrix); }
+    this.model.matrixChanged.attach((sender, { isResized, matrix }) => {
+      if (isResized) { this.view.initTable(matrix); }
+      else { this.view.changeTable(matrix); }
     });
     this.view.tableCellChanged.attach((sender, { row, cell }) => {
       this.model.toggleCell(row, cell);
@@ -33,16 +33,16 @@ class Controller {
       this.model.clearMatrix();
       this.setRunning(false);
     });
-    this.view.speedChanged.attach((sender, options) => {
-      this.fps = options.value;
+    this.view.speedChanged.attach((sender, { value }) => {
+      this.fps = value;
     });
-    this.view.widthChanged.attach((sender, options) => {
+    this.view.widthChanged.attach((sender, { value }) => {
       this.setRunning(false);
-      this.model.setWidthMatrix(options.value);
+      this.model.setWidthMatrix(value);
     });
-    this.view.heightChanged.attach((sender, options) => {
+    this.view.heightChanged.attach((sender, { value }) => {
       this.setRunning(false);
-      this.model.setHeightMatrix(options.value);
+      this.model.setHeightMatrix(value);
     });
   }
   setRunning(value: boolean): void {

@@ -30,7 +30,7 @@ class Model implements IModel{
     });
     this.columns = newWidth;
     this.stateHistory = [];
-    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
+    this.matrixChanged.notify({ matrix: this.matrix, isResized: true });
   }
   setHeightMatrix(newHeight: number): void {
     this.matrix = Array.from(Array(newHeight), (row, i) => {
@@ -39,7 +39,7 @@ class Model implements IModel{
     });
     this.rows = newHeight;
     this.stateHistory = [];
-    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
+    this.matrixChanged.notify({ matrix: this.matrix, isResized: true });
   }
   clearMatrix(): void {
     this.initMatrix(this.rows, this.columns);
