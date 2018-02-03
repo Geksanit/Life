@@ -1,5 +1,6 @@
-import IModel from '../model/IModel';
-import IView from '../view/IView';
+import { IModel } from '../model/IModel';
+import { IView } from '../view/IView';
+
 
 class Controller {
   model: IModel;
@@ -15,32 +16,32 @@ class Controller {
     this.setRunning(false);
   }
   setSubscription():void {
-    this.model.matrixChanged.attach((sender, { isResized, matrix }) => {
-      if (isResized) { this.view.initTable(matrix); }
+    this.model.matrixChanged.attach((sender, { resized , matrix }) => {
+      if (resized) { this.view.initTable(matrix); }
       else { this.view.changeTable(matrix); }
     });
     this.view.tableCellChanged.attach((sender, { row, cell }) => {
       this.model.toggleCell(row, cell);
     });
-    this.view.startEvent.attach(() => {
+    this.view.started.attach(() => {
       this.setRunning(true);
       this.anim();
     });
-    this.view.pauseEvent.attach(() => {
+    this.view.paused.attach(() => {
       this.setRunning(false);
     });
-    this.view.clearEvent.attach(() => {
+    this.view.cleared.attach(() => {
       this.model.clearMatrix();
       this.setRunning(false);
     });
-    this.view.speedChanged.attach((sender, { value }) => {
+    this.view.speedChanged.attach((sender, value) => {
       this.fps = value;
     });
-    this.view.widthChanged.attach((sender, { value }) => {
+    this.view.widthChanged.attach((sender, value) => {
       this.setRunning(false);
       this.model.setWidthMatrix(value);
     });
-    this.view.heightChanged.attach((sender, { value }) => {
+    this.view.heightChanged.attach((sender, value) => {
       this.setRunning(false);
       this.model.setHeightMatrix(value);
     });

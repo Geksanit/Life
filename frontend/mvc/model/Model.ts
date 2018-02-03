@@ -1,5 +1,5 @@
-import Event from '../utils/EventSender';
-import IModel from './IModel';
+import EventSender from '../utils/EventSender';
+import { IModel, matrixChangedMessage } from './IModel';
 import '../../scripts/arrayFrom-polyfill';
 
 class Model implements IModel{
@@ -7,13 +7,13 @@ class Model implements IModel{
   rows: number;
   columns: number;
   stateHistory: boolean[][][];
-  matrixChanged: Event;
+  matrixChanged: EventSender<matrixChangedMessage>;
   constructor(rows: number = 10, columns: number = 10) {
     this.initMatrix(rows, columns);
     this.rows = rows;
     this.columns = columns;
     this.stateHistory = [];
-    this.matrixChanged = new Event(this);
+    this.matrixChanged = new EventSender<matrixChangedMessage>(this);
   }
   initMatrix(rows: number, columns: number): void {
     this.matrix = Array.from(Array(rows), () => Array.from(Array(columns), () => false));
@@ -30,7 +30,7 @@ class Model implements IModel{
     });
     this.columns = newWidth;
     this.stateHistory = [];
-    this.matrixChanged.notify({ matrix: this.matrix, isResized: true });
+    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   setHeightMatrix(newHeight: number): void {
     this.matrix = Array.from(Array(newHeight), (row, i) => {
@@ -39,7 +39,7 @@ class Model implements IModel{
     });
     this.rows = newHeight;
     this.stateHistory = [];
-    this.matrixChanged.notify({ matrix: this.matrix, isResized: true });
+    this.matrixChanged.notify({ matrix: this.matrix, resized: true });
   }
   clearMatrix(): void {
     this.initMatrix(this.rows, this.columns);

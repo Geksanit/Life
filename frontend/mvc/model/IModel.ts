@@ -1,8 +1,13 @@
 import IEventSender from '../utils/IEventSender';
 
+type matrixChangedMessage = {
+  matrix: boolean[][];
+  resized?: boolean;
+};
+
 interface IModel {
   matrix: boolean[][];
-  matrixChanged: IEventSender;
+  matrixChanged: IEventSender<matrixChangedMessage>;
   setWidthMatrix(newValue: number): void;
   setHeightMatrix(newValue: number): void;
   clearMatrix(): void;
@@ -11,4 +16,4 @@ interface IModel {
   toggleCell(row: number, column: number): void;
 }
 
-export default IModel;
+export { IModel, matrixChangedMessage };

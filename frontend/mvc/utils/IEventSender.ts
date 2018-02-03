@@ -1,5 +1,5 @@
-interface IEventSender {
-  attach(listener: (a, b) => void): void;
-  notify(args: object): void;
+interface IEventSender<T> {
+  attach(listener: (a: object, b: T) => void): void;
+  notify(args: T): void;
 }
 export default IEventSender;
