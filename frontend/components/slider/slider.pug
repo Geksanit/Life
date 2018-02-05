@@ -5,7 +5,7 @@ mixin slider(options)
     - options.value = options.value || 0
     - options.mix = options.mix || ''
 
-    div(class = "slider slider_color_" + options.color + " " + options.mix)
+    div(class = "slider js-slider slider_color_" + options.color + " " + options.mix)
       if (options.view)
         .slider__view.js-slider__view #{options.value}
       if (options.line)

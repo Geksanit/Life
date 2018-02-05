@@ -1,5 +1,5 @@
 import EventSender from '../utils/EventSender';
-import IView from './IView';
+import { IView, tableCellAddress } from './IView';
 
 const CLASS_CEIL = 'game__ceil';
 const CLASS_CEIL_LIVE = 'game__ceil_live';
@@ -15,13 +15,13 @@ class View implements IView{
   $sliderHeight: JQuery;
   $status: JQuery;
 
-  tableCellChanged: EventSender;
-  startEvent: EventSender;
-  pauseEvent: EventSender;
-  clearEvent: EventSender;
-  widthChanged: EventSender;
-  heightChanged: EventSender;
-  speedChanged: EventSender;
+  tableCellChanged: EventSender<tableCellAddress>;
+  started: EventSender<null>;
+  paused: EventSender<null>;
+  cleared: EventSender<null>;
+  widthChanged: EventSender<number>;
+  heightChanged: EventSender<number>;
+  speedChanged: EventSender<number>;
   constructor() {
     this.initDOMElements();
     this.initEvents();
@@ -39,13 +39,13 @@ class View implements IView{
     this.$status = this.$controls.find('.js-game__status');
   }
   initEvents(): void {
-    this.tableCellChanged = new EventSender(this);
-    this.startEvent = new EventSender(this);
-    this.pauseEvent = new EventSender(this);
-    this.clearEvent = new EventSender(this);
-    this.widthChanged = new EventSender(this);
-    this.heightChanged = new EventSender(this);
-    this.speedChanged = new EventSender(this);
+    this.tableCellChanged = new EventSender<tableCellAddress>(this);
+    this.started = new EventSender<null>(this);
+    this.paused = new EventSender<null>(this);
+    this.cleared = new EventSender<null>(this);
+    this.widthChanged = new EventSender<number>(this);
+    this.heightChanged = new EventSender<number>(this);
+    this.speedChanged = new EventSender<number>(this);
   }
   initHandlers(): void {
     this.$table.on('click.view', 'td', ({ target }) => {
@@ -54,25 +54,25 @@ class View implements IView{
       this.tableCellChanged.notify({ row, cell });
     });
     this.$buttonStart.on('click.view', () => {
-      this.startEvent.notify({});
+      this.started.notify(null);
     });
     this.$buttonPause.on('click.view', () => {
-      this.pauseEvent.notify({});
+      this.paused.notify(null);
     });
     this.$buttonClear.on('click.view', () => {
-      this.clearEvent.notify({});
+      this.cleared.notify(null);
     });
     this.$sliderSpeed.on('change.view', ({ target }) => {
       const value: number = Number($(target).val());
-      this.speedChanged.notify({ value });
+      this.speedChanged.notify(value);
     });
     this.$sliderWidth.on('change.view', ({ target }) => {
       const value: number = Number($(target).val());
-      this.widthChanged.notify({ value });
+      this.widthChanged.notify(value);
     });
     this.$sliderHeight.on('change.view', ({ target }) => {
       const value: number = Number($(target).val());
-      this.heightChanged.notify({ value });
+      this.heightChanged.notify(value);
     });
   }
   setButtons(running: boolean): void {
